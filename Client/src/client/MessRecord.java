@@ -45,7 +45,7 @@ public class MessRecord {
         return messList;
     }
     
-    
+
     public void addNumOfMess() {
         this.numOfMess = this.numOfMess + 1;
     }

@@ -12,22 +12,21 @@ package client;
 public class Friend {
     
     private String name;
-    private int receivedPort;
-    private boolean status;
+    private int sentPort; // port to send to friend
+    private int status;
 
-    public Friend(String name, int receivedPort) {
+    public Friend(String name, int sentPort, int status) {
         this.name = name;
-        this.receivedPort = receivedPort;
-        this.status = false;
-    }
-
-    // set friend's status from server
-    public void setStatus(boolean status) {
-        
+        this.sentPort = sentPort;
         this.status = status;
     }
 
-    public boolean isStatus() {
+    // set friend's status from server
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getStatus() {
         return status;
     }
     

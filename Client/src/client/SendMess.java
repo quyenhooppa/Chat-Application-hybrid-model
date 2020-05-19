@@ -79,12 +79,15 @@ public class SendMess extends Thread {
                     PrintWriter output = 
                             new PrintWriter(socket.getOutputStream(), true);
                     
-                    output.println(mess);
-                    MessRecord record = userSend.messRecord.get(peerName);
-                    record.addNumOfMess();
-                    record.addMess(mess, sentPort);
-                    mess = "";
                     
+                    String messSent = userSend.getUserName() + "%" + mess;
+                    output.println(messSent);
+                    
+                    MessRecord record = userSend.messRecordList.get(peerName);
+                    record.addNumOfMess(); 
+                    record.addMess(messSent, 1);
+                    
+                    mess = "";     
                     isSend = false;
                     
                     try {

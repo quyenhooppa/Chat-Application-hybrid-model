@@ -16,7 +16,7 @@ import java.net.ServerSocket;
  *
  * @author quyenhooppa
  */
-public final class User extends Thread {
+public class User extends Thread {
 
     private String name; // name of user
     private String pass; // passwprd
@@ -26,15 +26,29 @@ public final class User extends Thread {
     // list of user's friends
     HashMap<String, Friend> friendList; 
     // record messages communicate with friends
-    HashMap<String, MessRecord> messRecord; 
+    HashMap<String, MessRecord> messRecordList; 
+    
     
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
-        friendList = new HashMap<>();
+        //friendList = new HashMap<>();
+        //messRecordList = new HashMap<>();
     }
-            
+
     
+    public User(String name, String pass, int receivedPort, 
+            HashMap<String, Friend> friendList, 
+            HashMap<String, MessRecord> messRecordList) {
+        this.name = name;
+        this.pass = pass;
+        this.receivedPort = receivedPort;
+        this.friendList = friendList;
+        this.messRecordList = messRecordList;
+    }
+    
+    
+
     public void setUserName(String name) 
     {
         this.name = name;
@@ -67,7 +81,134 @@ public final class User extends Thread {
     }
     
     
-    // add new friend header is 4
+    // register header is 1
+    public boolean register() {
+        
+        try (Socket socket = new Socket("localhost", 5000)){
+            
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter output = 
+                    new PrintWriter(socket.getOutputStream(), true);
+            
+            output.println("1" + this.name + "-" + this.pass);
+            
+            String response = input.readLine();
+ 
+            try {
+                
+                socket.close(); 
+                if (Integer.parseInt(response) == 1) {
+                    return true;
+                }
+                
+            } catch(IOException e) {
+                System.out.println("Register close socket: " 
+                        + e.getMessage());
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Error from " + this.name + " " 
+                    + e.getMessage());
+        }
+        
+        return false;
+    }
+    
+    
+    // login header is 2
+    public boolean login() {
+        
+        try (Socket socket = new Socket("localhost", 5000)) {
+            BufferedReader echoes = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter stringToEcho = 
+                    new PrintWriter(socket.getOutputStream(), true);
+
+            stringToEcho.println("2" + this.name + "-" + this.pass);
+            
+            String response = echoes.readLine();
+            
+            int curPos = 0;
+            
+            while (response.charAt(curPos) != '%') {
+                curPos++;
+            }
+            // get the received mess port
+            receivedPort = Integer.parseInt(response.substring(0, curPos));
+            
+            int friendCount = 0;
+            int pos = curPos;
+            curPos++;
+            
+            while (response.charAt(curPos) != '%') {
+                curPos++;
+            }
+            // get the number of friends
+            friendCount = Integer.parseInt(response.substring(pos + 1, curPos));
+            
+            pos = curPos;
+            curPos++;
+            
+            // add friends to the list
+            for (int i = 0; i < friendCount - 1; i++) {
+                String friendName;
+                int sentPort;
+                
+                int status =  Character.getNumericValue(response.charAt(curPos));
+                curPos++;
+                pos++;
+                
+                while (response.charAt(curPos) != '-') {
+                    curPos++;
+                }
+                // get friend name
+                friendName = response.substring(pos + 1, curPos);
+                
+                pos = curPos;
+                curPos++;
+                
+                if (i == friendCount - 1) {
+                    sentPort = Integer.parseInt(response.substring(curPos + 1));
+                } else {
+                    while (response.charAt(curPos) != '%') {
+                        curPos++;
+                    }
+                    // get port to send
+                    sentPort = Integer.parseInt(response.substring(pos + 1, curPos));
+                    
+                    pos = curPos;
+                    curPos++;
+                }
+                
+                Friend newFriend = new Friend(friendName, sentPort, status);
+                MessRecord newMessRecord = new MessRecord(friendName);
+                
+                friendList.put(friendName, newFriend); // add friend
+                messRecordList.put(friendName, newMessRecord); // add mess record
+                
+            }
+
+            
+            try {
+                
+                socket.close();
+                return true;
+                
+            } catch(IOException e) {
+                System.out.println("Login close socket: " 
+                        + e.getMessage());
+            } 
+        } catch (IOException e) {
+            System.out.println("Login Error " 
+                    + e.getMessage());
+        }
+        
+        return false;
+    }
+ 
+    
+        // add new friend header is 4
     public int addFriend(String name)
     {
         int info = -1; // not found friend
@@ -110,74 +251,6 @@ public final class User extends Thread {
         return info;
     }
     
-    // register header is 1
-    public int register() {
-        try (Socket socket = new Socket("localhost", 5000)){
-            
-            BufferedReader echoes = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            PrintWriter stringToEcho = 
-                    new PrintWriter(socket.getOutputStream(), true);
-            
-            stringToEcho.println("1" + this.name + "-" + 
-                    this.pass);
-            
-            String response = echoes.readLine();
-           
-            //System.out.println("Id is: " + response);
-            
-            //this.setID(response);
-            //this.setPort((Integer.parseInt(response) % 1000) + 3000);
- 
-            try {
-                
-                socket.close(); 
-                return Integer.parseInt(response);
-                
-            } catch(IOException e) {
-                System.out.println("Register close socket: " 
-                        + e.getMessage());
-            }
-            
-        } catch (IOException e) {
-            System.out.println("Error from " + this.name + " " 
-                    + e.getMessage());
-        }
-        
-        return 0;
-    }
-    
-    // login header is 2
-    public int login() {
-        int login = 0;
-        
-        try (Socket socket = new Socket("localhost", 5000)) {
-            BufferedReader echoes = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            PrintWriter stringToEcho = 
-                    new PrintWriter(socket.getOutputStream(), true);
-
-            stringToEcho.println("2" + this.name + "-" + this.pass);
-            
-            String response = echoes.readLine();
-            //System.out.println(response);
-
-            login = Integer.parseInt(response);
-
-            try {
-                socket.close();
-            } catch(IOException e) {
-                System.out.println("Login close socket: " 
-                        + e.getMessage());
-            } 
-        } catch (IOException e) {
-            System.out.println("Login Error " 
-                    + e.getMessage());
-        }
-        
-        return login;
-    }
- 
     
     
     @Override    
@@ -195,10 +268,20 @@ public final class User extends Thread {
                     PrintWriter output = 
                             new PrintWriter(socket.getOutputStream(), true);
 
-                    String echoString = input.readLine();
+                    String receivedMess = input.readLine();
                     
-                    this.setMess(echoString);
+                    this.setMess(receivedMess);
                     System.out.println("Mess received: " + this.getMess());
+                    
+                    int curPos = 0;
+                    while (receivedMess.charAt(curPos) != '%') {
+                        curPos++;
+                    }
+                    String friendName = receivedMess.substring(0, curPos);
+                    
+                    MessRecord record = messRecordList.get(friendName);
+                    record.addNumOfMess();
+                    record.addMess(receivedMess.substring(curPos + 1), 0);
 
                     output.println("Received");
 
