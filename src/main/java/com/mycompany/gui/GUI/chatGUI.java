@@ -5,6 +5,7 @@
  */
 package com.mycompany.gui.GUI;
 
+import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -15,6 +16,8 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -38,20 +41,19 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     
     public chatGUI() {
         initComponents();
+        initSetting();    
+    }        
+    private void initSetting(){
         //Create list for online and offline friends
         jList1.setModel(listOnl);
         jList2.setModel(listOff);
-        addName("Thu",0);
-        addName("Thu",0);
-        addName("Duong",0);
         jTextField1.addActionListener(typeMessage);
         jTextField2.addActionListener(newChat);
         doc = jTextPane1.getStyledDocument();
         messageAlign= new SimpleAttributeSet();
         JScrollPane   scroll = new JScrollPane();
-        jTextPane1.add(scroll);        
-    }        
-
+        jTextPane1.add(scroll);    
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -250,6 +252,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //
+     public void ownerChat(){
+        ownerChatMessage(jTextField1.getText());
+        //Send message to other client
+        jTextField1.setText("");
+    }
     private void ownerChatMessage(String message){
         StyleConstants.setAlignment(messageAlign, StyleConstants.ALIGN_RIGHT);
         try
@@ -320,10 +327,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             //Begin connection here
         }
         else {
-            failedGUI failedDialog = new failedGUI();
-            failedDialog.setVisible(true);
+            JFrame frame = null;
+            JOptionPane.showMessageDialog(frame, "Invalid friend or your friend is offline");
         }
     }
+ 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         beginChat();
 
@@ -373,14 +381,14 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        ownerChat();
     }//GEN-LAST:event_jButton2ActionPerformed
     Action typeMessage = new AbstractAction()
     {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            System.out.println("some action");
+            ownerChat();
         }
     };
     

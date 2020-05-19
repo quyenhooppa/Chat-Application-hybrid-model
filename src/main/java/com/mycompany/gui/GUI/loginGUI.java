@@ -6,6 +6,11 @@
 package com.mycompany.gui.GUI;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -19,6 +24,7 @@ public class loginGUI extends javax.swing.JFrame {
      */
     public loginGUI() {
         initComponents();
+        jPasswordField1.addActionListener(login);
     }
 
     /**
@@ -124,7 +130,17 @@ public class loginGUI extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    private void checkAccountInf(){
+        if (/*confirm right username and password*/true){
+            dispose();
+            chatGUI newChat = new chatGUI();
+            newChat.setVisible(true);
+        }
+        else {
+            JFrame frame = null;
+            JOptionPane.showMessageDialog(frame, "Invalid username or password");
+        }
+    }
     public String getID(){
         return jTextField1.getText();
     }
@@ -140,22 +156,21 @@ public class loginGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (/*confirm right username and password*/true){
-            dispose();
-            chatGUI newChat = new chatGUI();
-            newChat.setVisible(true);
-        }
-        else {
-            failedGUI failedUser = new failedGUI();
-            failedUser.setVisible(true);
-        }
+        checkAccountInf();
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         
     }//GEN-LAST:event_jPasswordField1ActionPerformed
-
+     Action login = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            checkAccountInf();
+        }
+    };
     /**
      * @param args the command line arguments
      */

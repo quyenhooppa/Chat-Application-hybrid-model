@@ -5,6 +5,12 @@
  */
 package com.mycompany.gui.GUI;
 
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Admin
@@ -16,6 +22,7 @@ public class registerGUI extends javax.swing.JFrame {
      */
     public registerGUI() {
         initComponents();
+        jPasswordField2.addActionListener(register);
     }
 
     /**
@@ -135,7 +142,10 @@ public class registerGUI extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    private boolean checkUserName(){
+        //check Usernaem here
+        return false;
+    }
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
@@ -143,19 +153,22 @@ public class registerGUI extends javax.swing.JFrame {
         if (jPasswordField1.getText().equals(jPasswordField2.getText()) && jPasswordField1.getText().length() >= 6 ) return true;
         return false;
     }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (/*username and password ok*/checkPassword()){
+    private void doneRegister(){
+         if (checkUserName() && checkPassword()){
             dispose();
             chatGUI newChat = new chatGUI();
             newChat.setVisible(true);
         }
         else {
-            failedGUI failedPassword = new failedGUI();
-            failedPassword.setVisible(true);
+            JFrame frame = null;
+            JOptionPane.showMessageDialog(frame, "Invalid username or password");
             jTextField1.setText("");
             jPasswordField1.setText("");
             jPasswordField2.setText("");
         }
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       doneRegister();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -163,7 +176,30 @@ public class registerGUI extends javax.swing.JFrame {
         loginGUI returnUser = new loginGUI();
         returnUser.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    Action register = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            doneRegister();
+        }
+    };
+  /*      Action skipToPasswordTyping = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            jPasswordField1.;
+        }
+    };
+            Action skipToPasswordConfirm = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            doneRegister();
+        }
+    };*/
     /**
      * @param args the command line arguments
      */
