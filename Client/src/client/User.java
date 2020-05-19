@@ -128,9 +128,12 @@ public class User extends Thread {
             stringToEcho.println("2" + this.name + "-" + this.pass);
             
             String response = echoes.readLine();
+            // login failed
+            if (response.charAt(0) == '0') {
+                return false;
+            }
             
-            int curPos = 0;
-            
+            int curPos = 0;            
             while (response.charAt(curPos) != '%') {
                 curPos++;
             }
