@@ -23,12 +23,12 @@ public class SocketClienExample {
         ObjectInputStream ois = null;
         for(int i=0; i<5;i++){
             //establish socket connection to server
-            socket = new Socket(host.getHostName(), 1234);
+            socket = new Socket(host.getHostName(), 5000);
             //write to socket using ObjectOutputStream
             oos = new ObjectOutputStream(socket.getOutputStream());
             System.out.println("Sending request to Socket Server");
             if(i==4)oos.writeObject("exit");
-            else oos.writeObject(""+i);
+            else oos.writeObject("0quithu165-ngoquithu");
             //read the server response message
             ois = new ObjectInputStream(socket.getInputStream());
             String message = (String) ois.readObject();
