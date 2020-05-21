@@ -52,7 +52,8 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         doc = jTextPane1.getStyledDocument();
         messageAlign= new SimpleAttributeSet();
         JScrollPane   scroll = new JScrollPane();
-        jTextPane1.add(scroll);    
+        jTextPane1.add(scroll);   
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -162,6 +163,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
         jLabel3.setText("Offine");
 
+        jTextPane1.setEditable(false);
         jScrollPane4.setViewportView(jTextPane1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -252,7 +254,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //
-     public void ownerChat(){
+    public void ownerChat(){
         ownerChatMessage(jTextField1.getText());
         //Send message to other client
         jTextField1.setText("");
@@ -268,7 +270,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         catch(Exception e) { System.out.println(e);}
     }
     
-        private void friendChatMessage(String message){
+    private void friendChatMessage(String message){
         StyleConstants.setAlignment(messageAlign, StyleConstants.ALIGN_LEFT);
         try
         {

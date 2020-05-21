@@ -23,7 +23,7 @@ public class SocketClienExample {
         ObjectInputStream ois = null;
         for(int i=0; i<5;i++){
             //establish socket connection to server
-            socket = new Socket(host.getHostName(), 9876);
+            socket = new Socket(host.getHostName(), 1234);
             //write to socket using ObjectOutputStream
             oos = new ObjectOutputStream(socket.getOutputStream());
             System.out.println("Sending request to Socket Server");
