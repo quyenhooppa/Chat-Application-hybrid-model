@@ -6,6 +6,9 @@
 package clientUI;
 
 import client.User;
+import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -19,6 +22,7 @@ public class registerGUI extends javax.swing.JFrame {
      */
     public registerGUI() {
         initComponents();
+        rePassword.addActionListener(register);
     }
 
     /**
@@ -38,16 +42,11 @@ public class registerGUI extends javax.swing.JFrame {
         userName = new javax.swing.JTextField();
         password = new javax.swing.JPasswordField();
         rePassword = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        doneBut = new javax.swing.JButton();
+        cancelBut = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jPanel1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jPanel1KeyPressed(evt);
-            }
-        });
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CHAT APP SIGNUP");
 
         jLabel1.setText("Name:");
 
@@ -55,7 +54,6 @@ public class registerGUI extends javax.swing.JFrame {
 
         jLabel3.setText("Confirm password:");
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("REGISTER");
 
         userName.addActionListener(new java.awt.event.ActionListener() {
@@ -64,17 +62,17 @@ public class registerGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Done");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        doneBut.setText("Done");
+        doneBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                doneButActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        cancelBut.setText("Cancel");
+        cancelBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                cancelButActionPerformed(evt);
             }
         });
 
@@ -82,10 +80,14 @@ public class registerGUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(doneBut)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel2)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -100,19 +102,15 @@ public class registerGUI extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(cancelBut)
                         .addGap(44, 44, 44))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(107, 107, 107)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4)
                 .addGap(7, 7, 7)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -126,8 +124,8 @@ public class registerGUI extends javax.swing.JFrame {
                     .addComponent(rePassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(doneBut)
+                    .addComponent(cancelBut))
                 .addGap(0, 10, Short.MAX_VALUE))
         );
 
@@ -137,24 +135,23 @@ public class registerGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void userNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_userNameActionPerformed
 
-    
-    // REGISTER BUTTON
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+    private void doneRegister() throws InterruptedException, ClassNotFoundException {
+        
         if (userName.getText().isEmpty() || password.getText().isEmpty() || 
                 rePassword.getText().isEmpty()) {
         
@@ -226,20 +223,52 @@ public class registerGUI extends javax.swing.JFrame {
                     "Password not matched");
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    // CANCEL BUTTON
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jPanel1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel1KeyPressed
-        // TODO add your handling code here:
-//        jPanel1.keyDown(evt, WIDTH);
-    }//GEN-LAST:event_jPanel1KeyPressed
-
+    }
     
+    private void doneButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButActionPerformed
+        try {
+            doneRegister();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_doneButActionPerformed
+
+    private void cancelButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelButActionPerformed
+    
+    Action register = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            try {
+                doneRegister();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    };
+  /*      Action skipToPasswordTyping = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            jPasswordField1.;
+        }
+    };
+            Action skipToPasswordConfirm = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            doneRegister();
+        }
+    };*/
     /**
      * @param args the command line arguments
      */
@@ -279,8 +308,8 @@ public class registerGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton cancelBut;
+    private javax.swing.JButton doneBut;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

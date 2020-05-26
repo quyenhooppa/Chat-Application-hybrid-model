@@ -12,11 +12,13 @@ package client;
 public class Friend {
     
     private String name;
+    private String ip;
     private int sentPort; // port to send to friend
     private int status;
 
-    public Friend(String name, int sentPort, int status) {
+    public Friend(String name, String ip, int sentPort, int status) {
         this.name = name;
+        this.ip = ip;
         this.sentPort = sentPort;
         this.status = status;
     }
@@ -26,8 +28,21 @@ public class Friend {
         this.status = status;
     }
 
+    
+    public String getName() {
+        return name;
+    }
+
+    public int getSentPort() {
+        return sentPort;
+    }
+    
     public int getStatus() {
         return status;
+    }
+    
+    public String getIP() {
+        return ip;
     }
     
 }

@@ -18,29 +18,19 @@ import java.net.Socket;
 public class SendMess extends Thread {
     
     private User userSend;
-    private int sentPort;
-    private String peerName;
+    private Friend friend;
     private String mess;
     private boolean isSend;
 
-    public SendMess(User userSend, int sentPort, String peerName, boolean isSend) {
+    public SendMess(User userSend, Friend friend, boolean isSend) {
         this.userSend = userSend;
-        this.sentPort = sentPort;
-        this.peerName = peerName;
+        this.friend = friend;
         this.isSend = isSend;
         this.mess = "";
     }
     
     
     //--------------- SETTER ---------------
-    public void setSentPort(int sentPort) {
-        this.sentPort = sentPort;
-    }
-
-    public void setPeerName(String peerName) {
-        this.peerName = peerName;
-    }
-
     public void setMess(String mess) {
         this.mess = mess;
     }
@@ -50,14 +40,6 @@ public class SendMess extends Thread {
     }
 
     //--------------- GETTER ---------------
-    public int getSentPort() {
-        return sentPort;
-    }
-
-    public String getPeerName() {
-        return peerName;
-    }
-
     public String getMess() {
         return mess;
     }
@@ -71,41 +53,47 @@ public class SendMess extends Thread {
     @Override
     public void run() {
         while (true) {
-            if (isSend = true) {
-                try (Socket socket = new Socket("local host", sentPort)) {
-                    
+            //if (isIsSend() == true) {
+            
+                try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
+                    while (true) {
+                        if (isSend == true) {
                     BufferedReader input = new BufferedReader(
                             new InputStreamReader(socket.getInputStream()));
                     PrintWriter output = 
                             new PrintWriter(socket.getOutputStream(), true);
                     
                     
-                    String messSent = userSend.getUserName() + "%" + mess;
+                    String messSent = userSend.getUserName() + "%" + mess; 
                     output.println(messSent);
                     
-                    MessRecord record = userSend.messRecordList.get(peerName);
-                    record.addNumOfMess(); 
+                    MessRecord record = userSend.messRecordList.get(friend.getName());
+                    record.addNumOfMess(1); 
                     record.addMess(messSent, 1);
                     
-                    mess = "";     
+                    System.out.println(mess);
+                    
+                    mess = "";  
                     isSend = false;
                     
-                    try {
-                        socket.close();      
-                    } catch(IOException e) {
-                        System.out.println("Send close socket: " 
-                                + e.getMessage());
-                    } 
-
+//                    try {
+//                        socket.close();      
+//                    } catch(IOException e) {
+//                        System.out.println("Send close socket: " 
+//                                + e.getMessage());
+//                        break;
+//                    } 
+                    }
+                    }
                 } catch (IOException e) {
                     // Logger.getLogger(
                     //    sendMess.class.getName()).log(Level.SEVERE, null, e);
 
-                    System.out.println("Send " + peerName + " " 
+                    System.out.println("Send " + friend.getName() + " " 
                             + e.getMessage());
                     isSend = false;
-                    break;
-                }
+                    
+                //}
             }
         }
     }

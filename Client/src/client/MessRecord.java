@@ -28,9 +28,10 @@ public class MessRecord {
     
     
     //--------------- SETTER ---------------
-    public void setMessList(ArrayList<String> messList) {
-        this.messList = messList;
+    public void setNumOfMess(int numOfMess) {
+        this.numOfMess = numOfMess;
     }
+    
 
     //--------------- GETTER ---------------
     public int getNumOfMess() {
@@ -45,9 +46,10 @@ public class MessRecord {
         return messList;
     }
     
-
-    public void addNumOfMess() {
-        this.numOfMess = this.numOfMess + 1;
+    
+    // increase total number of mess when new mess added
+    public void addNumOfMess(int amount) {
+        this.numOfMess = this.numOfMess + amount;
     }
         
     // add messagae to the list, type of messages is sent (1) or received (0)

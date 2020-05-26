@@ -6,21 +6,24 @@
 package clientUI;
 
 import client.User;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
+
 
 /**
  *
  * @author Admin
  */
 public class loginGUI extends javax.swing.JFrame {
-    
+
     /**
      * Creates new form NewJFrame
      */
     public loginGUI() {
         initComponents();
+        password.addActionListener(login);
     }
-        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,41 +33,43 @@ public class loginGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
+        userName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        userName = new javax.swing.JTextField();
         password = new javax.swing.JPasswordField();
+        registerBut = new javax.swing.JButton();
+        loginBut = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Chat application");
+        setTitle("CHAT APP");
 
         jLabel1.setText("Name:");
 
         jLabel2.setText("Password:");
 
-        jButton1.setText("Register");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        password.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                passwordActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Login");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        registerBut.setText("Register");
+        registerBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                registerButActionPerformed(evt);
             }
         });
 
-        userName.addActionListener(new java.awt.event.ActionListener() {
+        loginBut.setText("Login");
+        loginBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userNameActionPerformed(evt);
+                loginButActionPerformed(evt);
             }
         });
+
+        jLabel3.setText("LOGIN");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -72,30 +77,35 @@ public class loginGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(45, 45, 45)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(password))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                                    .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(63, 63, 63)
+                            .addComponent(registerBut)
+                            .addGap(47, 47, 47)
+                            .addComponent(loginBut)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(32, 32, 32)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(userName)
-                            .addComponent(password)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)))
-                .addGap(43, 43, 43))
+                        .addGap(147, 147, 147)
+                        .addComponent(jLabel3)))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -103,36 +113,32 @@ public class loginGUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(16, 16, 16))
+                    .addComponent(registerBut)
+                    .addComponent(loginBut))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jPanel1.getAccessibleContext().setAccessibleName("");
-        jPanel1.getAccessibleContext().setAccessibleDescription("");
-
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void userNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_userNameActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+  
+    private void checkAccount() {
+        // does not give enough infomation
         if (userName.getText().isEmpty() || password.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null,
                 "Please enter BOTH your name and pass.");
@@ -140,6 +146,7 @@ public class loginGUI extends javax.swing.JFrame {
             String name = userName.getText().trim();
             String pass = password.getText().trim();
 
+            // check format of name
             if (!name.matches("^[a-zA-z0-9]+$") || name.matches("^[0-9].*$")) {
                 userName.setText("");
                 password.setText("");
@@ -150,9 +157,10 @@ public class loginGUI extends javax.swing.JFrame {
             } else {
                 
                 User newUser = new User(name, pass);
-                boolean login = newUser.login();
+                boolean isLogin = newUser.login();
 
-                if (login == true) {
+                // user exits
+                if (isLogin == true) {
                     //new MainGUI(newUser).setVisible(true);
                     new chatGUI(newUser).setVisible(true); 
 
@@ -166,13 +174,29 @@ public class loginGUI extends javax.swing.JFrame {
                 }
             }
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }
+    
+    private void registerButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButActionPerformed
+        new registerGUI().setVisible(true); 
+    }//GEN-LAST:event_registerButActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        new registerGUI().setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void loginButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButActionPerformed
+        checkAccount();
+    }//GEN-LAST:event_loginButActionPerformed
 
+    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
+        
+    }//GEN-LAST:event_passwordActionPerformed
+     
+    Action login = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            checkAccount();
+        }
+    };
+    
     /**
      * @param args the command line arguments
      */
@@ -202,6 +226,10 @@ public class loginGUI extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -212,13 +240,13 @@ public class loginGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton loginBut;
     private javax.swing.JPasswordField password;
+    private javax.swing.JButton registerBut;
     private javax.swing.JTextField userName;
     // End of variables declaration//GEN-END:variables
 }

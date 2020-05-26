@@ -6,64 +6,69 @@
 package clientUI;
 
 import client.User;
+import client.SendMess;
+import client.Friend;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.Image;
 import java.awt.Toolkit;
-import javax.swing.*;
-import java.util.*;
-import java.io.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 /**
  *
  * @author Admin
  */
-public class chatGUI extends javax.swing.JFrame {
-    
+public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private User user;
-    private DefaultListModel listFriends;
-    private HashMap<String, User> list;
-    
+    private SendMess sendMess;
+        
     /**
      * Creates new form chatGUI
      */
-//    private DefaultListModel listOnl = new DefaultListModel();
-//    private DefaultListModel listOff = new DefaultListModel();
+    private DefaultListModel listOnl = new DefaultListModel();
+    private DefaultListModel listOff = new DefaultListModel();
+    StyledDocument doc;
+    SimpleAttributeSet messageAlign;
+    
     public chatGUI() {
         initComponents();
-        //Create list for online and offline friends
-        listFriends = new DefaultListModel();  
-        jList1.setModel(listFriends);
-        //list = new HashMap<String, User>();
-        
-//        addName("Thu",0);
-//        addName("Thu",0);
-//        addName("Duong",0);
-//        removeName("Thu", 0);
+        initSetting();
     }
     
     public chatGUI(User user) {
         initComponents();
+        initSetting();
         this.user = user;
         user.start();
-        listFriends = new DefaultListModel();  
-        
-        listFriends.addElement("Thu");
-        jList1.setModel(listFriends);
+    }        
+    
+    private void initSetting(){
+        //Create list for online and offline friends
+        offList.setModel(listOnl);
+        onlineList.setModel(listOff);
+        jTextField1.addActionListener(typeMessage);
+        jTextField2.addActionListener(newChat);
+        doc = jTextPane1.getStyledDocument();
+        messageAlign= new SimpleAttributeSet();
+        JScrollPane   scroll = new JScrollPane();
+        jTextPane1.add(scroll); 
+        jLabel1.setText("Welcome!");
+        addName("quithu98", 1);
     }
-
-    public class receiveMess extends Thread {
-        
-        public receiveMess() {
-            
-        }
-        
-        @Override 
-        public void run() {
-            if (!user.getMess().equals("")) {
-                jTextArea1.append(user.getMess());
-            }
-        }
-    }
-        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,69 +78,62 @@ public class chatGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
-        buttonGroup3 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        logout = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        mess = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        offList = new javax.swing.JList<>();
         jTextField2 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        onlineList = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        reset = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
-
-        jButton1.setText("Logout");
+        logout.setText("Back");
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("F1");
 
-        mess.setText("Type here");
-        mess.addFocusListener(new java.awt.event.FocusAdapter() {
+        jTextField1.setText("Type here");
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                messFocusGained(evt);
+                jTextField1FocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                messFocusLost(evt);
+                jTextField1FocusLost(evt);
             }
         });
-        mess.addActionListener(new java.awt.event.ActionListener() {
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                messActionPerformed(evt);
+                jTextField1ActionPerformed(evt);
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        offList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList1MouseClicked(evt);
-            }
-        });
-        jList1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jList1PropertyChange(evt);
-            }
-        });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(offList);
 
         jTextField2.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
         jTextField2.setText("Enter name...");
@@ -162,21 +160,33 @@ public class chatGUI extends javax.swing.JFrame {
             }
         });
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+        onlineList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jList2ValueChanged(evt);
+        onlineList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                onlineListMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(jList2);
-        jList2.getAccessibleContext().setAccessibleName("");
+        onlineList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                onlineListValueChanged(evt);
+            }
+        });
+        jScrollPane3.setViewportView(onlineList);
 
         jLabel3.setText("Offine");
+
+        jScrollPane4.setViewportView(jTextPane1);
+
+        reset.setText("Reset");
+        reset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -184,33 +194,35 @@ public class chatGUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(mess, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButton3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jButton2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(187, 187, 187)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2))
+                    .addComponent(jScrollPane4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3)
+                        .addContainerGap())
+                    .addComponent(jScrollPane2)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 36, Short.MAX_VALUE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(logout)
+                .addGap(187, 187, 187)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(reset)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -218,36 +230,34 @@ public class chatGUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(logout)
                         .addGap(9, 9, 9))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(reset)
+                        .addComponent(jLabel1)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addComponent(jLabel2))
-                            .addComponent(jLabel3))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(131, 131, 131)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(55, 55, 55))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jButton2)
                         .addComponent(jButton3)
-                        .addComponent(mess, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton4)))
-                .addGap(44, 44, 44))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -256,7 +266,7 @@ public class chatGUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 29, Short.MAX_VALUE))
+                .addGap(0, 18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,27 +279,135 @@ public class chatGUI extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jList2ValueChanged
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
-        //        if (checkExistance(jTextField2.getText(),listOnl) != -1){
-            //            jLabel1.setText(jTextField2.getText());
-            //            //Begin connection here
-            //        }
-        //        else {
-            //            //failedGUI failedDialog = new failedGUI();
-            //            //failedDialog.setVisible(true);
-            //        }
-    }//GEN-LAST:event_jButton4ActionPerformed
-
+    //
+     public void ownerChat(){
+         if (!jTextField1.getText().equals("")) {
+        sendMess.setMess(jTextField1.getText());
+        sendMess.setIsSend(true);
+//        ownerChatMessage(jTextField1.getText());
+        if (sendMess.isIsSend() == true) {
+            ownerChatMessage(sendMess.getMess());
+            //Send message to other client
+            jTextField1.setText("");
+            sendMess.setIsSend(false);
+        }
+         }
+    }
+     
+    private void ownerChatMessage(String message){
+        StyleConstants.setAlignment(messageAlign, StyleConstants.ALIGN_RIGHT);
+        try
+        {
+            int length = doc.getLength();
+            doc.insertString(doc.getLength(), "\n" + message, null);
+            doc.setParagraphAttributes(length+1, 1, messageAlign, false);
+        }
+        catch(Exception e) { System.out.println(e);}
+    }
+    
+    
+    private void friendChatMessage(String message){
+        StyleConstants.setAlignment(messageAlign, StyleConstants.ALIGN_LEFT);
+        try
+        {
+            int length = doc.getLength();
+            doc.insertString(doc.getLength(),"\n" + message, null);
+            doc.setParagraphAttributes(length+1, 1, messageAlign, false);
+        }
+        catch(Exception e) { System.out.println(e);}
+    }
+    private int checkExistance(String name, DefaultListModel friendlist){
+        int size = friendlist.getSize();
+        for (int i =0; i < size; i++){
+            if (friendlist.getElementAt(i).equals(name)) 
+                return i;
+        }
+        return -1;
+    }
+    //Add a new name to list, if selectedList = 1 then choose online friendlist, 0 then choose offline friend list
+    public void addName(String name, int selectedList){
+        if (selectedList == 0){
+            if (checkExistance(name, listOnl) == -1){
+                listOnl.addElement(name);
+            }
+        }  
+        
+        if (selectedList == 1){
+            if (checkExistance(name, listOff) == -1){
+                listOff.addElement(name);
+            }
+        } 
+    } 
+    public void removeName(String name, int selectedList){
+        if (selectedList == 0){
+            int pos = checkExistance(name, listOnl);
+            if ( pos != -1){
+                listOnl.remove(pos);
+            }
+        }  
+        
+        if (selectedList == 1){
+            int pos = checkExistance(name, listOff);
+            if ( pos != -1){
+                listOff.remove(pos);
+            }
+        }
+    } 
+    
+    
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jTextField2ActionPerformed
+    
+    private void beginChat(){
+        if (checkExistance(jTextField2.getText(),listOnl) != -1){
+            jLabel1.setText(jTextField2.getText());
+            //Begin connection here
+        }
+        else {
+            JFrame frame = null;
+            JOptionPane.showMessageDialog(frame, "Invalid friend or your friend is offline");
+        }
+    }
+ 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        beginChat();
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_onlineListValueChanged
+        // TODO add your handling code here:
+        String friendName = onlineList.getSelectedValue();
+        jLabel1.setText(friendName);
+        Friend friend = (user.getFriendList()).get(friendName);
+        sendMess = new SendMess(user, friend, false);
+        sendMess.start();
+    }//GEN-LAST:event_onlineListValueChanged
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        //Send mesage to message field
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
+        // TODO add your handling code here:
+        if (jTextField1.getText().equals("Type here"))
+            jTextField1.setText("");
+    }//GEN-LAST:event_jTextField1FocusGained
+
+    private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
+        // TODO add your handling code here:
+        if (jTextField1.getText().equals("")){
+            jTextField1.setText("Type here");
+        }
+    }//GEN-LAST:event_jTextField1FocusLost
+
+    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
+        // TODO add your handling code here:
+         if (jTextField2.getText().equals("Enter name...")){
+            jTextField2.setText("");
+         }
+    }//GEN-LAST:event_jTextField2FocusGained
 
     private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
         // TODO add your handling code here:
@@ -298,88 +416,43 @@ public class chatGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTextField2FocusLost
 
-    
-    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        dispose();
+        //logout here
+        loginGUI newUser = new loginGUI();
+        newUser.setVisible(true);
+    }//GEN-LAST:event_logoutActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        ownerChat();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         // TODO add your handling code here:
-        if (jTextField2.getText().equals("Enter name...")){
-            jTextField2.setText("");
+    }//GEN-LAST:event_resetActionPerformed
+
+    private void onlineListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onlineListMouseClicked
+        // TODO add your handling code here:
+        jLabel1.setText(onlineList.getSelectedValue());
+    }//GEN-LAST:event_onlineListMouseClicked
+    Action typeMessage = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            ownerChat();
         }
-    }//GEN-LAST:event_jTextField2FocusGained
-
-    private void jList1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jList1PropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jList1PropertyChange
-
-    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
-        // TODO add your handling code here:
-
-        jLabel1.setText(jList1.getSelectedValue());
-        
-        //new receiveMess().start();
-    }//GEN-LAST:event_jList1MouseClicked
-
-    private void messActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messActionPerformed
-        // TODO add your handling code here:
-        if (!user.getMess().equals("")) {
-            jTextArea1.append(user.getMess());
-            user.setMess("");
+    };
+    
+    Action newChat = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            //System.out.println("some action");
+            beginChat();
         }
-    }//GEN-LAST:event_messActionPerformed
-
-    private void messFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_messFocusLost
-        // TODO add your handling code here:
-        if (mess.getText().equals("")){
-            mess.setText("Type here");
-        }
-    }//GEN-LAST:event_messFocusLost
-
-    private void messFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_messFocusGained
-        // TODO add your handling code here:
-        if (mess.getText().equals("Type here"))
-        mess.setText("");
-    }//GEN-LAST:event_messFocusGained
-    //
-    
-//    private int checkExistance(String name, DefaultListModel friendlist){
-//        int size = friendlist.getSize();
-//        for (int i =0; i < size; i++){
-//            if (friendlist.getElementAt(i).equals(name)) 
-//                return i;
-//        }
-//        return -1;
-//    }
-    
-    //Add a new name to list, if selectedList = 0 then choose online friendlist, 1 then choose offline friend list
-//    public void addName(String name, int selectedList){
-//        if (selectedList == 0){
-//            if (checkExistance(name, listOnl) == -1){
-//                listOnl.addElement(name);
-//            }
-//        }  
-//        
-//        if (selectedList == 1){
-//            if (checkExistance(name, listOff) == -1){
-//                listOff.addElement(name);
-//            }
-//        } 
-//    } 
-//    public void removeName(String name, int selectedList){
-//        if (selectedList == 0){
-//            int pos = checkExistance(name, listOnl);
-//            if ( pos != -1){
-//                listOnl.remove(pos);
-//            }
-//        }  
-//        
-//        if (selectedList == 1){
-//            int pos = checkExistance(name, listOff);
-//            if ( pos != -1){
-//                listOff.remove(pos);
-//            }
-//        }
-//    } 
-    
-    
+    };
     /**
      * @param args the command line arguments
      */
@@ -419,24 +492,37 @@ public class chatGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.ButtonGroup buttonGroup3;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField mess;
+    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JButton logout;
+    private javax.swing.JList<String> offList;
+    private javax.swing.JList<String> onlineList;
+    private javax.swing.JButton reset;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
