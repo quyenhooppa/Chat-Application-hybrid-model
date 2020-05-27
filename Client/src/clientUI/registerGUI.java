@@ -228,9 +228,7 @@ public class registerGUI extends javax.swing.JFrame {
     private void doneButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButActionPerformed
         try {
             doneRegister();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } catch (ClassNotFoundException | InterruptedException ex) {
             Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_doneButActionPerformed
@@ -246,9 +244,7 @@ public class registerGUI extends javax.swing.JFrame {
         {
             try {
                 doneRegister();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
+            } catch (ClassNotFoundException | InterruptedException ex) {
                 Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

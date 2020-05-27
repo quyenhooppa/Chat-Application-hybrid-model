@@ -5,9 +5,7 @@
  */
 package clientUI;
 
-import client.User;
-import client.SendMess;
-import client.Friend;
+import client.*;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Image;
@@ -15,6 +13,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
@@ -24,6 +25,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -33,8 +35,9 @@ import javax.swing.text.StyledDocument;
  * @author Admin
  */
 public class chatGUI extends javax.swing.JFrame implements KeyListener {
+    
     private User user;
-    private SendMess sendMess;
+    private String friendName;
         
     /**
      * Creates new form chatGUI
@@ -50,16 +53,17 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     }
     
     public chatGUI(User user) {
+        this.user = user;
+        friendName = null;
         initComponents();
         initSetting();
-        this.user = user;
-        user.start();
     }        
     
     private void initSetting(){
         //Create list for online and offline friends
         offList.setModel(listOnl);
         onlineList.setModel(listOff);
+        
         jTextField1.addActionListener(typeMessage);
         jTextField2.addActionListener(newChat);
         doc = jTextPane1.getStyledDocument();
@@ -67,7 +71,12 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         JScrollPane   scroll = new JScrollPane();
         jTextPane1.add(scroll); 
         jLabel1.setText("Welcome!");
+        
+        // initial add online offline friends
         addName("quithu98", 1);
+        
+        user.setChatUI(this);
+        user.start();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -195,34 +204,33 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addComponent(jScrollPane4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addContainerGap())
-                    .addComponent(jScrollPane2)
+                        .addComponent(logout)
+                        .addGap(187, 187, 187)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 36, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(logout)
-                .addGap(187, 187, 187)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(reset)
-                .addContainerGap())
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2))
+                            .addComponent(jScrollPane4))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(reset)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton4))))))
+                .addGap(0, 28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -232,9 +240,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(logout)
                         .addGap(9, 9, 9))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(reset)
-                        .addComponent(jLabel1)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(reset))
+                        .addGap(5, 5, 5)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
@@ -264,9 +274,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 18, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,19 +287,44 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-    //
-     public void ownerChat(){
-         if (!jTextField1.getText().equals("")) {
-        sendMess.setMess(jTextField1.getText());
-        sendMess.setIsSend(true);
-//        ownerChatMessage(jTextField1.getText());
-        if (sendMess.isIsSend() == true) {
-            ownerChatMessage(sendMess.getMess());
-            //Send message to other client
-            jTextField1.setText("");
-            sendMess.setIsSend(false);
+    
+    
+    // Display the messages communicated with friend
+    public void displayMess(String friend) throws BadLocationException {
+        doc.remove(0, doc.getLength());
+        
+        // get message record with friend
+        MessRecord messRecord = user.getMessRecordList().get(friend);
+        
+        for (int i = 0; i < messRecord.getNumOfMess(); i++) {
+            String message = messRecord.getMessList().get(i);
+            if (message.charAt(0) == '1') {
+                ownerChatMessage(message.substring(1));
+            } else {
+                friendChatMessage(message.substring(1));
+            }
         }
-         }
+    } 
+    
+    
+    //Send message to other clients
+    public void ownerChat() throws BadLocationException{
+        if (!jTextField1.getText().equals("")) {
+            
+            // get friend's info
+            Friend friend = (user.getFriendList()).get(friendName);
+            
+            //create a thread to send message
+            SendMess sendMess = new SendMess(user, friend, false);
+            sendMess.setChatUI(this);
+            
+            //get message
+            sendMess.setMess(jTextField1.getText());
+            sendMess.start();
+            
+            jTextField1.setText("");
+
+        }
     }
      
     private void ownerChatMessage(String message){
@@ -302,7 +335,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             doc.insertString(doc.getLength(), "\n" + message, null);
             doc.setParagraphAttributes(length+1, 1, messageAlign, false);
         }
-        catch(Exception e) { System.out.println(e);}
+        catch(BadLocationException e) { System.out.println(e);}
     }
     
     
@@ -314,8 +347,10 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             doc.insertString(doc.getLength(),"\n" + message, null);
             doc.setParagraphAttributes(length+1, 1, messageAlign, false);
         }
-        catch(Exception e) { System.out.println(e);}
+        catch(BadLocationException e) { System.out.println(e);}
     }
+    
+    
     private int checkExistance(String name, DefaultListModel friendlist){
         int size = friendlist.getSize();
         for (int i =0; i < size; i++){
@@ -324,7 +359,9 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         }
         return -1;
     }
-    //Add a new name to list, if selectedList = 1 then choose online friendlist, 0 then choose offline friend list
+    
+    // ***** selectedList = 1 online friendlist, 0  offline friend list *****
+    // Add a new name to list
     public void addName(String name, int selectedList){
         if (selectedList == 0){
             if (checkExistance(name, listOnl) == -1){
@@ -338,6 +375,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             }
         } 
     } 
+    // Remove a name from list
     public void removeName(String name, int selectedList){
         if (selectedList == 0){
             int pos = checkExistance(name, listOnl);
@@ -364,6 +402,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         if (checkExistance(jTextField2.getText(),listOnl) != -1){
             jLabel1.setText(jTextField2.getText());
             //Begin connection here
+            
         }
         else {
             JFrame frame = null;
@@ -373,16 +412,12 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
  
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         beginChat();
-
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_onlineListValueChanged
         // TODO add your handling code here:
-        String friendName = onlineList.getSelectedValue();
+        friendName = onlineList.getSelectedValue();
         jLabel1.setText(friendName);
-        Friend friend = (user.getFriendList()).get(friendName);
-        sendMess = new SendMess(user, friend, false);
-        sendMess.start();
     }//GEN-LAST:event_onlineListValueChanged
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -404,9 +439,9 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
     private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
         // TODO add your handling code here:
-         if (jTextField2.getText().equals("Enter name...")){
+        if (jTextField2.getText().equals("Enter name...")){
             jTextField2.setText("");
-         }
+        } 
     }//GEN-LAST:event_jTextField2FocusGained
 
     private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
@@ -424,7 +459,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     }//GEN-LAST:event_logoutActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ownerChat();
+        try {
+            ownerChat();
+        } catch (BadLocationException ex) {
+            Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
@@ -440,7 +479,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            ownerChat();
+            try {
+                ownerChat();
+            } catch (BadLocationException ex) {
+                Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     };
     
@@ -485,6 +528,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new chatGUI().setVisible(true);
             }

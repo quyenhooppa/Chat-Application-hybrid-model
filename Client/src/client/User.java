@@ -5,6 +5,7 @@
  */
 package client;
 
+import clientUI.chatGUI;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +16,9 @@ import java.net.InetAddress;
 import java.util.*;
 import java.net.Socket;
 import java.net.ServerSocket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 /**
  *
  * @author quyenhooppa
@@ -25,6 +29,7 @@ public class User extends Thread {
     private String pass; // passwprd
     private int receivedPort; // port connection
     private String mess; 
+    private chatGUI chatUI;
     
     // list of user's friends
     HashMap<String, Friend> friendList; 
@@ -68,6 +73,10 @@ public class User extends Thread {
     {
         this.pass = pass;
     }
+    
+    public void setChatUI(chatGUI chatUI) {
+        this.chatUI = chatUI;
+    }
 
     
     //--------------- GETTER ---------------
@@ -100,7 +109,7 @@ public class User extends Thread {
     // register header is 1
     public boolean register() throws ClassNotFoundException, InterruptedException {
         
-        try (Socket socket = new Socket("192.168.1.179", 5000)){
+        try (Socket socket = new Socket("192.168.1.178", 5000)){
             
             InetAddress host = InetAddress.getLocalHost();
             
@@ -151,7 +160,7 @@ public class User extends Thread {
     // login header is 2
     public boolean login() {
         
-        try (Socket socket = new Socket("192.168.1.179", 5000)) {
+        try (Socket socket = new Socket("192.168.1.178", 5000)) {
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 
@@ -329,7 +338,7 @@ public class User extends Thread {
     {
         
         try(ServerSocket serverSocket = new ServerSocket(this.receivedPort)) {
-                while (true) {
+            while (true) {
                 Socket socket = serverSocket.accept();
 
                 try {
@@ -342,7 +351,7 @@ public class User extends Thread {
                     String receivedMess = input.readLine();
                     
                     this.setMess(receivedMess);
-                    System.out.println("Mess received: " + this.getMess());
+                    //System.out.println(this.getMess());
                     
                     int curPos = 0;
                     while (receivedMess.charAt(curPos) != '%') {
@@ -353,11 +362,17 @@ public class User extends Thread {
                     MessRecord record = messRecordList.get(friendName);
                     record.addNumOfMess(1);
                     record.addMess(receivedMess.substring(curPos + 1), 0);
+                    
+                    chatUI.displayMess(friendName);
+                    
+                    System.out.println(record.getMessList().get(record.getNumOfMess()-1));
 
                     output.println("Received");
 
                 } catch(IOException e) {
                     System.out.println("Oops: " + e.getMessage());
+                } catch (BadLocationException ex) {
+                    Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     try {
                         socket.close();
