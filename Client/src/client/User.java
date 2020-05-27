@@ -26,13 +26,14 @@ import javax.swing.text.BadLocationException;
 public class User extends Thread {
 
     private String name; // name of user
-    private String pass; // passwprd
+    private String pass; // password
     private int receivedPort; // port connection
     private String mess; 
     private chatGUI chatUI;
     
     // list of user's friends
     HashMap<String, Friend> friendList; 
+    
     // record messages communicate with friends
     HashMap<String, MessRecord> messRecordList; 
     
@@ -42,8 +43,6 @@ public class User extends Thread {
         this.pass = pass;
         this.friendList = new HashMap<>();
         this.messRecordList = new HashMap<>();
-        //friendList = new HashMap<>();
-        //messRecordList = new HashMap<>();
     }
 
     
@@ -209,11 +208,11 @@ public class User extends Thread {
  
     
     // get friend's information from the server when login successfully
-    public void setUpFriendInfo(String response) {
+    private void setUpFriendInfo(String response) {
         /**
-        *                  RESPONSE FORMAT
+        *                           RESPONSE FORMAT
         * " lister port of user % number of friends % 
-        *  friend's status friend's name - listen port of friend % ...." 
+        *  friend's status friend's name - IP address - listen port of friend % ...." 
         **/
             
             int curPos = 0;            
@@ -245,6 +244,7 @@ public class User extends Thread {
             // add friends to the list
             for (int i = 0; i < friendCount; i++) {
                 String friendName;
+                String ip;
                 int sentPort;
                 
                 // get current status of friend
@@ -259,6 +259,16 @@ public class User extends Thread {
                 // cusPor is at -
                 // get friend name
                 friendName = response.substring(pos + 1, curPos);
+                
+                pos = curPos; // pos is at -
+                curPos++; // next character
+                
+                while (response.charAt(curPos) != '-') {
+                    curPos++;
+                }
+                // cusPor is at -
+                // get ip
+                ip= response.substring(pos + 1, curPos);
                 
                 pos = curPos; // pos is at -
                 curPos++; // next character
@@ -278,22 +288,54 @@ public class User extends Thread {
                 }
                 
                 // Friend newFriend = new Friend(friendName, sentPort, status);
-                //Friend newFriend = new Friend(friendName, sentPort, 1); // testing
+                Friend newFriend = new Friend(friendName, ip, sentPort, status);
                 MessRecord newMessRecord = new MessRecord(friendName);
                 
-                //friendList.put(friendName, newFriend); // add friend
-                //messRecordList.put(friendName, newMessRecord); // add mess record
+               friendList.put(friendName, newFriend); // add friend
+               messRecordList.put(friendName, newMessRecord); // add mess record
                 
             }
     }
     
-
-    // add new friend header is 4
-    public int addFriend(String name)
-    {
-        int info = -1; // not found friend
+    
+    // find user header is 3
+    public boolean findUser(String name) {
         
-        try (Socket socket = new Socket("localhost", 5000)) {
+        try (Socket socket = new Socket("192.168.1.192", 5000)) {
+            BufferedReader echoes = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter stringToEcho = 
+                    new PrintWriter(socket.getOutputStream(), true);
+            
+            stringToEcho.println("3" + this.name);
+            
+            String response = echoes.readLine();
+            
+            try {
+                socket.close();
+                
+                if (response.equals("1")) {
+                    return true;
+                }
+            } catch(IOException e) {
+                System.out.println("Find close socket: " 
+                        + e.getMessage());
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Find Error: " 
+                    + e.getMessage());
+        }
+        
+        return false;
+    }
+
+    
+    // add new friend header is 4
+    public void addFriend(String name)
+    {
+        
+        try (Socket socket = new Socket("192.168.1.192", 5000)) {
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 
@@ -304,18 +346,29 @@ public class User extends Thread {
             String response = echoes.readLine();
             System.out.println(response);
             
-            int friendStatus = Integer.parseInt(response); 
             
-            // already friend
-            if (friendStatus > 1) {
-                info = 0;
+            String ip;
+            int port;
+            int status;
             
-            // add new friend
-            } else if (friendStatus > 0) {
-//                User newFriend = new User(name, friendStatus);
-//                friendList.put(name, newFriend);
-//                info = 1;
+            int curPos = 0;
+            // get current status of friend
+            status = Character.getNumericValue(response.charAt(curPos));
+                 
+            while (response.charAt(curPos) != '%') {
+                curPos++;
             }
+            // cusPor is at %
+            // get friend ip
+            ip = response.substring(1, curPos);
+                
+            // get friend listen port
+            port = Integer.parseInt(response.substring(curPos + 1));
+                
+                 
+            //Friend newFriend = new Friend(name, ip, port, status);        
+            friendList.put(name, new Friend(name, ip, port, status));
+            messRecordList.put(name, new MessRecord(name));
             
             try {
                 socket.close();
@@ -328,7 +381,6 @@ public class User extends Thread {
                     + e.getMessage());
         }
         
-        return info;
     }
     
     

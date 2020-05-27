@@ -65,13 +65,15 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         onlineList.setModel(listOff);
         
         jTextField1.addActionListener(typeMessage);
-        jTextField2.addActionListener(newChat);
+        findUser.addActionListener(newChat);
         doc = jTextPane1.getStyledDocument();
         messageAlign= new SimpleAttributeSet();
         JScrollPane   scroll = new JScrollPane();
         jTextPane1.add(scroll); 
+        
         jLabel1.setText("Welcome!");
         
+        //  TODO
         // initial add online offline friends
         addName("quithu98", 1);
         
@@ -95,9 +97,9 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         jButton3 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         offList = new javax.swing.JList<>();
-        jTextField2 = new javax.swing.JTextField();
+        findUser = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        findToChat = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         onlineList = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
@@ -144,28 +146,28 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         });
         jScrollPane2.setViewportView(offList);
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
-        jTextField2.setText("Enter name...");
-        jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
+        findUser.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
+        findUser.setText("Enter name...");
+        findUser.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextField2FocusGained(evt);
+                findUserFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField2FocusLost(evt);
+                findUserFocusLost(evt);
             }
         });
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        findUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                findUserActionPerformed(evt);
             }
         });
 
         jLabel2.setText("Online");
 
-        jButton4.setText("Chat");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        findToChat.setText("Chat");
+        findToChat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                findToChatActionPerformed(evt);
             }
         });
 
@@ -227,9 +229,9 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(findUser, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton4))))))
+                                    .addComponent(findToChat))))))
                 .addGap(0, 28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -265,8 +267,8 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
                         .addComponent(jButton3)
                         .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton4)))
+                        .addComponent(findUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(findToChat)))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
@@ -393,26 +395,38 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     } 
     
     
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void findUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findUserActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_findUserActionPerformed
     
-    private void beginChat(){
-        if (checkExistance(jTextField2.getText(),listOnl) != -1){
-            jLabel1.setText(jTextField2.getText());
+    private boolean beginChat(){
+        if (checkExistance(findUser.getText(),listOnl) != -1){
+            jLabel1.setText(findUser.getText());
             //Begin connection here
-            
+            return true;
         }
-        else {
+        //else {
             JFrame frame = null;
             JOptionPane.showMessageDialog(frame, "Invalid friend or your friend is offline");
-        }
+        //}
+        return false;
     }
  
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        beginChat();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void findToChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findToChatActionPerformed
+       
+        if (beginChat() == false) {
+            boolean found = user.findUser(findUser.getText());
+
+            if (found == false) {
+                JOptionPane.showMessageDialog(null, "User not found");
+            } else {
+                // TODO
+                // add friend 
+            }
+        }
+        
+    }//GEN-LAST:event_findToChatActionPerformed
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_onlineListValueChanged
         // TODO add your handling code here:
@@ -437,21 +451,24 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         }
     }//GEN-LAST:event_jTextField1FocusLost
 
-    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
+    private void findUserFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_findUserFocusGained
         // TODO add your handling code here:
-        if (jTextField2.getText().equals("Enter name...")){
-            jTextField2.setText("");
+        if (findUser.getText().equals("Enter name...")){
+            findUser.setText("");
         } 
-    }//GEN-LAST:event_jTextField2FocusGained
+    }//GEN-LAST:event_findUserFocusGained
 
-    private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
+    private void findUserFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_findUserFocusLost
         // TODO add your handling code here:
-        if (jTextField2.getText().equals("")){
-            jTextField2.setText("Enter name...");
+        if (findUser.getText().equals("")){
+            findUser.setText("Enter name...");
         }
-    }//GEN-LAST:event_jTextField2FocusLost
+    }//GEN-LAST:event_findUserFocusLost
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        // TODO
+        // close the received socket
+        
         dispose();
         //logout here
         loginGUI newUser = new loginGUI();
@@ -536,9 +553,10 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton findToChat;
+    private javax.swing.JTextField findUser;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -547,7 +565,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JButton logout;
     private javax.swing.JList<String> offList;
