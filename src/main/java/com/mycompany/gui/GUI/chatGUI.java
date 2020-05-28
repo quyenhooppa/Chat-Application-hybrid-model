@@ -38,23 +38,25 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private DefaultListModel listOff = new DefaultListModel();
     StyledDocument doc;
     SimpleAttributeSet messageAlign;
-    
+
     public chatGUI() {
         initComponents();
-        initSetting();    
-    }        
-    private void initSetting(){
+        initSetting();
+    }
+
+    private void initSetting() {
         //Create list for online and offline friends
         jList1.setModel(listOnl);
         jList2.setModel(listOff);
         jTextField1.addActionListener(typeMessage);
         jTextField2.addActionListener(newChat);
         doc = jTextPane1.getStyledDocument();
-        messageAlign= new SimpleAttributeSet();
-        JScrollPane   scroll = new JScrollPane();
-        jTextPane1.add(scroll);   
-        
+        messageAlign = new SimpleAttributeSet();
+        JScrollPane scroll = new JScrollPane();
+        jTextPane1.add(scroll);
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -260,86 +262,96 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //
-    public void ownerChat(){
+
+    public void ownerChat() {
         ownerChatMessage(jTextField1.getText());
         //Send message to other client
         jTextField1.setText("");
     }
-    private void ownerChatMessage(String message){
+
+    private void beginChat() {
+        if (checkExistance(jTextField2.getText(), listOnl) != -1) {
+            jLabel1.setText(jTextField2.getText());
+            //Begin connection here
+        } else if (checkExistance(jTextField2.getText(), listOff) != -1 ){
+            JFrame frame = null;
+            JOptionPane.showMessageDialog(frame, "Your friend is offline");
+        }
+        else {
+            requestGUI addfriend = new requestGUI(jTextField2.getText(), 1);
+            addfriend.setVisible(true);
+        }
+    }
+
+    private void ownerChatMessage(String message) {
         StyleConstants.setAlignment(messageAlign, StyleConstants.ALIGN_RIGHT);
-        try
-        {
+        try {
             int length = doc.getLength();
             doc.insertString(doc.getLength(), "\n" + message, null);
-            doc.setParagraphAttributes(length+1, 1, messageAlign, false);
+            doc.setParagraphAttributes(length + 1, 1, messageAlign, false);
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e) { System.out.println(e);}
     }
-    
-    private void friendChatMessage(String message){
+
+    private void friendChatMessage(String message) {
         StyleConstants.setAlignment(messageAlign, StyleConstants.ALIGN_LEFT);
-        try
-        {
+        try {
             int length = doc.getLength();
-            doc.insertString(doc.getLength(),"\n" + message, null);
-            doc.setParagraphAttributes(length+1, 1, messageAlign, false);
+            doc.insertString(doc.getLength(), "\n" + message, null);
+            doc.setParagraphAttributes(length + 1, 1, messageAlign, false);
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e) { System.out.println(e);}
     }
-    private int checkExistance(String name, DefaultListModel friendlist){
+
+    private int checkExistance(String name, DefaultListModel friendlist) {
         int size = friendlist.getSize();
-        for (int i =0; i < size; i++){
-            if (friendlist.getElementAt(i).equals(name)) 
+        for (int i = 0; i < size; i++) {
+            if (friendlist.getElementAt(i).equals(name)) {
                 return i;
+            }
         }
         return -1;
     }
+
     //Add a new name to list, if selectedList = 0 then choose online friendlist, 1 then choose offline friend list
-    public void addName(String name, int selectedList){
-        if (selectedList == 0){
-            if (checkExistance(name, listOnl) == -1){
+    public void addName(String name, int selectedList) {
+        if (selectedList == 0) {
+            if (checkExistance(name, listOnl) == -1) {
                 listOnl.addElement(name);
             }
-        }  
-        
-        if (selectedList == 1){
-            if (checkExistance(name, listOff) == -1){
+        }
+
+        if (selectedList == 1) {
+            if (checkExistance(name, listOff) == -1) {
                 listOff.addElement(name);
             }
-        } 
-    } 
-    public void removeName(String name, int selectedList){
-        if (selectedList == 0){
+        }
+    }
+
+    public void removeName(String name, int selectedList) {
+        if (selectedList == 0) {
             int pos = checkExistance(name, listOnl);
-            if ( pos != -1){
+            if (pos != -1) {
                 listOnl.remove(pos);
             }
-        }  
-        
-        if (selectedList == 1){
+        }
+
+        if (selectedList == 1) {
             int pos = checkExistance(name, listOff);
-            if ( pos != -1){
+            if (pos != -1) {
                 listOff.remove(pos);
             }
         }
-    } 
-    
-    
+    }
+
+
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
-    
-    private void beginChat(){
-                if (checkExistance(jTextField2.getText(),listOnl) != -1){
-            jLabel1.setText(jTextField2.getText());
-            //Begin connection here
-        }
-        else {
-            JFrame frame = null;
-            JOptionPane.showMessageDialog(frame, "Invalid friend or your friend is offline");
-        }
-    }
- 
+
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         beginChat();
 
@@ -347,7 +359,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
     private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jList2ValueChanged
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -362,21 +374,21 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
     private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
         // TODO add your handling code here:
-        if (jTextField1.getText().equals("")){
+        if (jTextField1.getText().equals("")) {
             jTextField1.setText("Type here");
         }
     }//GEN-LAST:event_jTextField1FocusLost
 
     private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
         // TODO add your handling code here:
-         if (jTextField2.getText().equals("Enter name...")){
+        if (jTextField2.getText().equals("Enter name...")) {
             jTextField2.setText("");
-         }
+        }
     }//GEN-LAST:event_jTextField2FocusGained
 
     private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
         // TODO add your handling code here:
-        if (jTextField2.getText().equals("")){
+        if (jTextField2.getText().equals("")) {
             jTextField2.setText("Enter name...");
         }
     }//GEN-LAST:event_jTextField2FocusLost
@@ -395,24 +407,21 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private void jList2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jList2FocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_jList2FocusGained
-    Action typeMessage = new AbstractAction()
-    {
+    Action typeMessage = new AbstractAction() {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             ownerChat();
         }
     };
-    
-    Action newChat = new AbstractAction()
-    {
+
+    Action newChat = new AbstractAction() {
         @Override
-        public void actionPerformed(ActionEvent e)
-        {
+        public void actionPerformed(ActionEvent e) {
             //System.out.println("some action");
             beginChat();
         }
     };
+
     /**
      * @param args the command line arguments
      */
@@ -420,7 +429,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

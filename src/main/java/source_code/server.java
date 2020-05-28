@@ -56,8 +56,10 @@ public class server {
                 getMessage();
             } catch (IOException ex) {
                 Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
+                 System.out.println("Waiting for the client request 1 ");
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(server.class.getName()).log(Level.SEVERE, null, ex);
+                 System.out.println("Waiting for the client request 3");
             }
             }
         }

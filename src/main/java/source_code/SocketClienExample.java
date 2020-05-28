@@ -28,7 +28,7 @@ public class SocketClienExample {
             oos = new ObjectOutputStream(socket.getOutputStream());
             System.out.println("Sending request to Socket Server");
             if(i==4)oos.writeObject("exit");
-            else oos.writeObject("0quithu165-ngoquithu");
+            else oos.writeObject("1quithu165-ngoquithu");
             //read the server response message
             ois = new ObjectInputStream(socket.getInputStream());
             String message = (String) ois.readObject();
