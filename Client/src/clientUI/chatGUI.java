@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -59,7 +60,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         initSetting();
     }        
     
-    private void initSetting(){
+    private void initSetting() {
         //Create list for online and offline friends
         offList.setModel(listOnl);
         onlineList.setModel(listOff);
@@ -75,10 +76,27 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         
         //  TODO
         // initial add online offline friends
-        addName("quithu98", 1);
+        // addName("quithu98", 1);
+        friendClassify();
         
         user.setChatUI(this);
         user.start();
+    }
+    
+    public void friendClassify() {
+        if (!user.getFriendList().isEmpty()) {
+            int numOfFriends = user.getFriendList().size();
+
+            for (int i = 0; i < numOfFriends; i++) {
+                Friend friend = (new ArrayList<>(user.getFriendList().values())).get(i);
+               
+                if (friend.getStatus() == 1) {
+                    addName(friend.getName(), 1);
+                } else {
+                    addName(friend.getName(), 0);
+                }
+            }
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -292,8 +310,10 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     
     
     // Display the messages communicated with friend
-    public void displayMess(String friend) throws BadLocationException {
-        doc.remove(0, doc.getLength());
+    public void displayMess(String friend) { //throws BadLocationException {
+        try {
+            doc.remove(0, doc.getLength());
+        } catch(BadLocationException e) { System.out.println(e);}
         
         // get message record with friend
         MessRecord messRecord = user.getMessRecordList().get(friend);
@@ -310,7 +330,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     
     
     //Send message to other clients
-    public void ownerChat() throws BadLocationException{
+    public void ownerChat() {
         if (!jTextField1.getText().equals("")) {
             
             // get friend's info
@@ -338,7 +358,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             doc.setParagraphAttributes(length+1, 1, messageAlign, false);
         }
         catch(BadLocationException e) { System.out.println(e);}
-    }
+    } 
     
     
     private void friendChatMessage(String message){
@@ -400,32 +420,30 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         
     }//GEN-LAST:event_findUserActionPerformed
     
-    private boolean beginChat(){
+    private void beginChat(){
         if (checkExistance(findUser.getText(),listOnl) != -1){
             jLabel1.setText(findUser.getText());
             //Begin connection here
-            return true;
-        }
-        //else {
+        } else if (checkExistance(findUser.getText(), listOff) != -1 ){
             JFrame frame = null;
-            JOptionPane.showMessageDialog(frame, "Invalid friend or your friend is offline");
-        //}
-        return false;
-    }
- 
-    private void findToChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findToChatActionPerformed
-       
-        if (beginChat() == false) {
+            JOptionPane.showMessageDialog(frame, "Your friend is offline");
+        }
+        else {
             boolean found = user.findUser(findUser.getText());
-
+            
             if (found == false) {
                 JOptionPane.showMessageDialog(null, "User not found");
             } else {
                 // TODO
                 // add friend 
+                requestGUI addfriend = new requestGUI(user, findUser.getText(), 1);
+                addfriend.setVisible(true);
             }
         }
-        
+    }
+ 
+    private void findToChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findToChatActionPerformed
+        beginChat();
     }//GEN-LAST:event_findToChatActionPerformed
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_onlineListValueChanged
@@ -476,11 +494,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     }//GEN-LAST:event_logoutActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            ownerChat();
-        } catch (BadLocationException ex) {
-            Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ownerChat();    
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
@@ -496,11 +510,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            try {
-                ownerChat();
-            } catch (BadLocationException ex) {
-                Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            ownerChat();
         }
     };
     

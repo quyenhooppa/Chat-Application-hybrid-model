@@ -6,6 +6,7 @@
 package client;
 
 import clientUI.chatGUI;
+import clientUI.requestGUI;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,9 +31,10 @@ public class User extends Thread {
     private int receivedPort; // port connection
     private String mess; 
     private chatGUI chatUI;
+    private requestGUI requestUI;
     
     // list of user's friends
-    HashMap<String, Friend> friendList; 
+    LinkedHashMap<String, Friend> friendList; 
     
     // record messages communicate with friends
     HashMap<String, MessRecord> messRecordList; 
@@ -41,13 +43,13 @@ public class User extends Thread {
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
-        this.friendList = new HashMap<>();
+        this.friendList = new LinkedHashMap<>();
         this.messRecordList = new HashMap<>();
     }
 
     
     public User(String name, String pass, int receivedPort, 
-            HashMap<String, Friend> friendList, 
+            LinkedHashMap<String, Friend> friendList, 
             HashMap<String, MessRecord> messRecordList) {
         this.name = name;
         this.pass = pass;
@@ -77,6 +79,12 @@ public class User extends Thread {
         this.chatUI = chatUI;
     }
 
+    public void setRequestUI(requestGUI requestUI) {
+        this.requestUI = requestUI;
+    }
+    
+    
+
     
     //--------------- GETTER ---------------
     public String getUserName() 
@@ -94,13 +102,25 @@ public class User extends Thread {
         return this.pass;
     }
 
-    public HashMap<String, Friend> getFriendList() {
+    public LinkedHashMap<String, Friend> getFriendList() {
         return friendList;
     }
 
     public HashMap<String, MessRecord> getMessRecordList() {
         return messRecordList;
     }
+
+    public chatGUI getChatUI() {
+        return chatUI;
+    }
+
+    public requestGUI getRequestUI() {
+        return requestUI;
+    }
+    
+    
+    
+    
     
     
     
@@ -108,7 +128,7 @@ public class User extends Thread {
     // register header is 1
     public boolean register() throws ClassNotFoundException, InterruptedException {
         
-        try (Socket socket = new Socket("192.168.1.178", 5000)){
+        try (Socket socket = new Socket("10.130.39.160", 5000)){
             
             InetAddress host = InetAddress.getLocalHost();
             
@@ -159,13 +179,17 @@ public class User extends Thread {
     // login header is 2
     public boolean login() {
         
-        try (Socket socket = new Socket("192.168.1.178", 5000)) {
+        try (Socket socket = new Socket("10.130.39.160", 5000)) {
+            
+            InetAddress host = InetAddress.getLocalHost();
+                    
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 
                     new PrintWriter(socket.getOutputStream(), true);
 
-            stringToEcho.println("2" + this.name + "-" + this.pass); // send request
+            stringToEcho.println("2" + this.name + "-" + this.pass + 
+                    "-" + host.getHostAddress()); // send request
             
             String response = echoes.readLine();
             
@@ -179,14 +203,14 @@ public class User extends Thread {
             //setUpFriendInfo(response);
             
             //********* TESTING ********
-            this.receivedPort = Integer.parseInt(response);
-            
-            String friendName = "quithu98";
-            Friend newFriend = new Friend(friendName, "192.168.1.58", 3001, 1); // testing
-            MessRecord newMessRecord = new MessRecord(friendName);
-                
-            friendList.put(friendName, newFriend); // add friend
-            messRecordList.put(friendName, newMessRecord); // add mess record
+//            this.receivedPort = Integer.parseInt(response);
+//            
+//            String friendName = "quithu98";
+//            Friend newFriend = new Friend(friendName, "192.168.1.58", 3001, 1); // testing
+//            MessRecord newMessRecord = new MessRecord(friendName);
+//                
+//            friendList.put(friendName, newFriend); // add friend
+//            messRecordList.put(friendName, newMessRecord); // add mess record
 
             
             try {
@@ -205,9 +229,97 @@ public class User extends Thread {
         
         return false;
     }
- 
     
-    // get friend's information from the server when login successfully
+    
+    // find user header is 3
+    public boolean findUser(String name) {
+        
+        try (Socket socket = new Socket("10.130.39.160", 5000)) {
+            BufferedReader echoes = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter stringToEcho = 
+                    new PrintWriter(socket.getOutputStream(), true);
+            
+            stringToEcho.println("3" + this.name + '-' + name);
+            
+            String response = echoes.readLine();
+            
+            try {
+                socket.close();
+                
+                if (response.equals("1")) {
+                    return true;
+                }
+            } catch(IOException e) {
+                System.out.println("Find close socket: " 
+                        + e.getMessage());
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Find Error: " 
+                    + e.getMessage());
+        }
+        
+        return false;
+    }
+
+    
+    // add new friend header is 4
+    public void addFriend(String name)
+    {
+        
+        try (Socket socket = new Socket("10.130.39.160", 5000)) {
+            BufferedReader echoes = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter stringToEcho = 
+                    new PrintWriter(socket.getOutputStream(), true);
+
+            stringToEcho.println("4" + this.name + "-" + name);
+            
+            String response = echoes.readLine();
+            System.out.println(response);
+            
+            
+            String ip;
+            int port;
+            int status;
+            
+            int curPos = 0;
+            // get current status of friend
+            status = Character.getNumericValue(response.charAt(curPos));
+                 
+            while (response.charAt(curPos) != '%') {
+                curPos++;
+            }
+            // cusPor is at %
+            // get friend ip
+            ip = response.substring(1, curPos);
+                
+            // get friend listen port
+            port = Integer.parseInt(response.substring(curPos + 1));
+                
+                 
+            //Friend newFriend = new Friend(name, ip, port, status);        
+            friendList.put(name, new Friend(name, ip, port, status));
+            messRecordList.put(name, new MessRecord(name));
+            
+            try {
+                socket.close();
+            } catch(IOException e) {
+                System.out.println("Add close socket: " 
+                        + e.getMessage());
+            } 
+        } catch (IOException e) {
+            System.out.println("Add Error " 
+                    + e.getMessage());
+        }
+        
+    }
+    
+    
+    
+    
+        // get friend's information from the server when login successfully
     private void setUpFriendInfo(String response) {
         /**
         *                           RESPONSE FORMAT
@@ -298,90 +410,6 @@ public class User extends Thread {
     }
     
     
-    // find user header is 3
-    public boolean findUser(String name) {
-        
-        try (Socket socket = new Socket("192.168.1.192", 5000)) {
-            BufferedReader echoes = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            PrintWriter stringToEcho = 
-                    new PrintWriter(socket.getOutputStream(), true);
-            
-            stringToEcho.println("3" + this.name);
-            
-            String response = echoes.readLine();
-            
-            try {
-                socket.close();
-                
-                if (response.equals("1")) {
-                    return true;
-                }
-            } catch(IOException e) {
-                System.out.println("Find close socket: " 
-                        + e.getMessage());
-            }
-            
-        } catch (IOException e) {
-            System.out.println("Find Error: " 
-                    + e.getMessage());
-        }
-        
-        return false;
-    }
-
-    
-    // add new friend header is 4
-    public void addFriend(String name)
-    {
-        
-        try (Socket socket = new Socket("192.168.1.192", 5000)) {
-            BufferedReader echoes = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            PrintWriter stringToEcho = 
-                    new PrintWriter(socket.getOutputStream(), true);
-
-            stringToEcho.println("4" + this.name + "-" + name);
-            
-            String response = echoes.readLine();
-            System.out.println(response);
-            
-            
-            String ip;
-            int port;
-            int status;
-            
-            int curPos = 0;
-            // get current status of friend
-            status = Character.getNumericValue(response.charAt(curPos));
-                 
-            while (response.charAt(curPos) != '%') {
-                curPos++;
-            }
-            // cusPor is at %
-            // get friend ip
-            ip = response.substring(1, curPos);
-                
-            // get friend listen port
-            port = Integer.parseInt(response.substring(curPos + 1));
-                
-                 
-            //Friend newFriend = new Friend(name, ip, port, status);        
-            friendList.put(name, new Friend(name, ip, port, status));
-            messRecordList.put(name, new MessRecord(name));
-            
-            try {
-                socket.close();
-            } catch(IOException e) {
-                System.out.println("Add close socket: " 
-                        + e.getMessage());
-            } 
-        } catch (IOException e) {
-            System.out.println("Add Error " 
-                    + e.getMessage());
-        }
-        
-    }
     
     
     
@@ -401,30 +429,43 @@ public class User extends Thread {
                             new PrintWriter(socket.getOutputStream(), true);
 
                     String receivedMess = input.readLine();
-                    
                     this.setMess(receivedMess);
-                    //System.out.println(this.getMess());
+                    
+                    System.out.println(this.getMess());
                     
                     int curPos = 0;
-                    while (receivedMess.charAt(curPos) != '%') {
-                        curPos++;
-                    }
-                    String friendName = receivedMess.substring(0, curPos);
                     
-                    MessRecord record = messRecordList.get(friendName);
-                    record.addNumOfMess(1);
-                    record.addMess(receivedMess.substring(curPos + 1), 0);
-                    
-                    chatUI.displayMess(friendName);
-                    
-                    System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+                    if (receivedMess.charAt(curPos) == '1') {
+                        
+                        curPos++;    
+                        while (receivedMess.charAt(curPos) != '%') {
+                            curPos++;
+                        }
+                        String friendName = receivedMess.substring(0, curPos);
 
-                    output.println("Received");
+                        MessRecord record = messRecordList.get(friendName);
+                        record.addNumOfMess(1);
+                        record.addMess(receivedMess.substring(curPos + 1), 0);
+
+                        chatUI.displayMess(friendName);
+
+                        System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+
+                        output.println("Received");
+                    
+                    } else {
+                        new requestGUI(this, receivedMess, 0).setVisible(true);
+                        
+                        if (requestUI.isAccpetFriend() == true) {
+                            output.println("Accepted");
+                        } else {
+                            output.println("Rejected");
+                        }
+                    }
+
 
                 } catch(IOException e) {
                     System.out.println("Oops: " + e.getMessage());
-                } catch (BadLocationException ex) {
-                    Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                 } finally {
                     try {
                         socket.close();

@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 
 /**
@@ -24,13 +25,14 @@ public class SendMess extends Thread {
     private User userSend;
     private Friend friend;
     private String mess;
-    private boolean isSend;
+    private boolean isAdd; // the mess is the add friend request
     private chatGUI chatUI;
 
-    public SendMess(User userSend, Friend friend, boolean isSend) {// throws IOException {
+    public SendMess(User userSend, Friend friend, boolean isAdd) {// throws IOException {
         this.userSend = userSend;
         this.friend = friend;
-        this.isSend = isSend;
+        
+        this.isAdd = false;
         this.mess = "";
         //this.socket = new Socket(friend.getIP(), friend.getSentPort()); 
     }
@@ -41,8 +43,8 @@ public class SendMess extends Thread {
         this.mess = mess;
     }
 
-    public void setIsSend(boolean isSend) {
-        this.isSend = isSend;
+    public void setIsAdd(boolean isAdd) {
+        this.isAdd = isAdd;
     }
 
     public void setChatUI(chatGUI chatUI) {
@@ -55,23 +57,25 @@ public class SendMess extends Thread {
         return mess;
     }
 
-    public boolean isIsSend() {
-        return isSend;
+    public boolean isIsAdd() {
+        return isAdd;
     }
 
     
     // Thread to send messages to each friend
     @Override
     public void run() {
-                try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
-                            BufferedReader input = new BufferedReader(
-                                    new InputStreamReader(socket.getInputStream()));
+            try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
+                BufferedReader input = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
                    
-                    PrintWriter output = 
-                            new PrintWriter(socket.getOutputStream(), true);
+                PrintWriter output = 
+                        new PrintWriter(socket.getOutputStream(), true);
                     
-                    
-                    String messSent = userSend.getUserName() + "%" + mess; 
+                String messSent;
+                
+                if (isAdd == false) {
+                    messSent = "1" + userSend.getUserName() + "%" + mess;
                     output.println(messSent);
                     
                     MessRecord record = userSend.getMessRecordList().get(friend.getName());
@@ -82,25 +86,42 @@ public class SendMess extends Thread {
                     
                     System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                     
-                    mess = "";  
+                    mess = "";
+                    } else {
+                        messSent = userSend.getUserName();
+                        
+                        if (input.readLine().equals("Accpeted")) {
+                            userSend.addFriend(friend.getName());
+                            userSend.getChatUI().friendClassify();
+                            
+                            JOptionPane.showMessageDialog(null, 
+                                    "You and " + friend.getName() + "are now friends!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Request rejected");
+                        }
+                        
+                        mess = "";
+                    }
+                   
+                    //System.out.println("Received!"); 
                     
-                    try {
-                        socket.close();      
-                    } catch(IOException e) {
-                        System.out.println("Send close socket: " 
-                                + e.getMessage());
-                    } 
+                try {
+                    socket.close();      
+                } catch(IOException e) {
+                    System.out.println("Send close socket: " 
+                            + e.getMessage());
+                } 
+            }   
                 
-                
-                } catch (IOException e) {
+                catch (IOException e) {
 
                     System.out.println("Send " + friend.getName() + " " 
                             + e.getMessage());
-                    isSend = false;
+                }
                     
-                } catch (BadLocationException ex) {
-            Logger.getLogger(SendMess.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//                } catch (BadLocationException ex) {
+//            Logger.getLogger(SendMess.class.getName()).log(Level.SEVERE, null, ex);
+                
     }
        
 }
