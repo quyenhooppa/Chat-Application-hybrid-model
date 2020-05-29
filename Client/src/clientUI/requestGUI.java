@@ -150,7 +150,7 @@ public class requestGUI extends javax.swing.JFrame {
             ip = userInfo.substring(0, curPos);
             port = Integer.parseInt(userInfo.substring(curPos + 1));
             
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), true);
+            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 3);
             request.setMess(user.getUserName());
             request.start();
         }

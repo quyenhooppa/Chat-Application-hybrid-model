@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -25,15 +22,14 @@ public class SendMess extends Thread {
     private User userSend;
     private Friend friend; 
     private String mess;
-    private boolean isAdd; // the mess is the add friend request
+    private int typeSending; // 1:message - 2:file - 3:friend request
     private chatGUI chatUI;
 
     
-    public SendMess(User userSend, Friend friend, boolean isAdd) {
+    public SendMess(User userSend, Friend friend, int typeSending) {
         this.userSend = userSend;
         this.friend = friend;
-        
-        this.isAdd = false;
+        this.typeSending = typeSending;
         this.mess = "";
     }
     
@@ -41,10 +37,6 @@ public class SendMess extends Thread {
     //--------------- SETTER ---------------
     public void setMess(String mess) {
         this.mess = mess;
-    }
-
-    public void setIsAdd(boolean isAdd) {
-        this.isAdd = isAdd;
     }
 
     public void setChatUI(chatGUI chatUI) {
@@ -57,12 +49,12 @@ public class SendMess extends Thread {
         return mess;
     }
 
-    public boolean isIsAdd() {
-        return isAdd;
+    public int getTypeSending() {
+        return typeSending;
     }
 
     
-    // Thread to send messages to each friend
+    // Thread sending to friend
     @Override
     public void run() {
             try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
@@ -74,22 +66,26 @@ public class SendMess extends Thread {
                     
                 String messSent;
                 
-                if (isAdd == false) {
-                    messSent = "1" + userSend.getUserName() + "%" + mess;
-                    output.println(messSent);
+                messSent = typeSending + userSend.getUserName() + "%" + mess;
+                output.println(messSent);
+                System.out.println(messSent);
                     
-                    MessRecord record = userSend.getMessRecordList().get(friend.getName());
-                    record.addNumOfMess(1); 
-                    record.addMess(mess, 1);
-                    
-                    chatUI.displayMess(friend.getName());
-                    
-                    System.out.println(record.getMessList().get(record.getNumOfMess()-1));
-                    
-                    mess = "";
-                    } else {
-                        messSent = userSend.getUserName();
+                switch (typeSending) {
+                    case 1: // send a message
                         
+                        MessRecord record = userSend.getMessRecordList().get(friend.getName());
+                        record.addNumOfMess(1);
+                        record.addMess(mess, 1);
+                        chatUI.displayMess(friend.getName());
+                        System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+                        mess = "";
+                        break;
+                
+                    case 2: // send a file
+                        break;
+                        
+                    case 3: // send friend request
+                         
                         if (input.readLine().equals("Accpeted")) {
                             userSend.addFriend(friend.getName());
                             userSend.getChatUI().friendClassify();
@@ -99,12 +95,13 @@ public class SendMess extends Thread {
                         } else {
                             JOptionPane.showMessageDialog(null, "Request rejected");
                         }
-                        
                         mess = "";
-                    }
+                        break;
+                        
+                    default:
+                        break;
+                }
                    
-                    //System.out.println("Received!"); 
-                    
                 try {
                     socket.close();      
                 } catch(IOException e) {

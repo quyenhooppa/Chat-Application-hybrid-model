@@ -28,8 +28,10 @@ public class User extends Thread {
 
     private String name; // name of user
     private String pass; // password
+    private String serverIp;
     private int receivedPort; // port connection
     private String mess; 
+    private Socket socket;
     private chatGUI chatUI;
     private requestGUI requestUI;
     
@@ -43,19 +45,9 @@ public class User extends Thread {
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
+        this.serverIp = "192.168.1.178";
         this.friendList = new LinkedHashMap<>();
         this.messRecordList = new HashMap<>();
-    }
-
-    
-    public User(String name, String pass, int receivedPort, 
-            LinkedHashMap<String, Friend> friendList, 
-            HashMap<String, MessRecord> messRecordList) {
-        this.name = name;
-        this.pass = pass;
-        this.receivedPort = receivedPort;
-        this.friendList = friendList;
-        this.messRecordList = messRecordList;
     }
     
     
@@ -128,7 +120,7 @@ public class User extends Thread {
     // register header is 1
     public boolean register() throws ClassNotFoundException, InterruptedException {
         
-        try (Socket socket = new Socket("192.168.1.178", 5000)){
+        try (Socket socket = new Socket(serverIp, 5000)){
             
             InetAddress host = InetAddress.getLocalHost();
             
@@ -179,7 +171,7 @@ public class User extends Thread {
     // login header is 2
     public boolean login() {
         
-        try (Socket socket = new Socket("192.168.1.178", 5000)) {
+        try (Socket socket = new Socket(serverIp, 5000)) {
             
             InetAddress host = InetAddress.getLocalHost();
                     
@@ -234,7 +226,7 @@ public class User extends Thread {
     // find user header is 3
     public boolean findUser(String name) {
         
-        try (Socket socket = new Socket("192.168.1.178", 5000)) {
+        try (Socket socket = new Socket(serverIp, 5000)) {
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 
@@ -243,14 +235,15 @@ public class User extends Thread {
             stringToEcho.println("3" + this.name + '-' + name);
             
             String response = echoes.readLine();
+            System.out.println(response);
             
             try {
-                socket.close();
-                
                 if (!response.equals("0")) {
                     chatUI.setUserInfo(response);
                     return true;
                 }
+                
+                socket.close();
             } catch(IOException e) {
                 System.out.println("Find close socket: " 
                         + e.getMessage());
@@ -269,7 +262,7 @@ public class User extends Thread {
     public void addFriend(String name)
     {
         
-        try (Socket socket = new Socket("192.168.1.178", 5000)) {
+        try (Socket socket = new Socket(serverIp, 5000)) {
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 

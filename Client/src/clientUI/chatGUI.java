@@ -343,7 +343,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             Friend friend = (user.getFriendList()).get(friendName);
             
             //create a thread to send message
-            SendMess sendMess = new SendMess(user, friend, false);
+            SendMess sendMess = new SendMess(user, friend, 1);
             sendMess.setChatUI(this);
             
             //get message
