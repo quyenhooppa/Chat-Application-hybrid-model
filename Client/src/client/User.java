@@ -195,7 +195,7 @@ public class User extends Thread {
             //setUpFriendInfo(response);
             
             //********* TESTING ********
-//            this.receivedPort = Integer.parseInt(response);
+            this.receivedPort = Integer.parseInt(response);
 //            
 //            String friendName = "quithu98";
 //            Friend newFriend = new Friend(friendName, "192.168.1.58", 3001, 1); // testing
@@ -429,32 +429,42 @@ public class User extends Thread {
                     
                     int curPos = 0;
                     
-                    if (receivedMess.charAt(curPos) == '1') {
-                        
-                        curPos++;    
-                        while (receivedMess.charAt(curPos) != '%') {
-                            curPos++;
-                        }
-                        String friendName = receivedMess.substring(0, curPos);
-
-                        MessRecord record = messRecordList.get(friendName);
-                        record.addNumOfMess(1);
-                        record.addMess(receivedMess.substring(curPos + 1), 0);
-
-                        chatUI.displayMess(friendName);
-
-                        System.out.println(record.getMessList().get(record.getNumOfMess()-1));
-
-                        output.println("Received");
-                    
-                    } else {
-                        new requestGUI(this, receivedMess, "", 0).setVisible(true);
-                        
-                        if (requestUI.isAccpetFriend() == true) {
-                            output.println("Accepted");
-                        } else {
-                            output.println("Rejected");
-                        }
+                    switch (receivedMess.charAt(0)) {
+                        case '1': // receive message
+                            curPos = 1;
+                            while (receivedMess.charAt(curPos) != '%') {
+                                curPos++;
+                            }   
+                            String friendName = receivedMess.substring(1, curPos);
+                            
+                            MessRecord record = messRecordList.get(friendName);
+                            record.addNumOfMess(1);
+                            record.addMess(receivedMess.substring(curPos + 1), 0);
+                            chatUI.displayMess(friendName);
+                            
+                            System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+                            output.println("Received");
+                            break;
+                            
+                        case '2': // receive a file
+                            break;
+                            
+                        case '3': // receive friend request 
+                            curPos = 1;
+                            while (receivedMess.charAt(curPos) != '%') {
+                                curPos++;
+                            }   
+                            new requestGUI(this, receivedMess.substring(1, curPos), output, 0).setVisible(true);
+                            
+//                            if (requestUI.isAccpetFriend() == true) {
+//                                output.println("Accepted");
+//                            } else {
+//                                output.println("Rejected");
+//                            }   
+                            break;
+                            
+                        default:
+                            break;
                     }
 
 

@@ -8,6 +8,7 @@ package clientUI;
 import client.Friend;
 import client.User;
 import client.SendMess;
+import java.io.PrintWriter;
 import javax.swing.JTextField;
 
 /**
@@ -20,7 +21,7 @@ public class requestGUI extends javax.swing.JFrame {
     private int pos;
     private String addName;
     private String userInfo;
-    private boolean accpetFriend;
+    private PrintWriter output;
 
     /**
      * Creates new form requestGUI
@@ -35,6 +36,7 @@ public class requestGUI extends javax.swing.JFrame {
     public requestGUI (User user, String name, String userInfo, int pos) {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
+        
         this.user = user;
         this.userInfo = userInfo;
         this.addName = name;
@@ -51,9 +53,27 @@ public class requestGUI extends javax.swing.JFrame {
             user.setRequestUI(this);
         }
     }
-
-    public boolean isAccpetFriend() {
-        return accpetFriend;
+    
+    
+    public requestGUI (User user, String name, PrintWriter output, int pos) {
+        initComponents();
+        jLabel1.setHorizontalAlignment(JTextField.CENTER);
+        
+        this.user = user;
+        this.output = output;
+        this.addName = name;
+        this.pos = pos;
+        
+        if (this.pos == 1) { //when a user want to addfriend with other one
+            jLabel1.setText("Send friend request to " + this.addName + "?");
+            //send request to other one
+            
+        }
+        else { // when receive a friend request
+            jLabel1.setText(this.addName + " want to be your friend?");
+            //handle action here
+            user.setRequestUI(this);
+        }
     }
     
     
@@ -85,6 +105,11 @@ public class requestGUI extends javax.swing.JFrame {
         });
 
         cancel.setText("Cancel");
+        cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -136,7 +161,8 @@ public class requestGUI extends javax.swing.JFrame {
             
             user.addFriend(addName);
             user.getChatUI().addName(addName, 1);
-            accpetFriend = true;
+            output.println("Accepted");
+            //accpetFriend = true;
             
         } else {
             
@@ -154,8 +180,17 @@ public class requestGUI extends javax.swing.JFrame {
             request.setMess(user.getUserName());
             request.start();
         }
-            this.dispose();
+        
+        this.dispose();
     }//GEN-LAST:event_acceptActionPerformed
+
+    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+        // TODO add your handling code here:
+        if (this.pos == 0) {
+            output.println("Rejected");
+        }
+        this.dispose();
+    }//GEN-LAST:event_cancelActionPerformed
 
     /**
      * @param args the command line arguments
