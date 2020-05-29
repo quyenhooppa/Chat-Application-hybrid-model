@@ -5,6 +5,7 @@
  */
 package clientUI;
 
+import client.Friend;
 import client.User;
 import client.SendMess;
 import javax.swing.JTextField;
@@ -18,6 +19,7 @@ public class requestGUI extends javax.swing.JFrame {
     private User user;
     private int pos;
     private String addName;
+    private String userInfo;
     private boolean accpetFriend;
 
     /**
@@ -49,10 +51,14 @@ public class requestGUI extends javax.swing.JFrame {
         }
     }
 
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
+    }
+
     public boolean isAccpetFriend() {
         return accpetFriend;
     }
-
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -137,7 +143,17 @@ public class requestGUI extends javax.swing.JFrame {
             
         } else {
             
-            SendMess request = new SendMess(user, user.getFriendList().get(addName), true);
+            String ip;
+            int port;
+            
+            int curPos = 0;
+            while (userInfo.charAt(curPos) != '-') {
+                curPos++;
+            }
+            ip = userInfo.substring(0, curPos);
+            port = Integer.parseInt(userInfo.substring(curPos + 1));
+            
+            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), true);
             request.setMess(user.getUserName());
             request.start();
         }

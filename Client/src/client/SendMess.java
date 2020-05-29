@@ -23,18 +23,18 @@ import javax.swing.text.BadLocationException;
 public class SendMess extends Thread {
     
     private User userSend;
-    private Friend friend;
+    private Friend friend; 
     private String mess;
     private boolean isAdd; // the mess is the add friend request
     private chatGUI chatUI;
 
-    public SendMess(User userSend, Friend friend, boolean isAdd) {// throws IOException {
+    
+    public SendMess(User userSend, Friend friend, boolean isAdd) {
         this.userSend = userSend;
         this.friend = friend;
         
         this.isAdd = false;
         this.mess = "";
-        //this.socket = new Socket(friend.getIP(), friend.getSentPort()); 
     }
     
     

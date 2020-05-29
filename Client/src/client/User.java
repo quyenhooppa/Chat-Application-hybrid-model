@@ -128,7 +128,7 @@ public class User extends Thread {
     // register header is 1
     public boolean register() throws ClassNotFoundException, InterruptedException {
         
-        try (Socket socket = new Socket("10.130.39.160", 5000)){
+        try (Socket socket = new Socket("192.168.1.178", 5000)){
             
             InetAddress host = InetAddress.getLocalHost();
             
@@ -179,7 +179,7 @@ public class User extends Thread {
     // login header is 2
     public boolean login() {
         
-        try (Socket socket = new Socket("10.130.39.160", 5000)) {
+        try (Socket socket = new Socket("192.168.1.178", 5000)) {
             
             InetAddress host = InetAddress.getLocalHost();
                     
@@ -234,7 +234,7 @@ public class User extends Thread {
     // find user header is 3
     public boolean findUser(String name) {
         
-        try (Socket socket = new Socket("10.130.39.160", 5000)) {
+        try (Socket socket = new Socket("192.168.1.178", 5000)) {
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 
@@ -247,7 +247,8 @@ public class User extends Thread {
             try {
                 socket.close();
                 
-                if (response.equals("1")) {
+                if (!response.equals("0")) {
+                    requestUI.setUserInfo(response);
                     return true;
                 }
             } catch(IOException e) {
@@ -268,7 +269,7 @@ public class User extends Thread {
     public void addFriend(String name)
     {
         
-        try (Socket socket = new Socket("10.130.39.160", 5000)) {
+        try (Socket socket = new Socket("192.168.1.178", 5000)) {
             BufferedReader echoes = new BufferedReader(
                     new InputStreamReader(socket.getInputStream()));
             PrintWriter stringToEcho = 

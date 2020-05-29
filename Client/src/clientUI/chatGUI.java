@@ -432,7 +432,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             boolean found = user.findUser(findUser.getText());
             
             if (found == false) {
-                JOptionPane.showMessageDialog(null, "User not found");
+                JOptionPane.showMessageDialog(null, "User not found or is offline");
             } else {
                 // TODO
                 // add friend 
