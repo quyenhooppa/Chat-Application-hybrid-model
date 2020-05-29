@@ -248,7 +248,7 @@ public class User extends Thread {
                 socket.close();
                 
                 if (!response.equals("0")) {
-                    requestUI.setUserInfo(response);
+                    chatUI.setUserInfo(response);
                     return true;
                 }
             } catch(IOException e) {
@@ -455,7 +455,7 @@ public class User extends Thread {
                         output.println("Received");
                     
                     } else {
-                        new requestGUI(this, receivedMess, 0).setVisible(true);
+                        new requestGUI(this, receivedMess, "", 0).setVisible(true);
                         
                         if (requestUI.isAccpetFriend() == true) {
                             output.println("Accepted");

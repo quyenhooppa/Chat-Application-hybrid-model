@@ -32,10 +32,11 @@ public class requestGUI extends javax.swing.JFrame {
     }
     
     
-    public requestGUI (User user, String name, int pos) {
+    public requestGUI (User user, String name, String userInfo, int pos) {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
         this.user = user;
+        this.userInfo = userInfo;
         this.addName = name;
         this.pos = pos;
         
@@ -49,10 +50,6 @@ public class requestGUI extends javax.swing.JFrame {
             //handle action here
             user.setRequestUI(this);
         }
-    }
-
-    public void setUserInfo(String userInfo) {
-        this.userInfo = userInfo;
     }
 
     public boolean isAccpetFriend() {
@@ -143,7 +140,7 @@ public class requestGUI extends javax.swing.JFrame {
             
         } else {
             
-            String ip;
+            String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
             int port;
             
             int curPos = 0;

@@ -39,6 +39,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     
     private User user;
     private String friendName;
+    private String userInfo;
         
     /**
      * Creates new form chatGUI
@@ -82,6 +83,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         user.setChatUI(this);
         user.start();
     }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
+    }
+   
     
     public void friendClassify() {
         if (!user.getFriendList().isEmpty()) {
@@ -436,7 +442,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             } else {
                 // TODO
                 // add friend 
-                requestGUI addfriend = new requestGUI(user, findUser.getText(), 1);
+                requestGUI addfriend = new requestGUI(user, findUser.getText(), userInfo, 1);
                 addfriend.setVisible(true);
             }
         }
