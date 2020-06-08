@@ -8,18 +8,19 @@ package client;
 import clientUI.chatGUI;
 import clientUI.requestGUI;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.util.*;
 import java.net.Socket;
 import java.net.ServerSocket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.text.BadLocationException;
+import javax.swing.JOptionPane;
 /**
  *
  * @author quyenhooppa
@@ -28,7 +29,8 @@ public class User extends Thread {
 
     private String name; // name of user
     private String pass; // password
-    private String serverIp;
+    private String serverIp; // server ip
+    private String clientIp; // user ip
     private int receivedPort; // port connection
     private String mess; 
     private Socket socket;
@@ -45,7 +47,7 @@ public class User extends Thread {
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
-        this.serverIp = "192.168.1.178";
+        this.serverIp = "172.20.10.8";
         this.friendList = new LinkedHashMap<>();
         this.messRecordList = new HashMap<>();
     }
@@ -93,6 +95,15 @@ public class User extends Thread {
     {
         return this.pass;
     }
+
+    public String getClientIp() {
+        return clientIp;
+    }
+
+    public int getReceivedPort() {
+        return receivedPort;
+    }
+    
 
     public LinkedHashMap<String, Friend> getFriendList() {
         return friendList;
@@ -185,7 +196,7 @@ public class User extends Thread {
             
             String response = echoes.readLine();
             
-            System.out.println(response);
+            System.out.println("Login: " + response);
             
             // login failed
             if (response.charAt(0) == '0') {
@@ -196,6 +207,7 @@ public class User extends Thread {
             
             //********* TESTING ********
             this.receivedPort = Integer.parseInt(response);
+            this.clientIp = host.getHostAddress();
 //            
 //            String friendName = "quithu98";
 //            Friend newFriend = new Friend(friendName, "192.168.1.58", 3001, 1); // testing
@@ -296,6 +308,7 @@ public class User extends Thread {
             //Friend newFriend = new Friend(name, ip, port, status);        
             friendList.put(name, new Friend(name, ip, port, status));
             messRecordList.put(name, new MessRecord(name));
+            chatUI.addName(name, status);
             
             try {
                 socket.close();
@@ -425,9 +438,11 @@ public class User extends Thread {
                     String receivedMess = input.readLine();
                     this.setMess(receivedMess);
                     
-                    System.out.println(this.getMess());
+                    System.out.println("Received: " + this.getMess());
                     
-                    int curPos = 0;
+                    int curPos = 1;
+                    String sender;
+                    String senderInfo;
                     
                     switch (receivedMess.charAt(0)) {
                         case '1': // receive message
@@ -440,30 +455,96 @@ public class User extends Thread {
                             MessRecord record = messRecordList.get(friendName);
                             record.addNumOfMess(1);
                             record.addMess(receivedMess.substring(curPos + 1), 0);
-                            chatUI.displayMess(friendName);
+                            if (chatUI.getFriendName().equals(friendName)) {
+                                chatUI.displayMess(friendName);
+                            }
                             
                             System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                             output.println("Received");
+                            
                             break;
                             
                         case '2': // receive a file
-                            break;
                             
-                        case '3': // receive friend request 
                             curPos = 1;
                             while (receivedMess.charAt(curPos) != '%') {
                                 curPos++;
                             }   
-                            new requestGUI(this, receivedMess.substring(1, curPos), output, 0).setVisible(true);
+                            friendName = receivedMess.substring(1, curPos);
+                            int pos = curPos; // pos at %
+                            curPos++; // char after %
                             
-//                            if (requestUI.isAccpetFriend() == true) {
-//                                output.println("Accepted");
-//                            } else {
-//                                output.println("Rejected");
-//                            }   
+                            while (receivedMess.charAt(curPos) != '%') {
+                                curPos++;
+                            }
+                            String fileName = receivedMess.substring(pos + 1, curPos);
+                            long fileLength = Long.parseLong(receivedMess.substring(curPos + 1));
+                            
+                            String home = System.getProperty("user.home");
+                            File file = new File(home + "/Downloads/" + fileName);
+                            file.createNewFile();
+                            // create an empty file with given size
+                            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                            raf.setLength(fileLength);
+                            raf.close();
+                            
+                            try (
+                                OutputStream out = new FileOutputStream(file);
+                                InputStream in = socket.getInputStream();
+                            ) {
+                                
+                                byte[] buffer = new byte[16 * 1024];
+                                
+                                int count;
+                                while ((count = in.read(buffer)) > 0) {
+                                    out.write(buffer, 0, count);
+                                }
+
+                                out.close();
+                                in.close();
+                                
+                                JOptionPane.showMessageDialog(null, 
+                                    fileName + " received done!");
+
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                            
                             break;
                             
-                        default:
+                            
+                        case '3': // receive friend request 
+                            
+                            curPos = 1;
+                            while (receivedMess.charAt(curPos) != '%') {
+                                curPos++;
+                            } 
+                            curPos++;
+                            
+                            sender = receivedMess.substring(1, curPos - 1);
+                            senderInfo = receivedMess.substring(curPos);
+                            new requestGUI(this, sender, senderInfo, 0).setVisible(true);
+                              
+                            break;
+                            
+                        case '4':
+                            
+                            curPos = 1;
+                            while (receivedMess.charAt(curPos) != '%') {
+                                curPos++;
+                            } 
+                            curPos++;
+                            
+                            sender = receivedMess.substring(1, curPos - 1);
+                            addFriend(sender);
+                            
+                            JOptionPane.showMessageDialog(null, "You and " + 
+                                sender + " are friends now");
+                            
+                            break;
+                            
+                        default: 
+                            
                             break;
                     }
 

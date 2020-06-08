@@ -8,7 +8,6 @@ package clientUI;
 import client.Friend;
 import client.User;
 import client.SendMess;
-import java.io.PrintWriter;
 import javax.swing.JTextField;
 
 /**
@@ -20,8 +19,7 @@ public class requestGUI extends javax.swing.JFrame {
     private User user;
     private int pos;
     private String addName;
-    private String userInfo;
-    private PrintWriter output;
+    private String receiverInfo; // ip + "-" + port
 
     /**
      * Creates new form requestGUI
@@ -33,48 +31,24 @@ public class requestGUI extends javax.swing.JFrame {
     }
     
     
-    public requestGUI (User user, String name, String userInfo, int pos) {
+    public requestGUI (User user, String name, String receiverInfo, int pos) {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
         
         this.user = user;
-        this.userInfo = userInfo;
+        this.receiverInfo = receiverInfo;
         this.addName = name;
         this.pos = pos;
         
-        if (this.pos == 1) { //when a user want to addfriend with other one
+        if (this.pos == 1) { //when a user want to addfriend with another
             jLabel1.setText("Send friend request to " + this.addName + "?");
-            //send request to other one
-            
         }
         else { // when receive a friend request
             jLabel1.setText(this.addName + " want to be your friend?");
-            //handle action here
             user.setRequestUI(this);
         }
     }
-    
-    
-    public requestGUI (User user, String name, PrintWriter output, int pos) {
-        initComponents();
-        jLabel1.setHorizontalAlignment(JTextField.CENTER);
-        
-        this.user = user;
-        this.output = output;
-        this.addName = name;
-        this.pos = pos;
-        
-        if (this.pos == 1) { //when a user want to addfriend with other one
-            jLabel1.setText("Send friend request to " + this.addName + "?");
-            //send request to other one
-            
-        }
-        else { // when receive a friend request
-            jLabel1.setText(this.addName + " want to be your friend?");
-            //handle action here
-            user.setRequestUI(this);
-        }
-    }
+
     
     
     /**
@@ -157,27 +131,31 @@ public class requestGUI extends javax.swing.JFrame {
 
     private void acceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptActionPerformed
         // TODO add your handling code here:
-        if (this.pos == 0) {
+        String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+        int port;
+            
+        int curPos = 0;
+        while (receiverInfo.charAt(curPos) != '-') {
+            curPos++;
+        }
+        ip = receiverInfo.substring(0, curPos);
+        port = Integer.parseInt(receiverInfo.substring(curPos + 1));
+            
+        if (this.pos == 0) { // sending accept replies
             
             user.addFriend(addName);
             user.getChatUI().addName(addName, 1);
-            output.println("Accepted");
-            //accpetFriend = true;
             
-        } else {
+            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 4);
             
-            String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-            int port;
+            request.setMess("");
+            request.start();
             
-            int curPos = 0;
-            while (userInfo.charAt(curPos) != '-') {
-                curPos++;
-            }
-            ip = userInfo.substring(0, curPos);
-            port = Integer.parseInt(userInfo.substring(curPos + 1));
-            
+        } else { // sending friend request
+
             SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 3);
-            request.setMess(user.getUserName());
+            String messSent = user.getClientIp() + "-" + user.getReceivedPort();
+            request.setMess(messSent);
             request.start();
         }
         
@@ -187,7 +165,7 @@ public class requestGUI extends javax.swing.JFrame {
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
         // TODO add your handling code here:
         if (this.pos == 0) {
-            output.println("Rejected");
+            //output.println("Rejected");
         }
         this.dispose();
     }//GEN-LAST:event_cancelActionPerformed

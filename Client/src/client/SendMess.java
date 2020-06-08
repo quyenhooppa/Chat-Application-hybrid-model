@@ -6,12 +6,18 @@
 package client;
 
 import clientUI.chatGUI;
+import clientUI.fileGUI;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 
 /**
  *
@@ -22,8 +28,10 @@ public class SendMess extends Thread {
     private User userSend;
     private Friend friend; 
     private String mess;
-    private int typeSending; // 1:message - 2:file - 3:friend request
+    private File file;
+    private int typeSending; // 1:message - 2:file - 3:friend request - 4:request reply
     private chatGUI chatUI;
+    private fileGUI fileUI;
 
     
     public SendMess(User userSend, Friend friend, int typeSending) {
@@ -42,6 +50,16 @@ public class SendMess extends Thread {
     public void setChatUI(chatGUI chatUI) {
         this.chatUI = chatUI;
     }
+
+    public void setFileUI(fileGUI fileUI) {
+        this.fileUI = fileUI;
+    }
+    
+    public void setFile(File file) {
+        this.file = file;
+    }
+    
+    
 
     
     //--------------- GETTER ---------------
@@ -68,7 +86,7 @@ public class SendMess extends Thread {
                 
                 messSent = typeSending + userSend.getUserName() + "%" + mess;
                 output.println(messSent);
-                System.out.println(messSent);
+                System.out.println("Sent: " + messSent);
                     
                 switch (typeSending) {
                     case 1: // send a message
@@ -76,26 +94,55 @@ public class SendMess extends Thread {
                         MessRecord record = userSend.getMessRecordList().get(friend.getName());
                         record.addNumOfMess(1);
                         record.addMess(mess, 1);
-                        chatUI.displayMess(friend.getName());
+                        if (chatUI.getFriendName().equals(friend.getName())) {
+                                chatUI.displayMess(friend.getName());
+                        }
                         System.out.println(record.getMessList().get(record.getNumOfMess()-1));
-                        mess = "";
+                        
                         break;
                 
                     case 2: // send a file
+                        
+                        try (
+                            InputStream in = new FileInputStream(file);
+                            OutputStream out = socket.getOutputStream();
+                        ) {
+
+                            byte[] buffer = new byte[16 * 1024];
+                            
+                            int count;
+                            //int current = 0;
+                            //JProgressBar progress = fileUI.getProgressBar();
+                            while ((count = in.read(buffer)) > 0) {
+                                out.write(buffer, 0, count);
+
+                                String s = file.length() + "";
+//                                current += buffer.length / Integer.valueOf(s);
+//                                progress.setValue(30);
+                            }
+                            //progress.setVisible(false);
+                            
+                            out.close();
+                            in.close();
+
+                            
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        
                         break;
                         
                     case 3: // send friend request
                          
-                        if (input.readLine().equals("Accpeted")) {
-                            userSend.addFriend(friend.getName());
-                            userSend.getChatUI().friendClassify();
-                            
-                            JOptionPane.showMessageDialog(null, 
-                                    "You and " + friend.getName() + "are now friends!");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Request rejected");
-                        }
-                        mess = "";
+                        JOptionPane.showMessageDialog(null, "Request sent");
+                        
+                        break;
+                        
+                    case 4: // send request reply
+                        
+                        JOptionPane.showMessageDialog(null, "You and " + 
+                                friend.getName() + " are friends now");
+                        
                         break;
                         
                     default:
@@ -115,9 +162,6 @@ public class SendMess extends Thread {
                     System.out.println("Send " + friend.getName() + " " 
                             + e.getMessage());
                 }
-                    
-//                } catch (BadLocationException ex) {
-//            Logger.getLogger(SendMess.class.getName()).log(Level.SEVERE, null, ex);
                 
     }
        

@@ -20,6 +20,9 @@ public class Client {
         // TODO code application logic here
         loginGUI loginUI = new loginGUI();
         loginUI.setVisible(true);
+        
+        loginUI = new loginGUI();
+        loginUI.setVisible(true);
     }
     
 }
