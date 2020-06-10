@@ -9,7 +9,10 @@ import client.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
@@ -130,6 +133,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
+        logout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/backicon.png"))); // NOI18N
         logout.setText("Logout");
         logout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,12 +158,16 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             }
         });
 
+        mess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/sendicon.png"))); // NOI18N
+        mess.setText("Send");
         mess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 messActionPerformed(evt);
             }
         });
 
+        file.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/attachicon.png"))); // NOI18N
+        file.setText("Attach");
         file.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fileActionPerformed(evt);
@@ -181,11 +189,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 findUserFocusLost(evt);
-            }
-        });
-        findUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findUserActionPerformed(evt);
             }
         });
 
@@ -237,14 +240,14 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
                         .addGap(187, 187, 187)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(mess)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(file))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 604, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(reset)
@@ -294,7 +297,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
                         .addComponent(findUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(findToChat))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(file, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 14, Short.MAX_VALUE)
+                        .addComponent(file, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(mess, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(34, Short.MAX_VALUE))
         );
@@ -425,12 +428,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         }
     } 
     
-    
-    private void findUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findUserActionPerformed
-        // TODO add your handling code here:
         
-    }//GEN-LAST:event_findUserActionPerformed
-    
     private void beginChat(){
         if (checkExistance(findUser.getText(),listOnl) != -1){
             jLabel1.setText(findUser.getText());
@@ -498,8 +496,14 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         // TODO
         // close the received socket
+            
+        try {
+            user.getServerSocket().close();
+        } catch (IOException ex) {
+            Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        dispose();
+        this.dispose();
         //logout here
         loginGUI newUser = new loginGUI();
         newUser.setVisible(true);

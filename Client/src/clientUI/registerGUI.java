@@ -45,7 +45,7 @@ public class registerGUI extends javax.swing.JFrame {
         doneBut = new javax.swing.JButton();
         cancelBut = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CHAT APP SIGNUP");
 
         jLabel1.setText("Name:");
