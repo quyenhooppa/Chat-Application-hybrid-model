@@ -49,12 +49,6 @@ public class loginGUI extends javax.swing.JFrame {
 
         jLabel2.setText("Password:");
 
-        password.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passwordActionPerformed(evt);
-            }
-        });
-
         registerBut.setText("Register");
         registerBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,10 +177,6 @@ public class loginGUI extends javax.swing.JFrame {
     private void loginButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButActionPerformed
         checkAccount();
     }//GEN-LAST:event_loginButActionPerformed
-
-    private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
-        
-    }//GEN-LAST:event_passwordActionPerformed
      
     Action login = new AbstractAction()
     {

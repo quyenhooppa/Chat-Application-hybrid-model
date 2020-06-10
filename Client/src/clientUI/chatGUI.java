@@ -70,7 +70,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         
         //  TODO
         // initial add online offline friends
-        // addName("quithu98", 1);
         friendClassify();
         
         user.setChatUI(this);
@@ -85,7 +84,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         return friendName;
     }
    
-    
     
     public void friendClassify() {
         if (!user.getFriendList().isEmpty()) {
@@ -150,11 +148,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField1FocusLost(evt);
-            }
-        });
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
             }
         });
 
@@ -462,10 +455,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         displayMess(friendName);
     }//GEN-LAST:event_onlineListValueChanged
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        //Send mesage to message field
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
     private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
         // TODO add your handling code here:
         if (jTextField1.getText().equals("Type here"))
@@ -494,19 +483,20 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     }//GEN-LAST:event_findUserFocusLost
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
-        // TODO
-        // close the received socket
-            
+
+        // close the receiver socket
         try {
             user.getServerSocket().close();
         } catch (IOException ex) {
             Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        // notify to server
+        user.logOut();
         
-        this.dispose();
-        //logout here
         loginGUI newUser = new loginGUI();
         newUser.setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_logoutActionPerformed
 
     private void messActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messActionPerformed

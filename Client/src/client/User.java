@@ -20,8 +20,6 @@ import java.net.InetAddress;
 import java.util.*;
 import java.net.Socket;
 import java.net.ServerSocket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 /**
  *
@@ -49,7 +47,7 @@ public class User extends Thread {
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
-        this.serverIp = "192.168.43.134";
+        this.serverIp = "192.168.1.178";
         this.friendList = new LinkedHashMap<>();
         this.messRecordList = new HashMap<>();
     }
@@ -129,11 +127,7 @@ public class User extends Thread {
     
     
     
-    
-    
-    
-    
-    
+
     // register header is 1
     public boolean register() throws ClassNotFoundException, InterruptedException {
         
@@ -303,7 +297,7 @@ public class User extends Thread {
             // get friend listen port
             port = Integer.parseInt(response.substring(curPos + 1));
             
-            //Fri)end newFriend = new Friend(name, ip, port, status);        
+            //Friend newFriend = new Friend(name, ip, port, status);        
             friendList.put(name, new Friend(name, ip, port, status));
             messRecordList.put(name, new MessRecord(name));
             chatUI.addName(name, status);
@@ -321,6 +315,36 @@ public class User extends Thread {
         
     }
     
+    
+    public void logOut () {
+        try (Socket socket = new Socket(serverIp, 5000)) {
+            
+            InetAddress host = InetAddress.getLocalHost();
+                    
+            BufferedReader echoes = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter stringToEcho = 
+                    new PrintWriter(socket.getOutputStream(), true);
+
+            stringToEcho.println("5" + this.name);
+            
+            String response = echoes.readLine();
+            
+            System.out.println("Logout: " + response);
+
+            
+            try {
+                socket.close();
+                
+            } catch(IOException e) {
+                System.out.println("Login close socket: " 
+                        + e.getMessage());
+            } 
+        } catch (IOException e) {
+            System.out.println("Login Error " 
+                    + e.getMessage());
+        }
+    }
     
     
     
