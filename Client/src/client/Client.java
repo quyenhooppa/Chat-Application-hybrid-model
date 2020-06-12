@@ -23,6 +23,9 @@ public class Client {
         
         loginUI = new loginGUI();
         loginUI.setVisible(true);
+        
+        loginUI = new loginGUI();
+        loginUI.setVisible(true);
     }
     
 }

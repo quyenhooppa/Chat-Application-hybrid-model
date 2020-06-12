@@ -17,8 +17,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -56,8 +58,8 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     
     private void initSetting() {
         //Create list for online and offline friends
-        offList.setModel(listOnl);
-        onlineList.setModel(listOff);
+        offlinefList.setModel(listOff);
+        onlineList.setModel(listOnl);
         
         jTextField1.addActionListener(typeMessage);
         findUser.addActionListener(newChat);
@@ -74,16 +76,36 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         
         user.setChatUI(this);
         user.start();
+        user.getRequest().setTypeOfRequest(6);
     }
 
-    public void setUserInfo(String receiverInfo) {
+    public void setReceiverInfo(String receiverInfo) {
         this.receiverInfo = receiverInfo;
     }
 
     public String getFriendName() {
         return friendName;
     }
-   
+
+    public JTextField getFindUser() {
+        return findUser;
+    }
+
+    public JList<String> getOnlineList() {
+        return onlineList;
+    }
+    
+    
+   public void newMess(String name) {
+       int size = listOnl.getSize();
+        for (int i =0; i < size; i++) {
+            System.out.println(listOnl.getElementAt(i));
+            if (listOnl.getElementAt(i).equals(name)) {
+                System.out.println("OK");
+                listOnl.setElementAt("o\t" + name, i);
+            }
+        }
+   }
     
     public void friendClassify() {
         if (!user.getFriendList().isEmpty()) {
@@ -118,7 +140,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         mess = new javax.swing.JButton();
         file = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        offList = new javax.swing.JList<>();
+        offlinefList = new javax.swing.JList<>();
         findUser = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         findToChat = new javax.swing.JButton();
@@ -167,12 +189,12 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             }
         });
 
-        offList.setModel(new javax.swing.AbstractListModel<String>() {
+        offlinefList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(offList);
+        jScrollPane2.setViewportView(offlinefList);
 
         findUser.setFont(new java.awt.Font("Tahoma", 2, 10)); // NOI18N
         findUser.setText("Enter name...");
@@ -393,30 +415,30 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     // Add a new name to list
     public void addName(String name, int selectedList){
         if (selectedList == 0){
-            if (checkExistance(name, listOnl) == -1){
-                listOnl.addElement(name);
+            if (checkExistance(name, listOff) == -1){
+                listOff.addElement(name);
             }
         }  
         
         if (selectedList == 1){
-            if (checkExistance(name, listOff) == -1){
-                listOff.addElement(name);
+            if (checkExistance(name, listOnl) == -1){
+                listOnl.addElement(name);
             }
         } 
     } 
     // Remove a name from list
     public void removeName(String name, int selectedList){
         if (selectedList == 0){
-            int pos = checkExistance(name, listOnl);
+            int pos = checkExistance(name, listOff);
             if ( pos != -1){
-                listOnl.remove(pos);
+                listOff.remove(pos);
             }
         }  
         
         if (selectedList == 1){
-            int pos = checkExistance(name, listOff);
+            int pos = checkExistance(name, listOnl);
             if ( pos != -1){
-                listOff.remove(pos);
+                listOnl.remove(pos);
             }
         }
     } 
@@ -424,23 +446,16 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         
     private void beginChat(){
         if (checkExistance(findUser.getText(),listOnl) != -1){
-            jLabel1.setText(findUser.getText());
-            //Begin connection here
-        } else if (checkExistance(findUser.getText(), listOff) != -1 ){
+            jLabel1.setText(findUser.getText()); // friend is online
+        } else if (checkExistance(findUser.getText(), listOff) != -1 ) {
+            //friend is offline
             JFrame frame = null;
             JOptionPane.showMessageDialog(frame, "Your friend is offline");
-        }
-        else {
-            boolean found = user.findUser(findUser.getText());
+        } else { // not your friend
             
-            if (found == false) {
-                JOptionPane.showMessageDialog(null, "User not found or is offline");
-            } else {
-                // TODO
-                // add friend 
-                requestGUI addfriend = new requestGUI(user, findUser.getText(), receiverInfo, 1);
-                addfriend.setVisible(true);
-            }
+            user.userNameAdding(findUser.getText());
+            user.requestToServer(3);
+
         }
     }
  
@@ -450,8 +465,12 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
     private void onlineListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_onlineListValueChanged
         // TODO add your handling code here:
+        if (onlineList.getSelectedValue().contains("o\t")) {
+            listOnl.setElementAt(onlineList.getSelectedValue().substring(2), 
+                    onlineList.getSelectedIndex());
+        }
+        jLabel1.setText(user.getUserName() + " : " + onlineList.getSelectedValue());
         friendName = onlineList.getSelectedValue();
-        jLabel1.setText(friendName);
         displayMess(friendName);
     }//GEN-LAST:event_onlineListValueChanged
 
@@ -464,7 +483,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
         // TODO add your handling code here:
         if (jTextField1.getText().equals("")){
-            jTextField1.setText("Type here");
+            //jTextField1.setText("Type here");
         }
     }//GEN-LAST:event_jTextField1FocusLost
 
@@ -478,12 +497,14 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private void findUserFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_findUserFocusLost
         // TODO add your handling code here:
         if (!findUser.getText().equals("Enter name ...")){
-            findUser.setText("Enter name...");
+//            findUser.setText("Enter name...");
+              findUser.setText("");
         }
     }//GEN-LAST:event_findUserFocusLost
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
-
+        
+        user.requestToServer(5);
         // close the receiver socket
         try {
             user.getServerSocket().close();
@@ -491,7 +512,6 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
             Logger.getLogger(chatGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         // notify to server
-        user.logOut();
         
         loginGUI newUser = new loginGUI();
         newUser.setVisible(true);
@@ -507,16 +527,28 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
     private void resetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetActionPerformed
         // TODO add your handling code here:
+        jLabel1.setText("Welcome " + user.getUserName());
+        try {
+            doc.remove(0, doc.getLength());
+        } catch(BadLocationException e) { 
+            System.out.println(e);
+        }
     }//GEN-LAST:event_resetActionPerformed
 
     private void onlineListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onlineListMouseClicked
         // TODO add your handling code here:
-        jLabel1.setText(onlineList.getSelectedValue());
+        if (onlineList.getSelectedValue().contains("o\t")) {
+            listOnl.setElementAt(onlineList.getSelectedValue().substring(2), 
+                    onlineList.getSelectedIndex());
+        }
+        jLabel1.setText(user.getUserName() + " : " + onlineList.getSelectedValue());
+        friendName = onlineList.getSelectedValue();
+        displayMess(friendName);
     }//GEN-LAST:event_onlineListMouseClicked
 
     private void fileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileActionPerformed
         // TODO add your handling code here:
-        if (!jLabel1.getText().contains("Welcome")) {
+        if (!jLabel1.getText().contains(user.getUserName())) {
             fileGUI fileUI = new fileGUI(user, user.getFriendList().get(friendName), this);
             fileUI.setVisible(true);    
         }
@@ -596,7 +628,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JButton logout;
     private javax.swing.JButton mess;
-    private javax.swing.JList<String> offList;
+    private javax.swing.JList<String> offlinefList;
     private javax.swing.JList<String> onlineList;
     private javax.swing.JButton reset;
     // End of variables declaration//GEN-END:variables

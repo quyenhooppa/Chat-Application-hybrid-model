@@ -143,7 +143,8 @@ public class requestGUI extends javax.swing.JFrame {
             
         if (this.pos == 0) { // sending accept replies
             
-            user.addFriend(addName);
+            user.requestToServer(4);
+            user.userNameAdding(addName);
             user.getChatUI().addName(addName, 1);
             
             SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 4);

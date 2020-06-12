@@ -25,6 +25,20 @@ public class registerGUI extends javax.swing.JFrame {
         rePassword.addActionListener(register);
     }
 
+    public JPasswordField getPassword() {
+        return password;
+    }
+
+    public JPasswordField getRePassword() {
+        return rePassword;
+    }
+
+    public JTextField getUserName() {
+        return userName;
+    }
+
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -194,24 +208,10 @@ public class registerGUI extends javax.swing.JFrame {
                 } else {
                     
                     User newUser = new User(name, pass);
-                    boolean check = newUser.register();
-
-                    if (check == true) {
-                        JOptionPane.showMessageDialog(null,
-                            "Register successfully.");
-
-                        this.dispose();
-
-                    } else {
-                        userName.setText("");
-                        password.setText("");
-                        rePassword.setText("");
-
-                        JOptionPane.showMessageDialog(null,
-                            "Register failed. "
-                                    + "Username may has existed or "
-                                    + "Fail to connect to server.");
-                    }
+                    newUser.requestToServer(1);
+                    newUser.getRequest().setRegisterUI(this);
+                    newUser.getRequest().start();
+                    
                 }
                 
             } else {

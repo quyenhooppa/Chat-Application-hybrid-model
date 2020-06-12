@@ -86,7 +86,7 @@ public class SendMess extends Thread {
                 
                 messSent = typeSending + userSend.getUserName() + "%" + mess;
                 output.println(messSent);
-                System.out.println("Sent: " + messSent);
+                System.out.println(userSend.getUserName() + " sent: " + messSent);
                     
                 switch (typeSending) {
                     case 1: // send a message

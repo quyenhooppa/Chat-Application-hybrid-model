@@ -24,6 +24,15 @@ public class loginGUI extends javax.swing.JFrame {
         password.addActionListener(login);
     }
 
+    public JPasswordField getPassword() {
+        return password;
+    }
+
+    public JTextField getUserName() {
+        return userName;
+    }
+    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,21 +160,9 @@ public class loginGUI extends javax.swing.JFrame {
             } else {
                 
                 User newUser = new User(name, pass);
-                boolean isLogin = newUser.login();
-
-                // user exits
-                if (isLogin == true) {
-                    //new MainGUI(newUser).setVisible(true);
-                    new chatGUI(newUser).setVisible(true); 
-
-                    this.dispose();
-                } else {
-                    userName.setText("");
-                    password.setText("");
-
-                    JOptionPane.showMessageDialog(null,
-                        "Login Failed. Please try again.");
-                }
+                newUser.requestToServer(2);
+                newUser.getRequest().setLoginUI(this);
+                newUser.getRequest().start();
             }
         }
     }
@@ -239,4 +236,8 @@ public class loginGUI extends javax.swing.JFrame {
     private javax.swing.JButton registerBut;
     private javax.swing.JTextField userName;
     // End of variables declaration//GEN-END:variables
+
+    public Object getRePassword() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
