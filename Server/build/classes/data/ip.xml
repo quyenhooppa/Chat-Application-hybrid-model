@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ip xmlns="USER IP">
+                
+    
+    
+    <user name="thucquyen">
+                                
+        
+        
+        <ip>172.20.10.8</ip>
+                                
+        
+        
+        <username>thucquyen</username>
+                            
+    
+    
+    </user>
+            
+    
+    
+    <user name="quithu165">
+                        
+        
+        <ip>172.20.10.8</ip>
+                        
+        
+        <username>quithu165</username>
+                    
+    
+    </user>
+        
+    
+    <user name="quangtrai">
+                
+        <ip>172.20.10.8</ip>
+                
+        <username>quangtrai</username>
+            
+    </user>
+    
+    <user name="thucuquyen">
+        <ip>172.20.10.8</ip>
+        <username>thucuquyen</username>
+    </user>
+</ip>
