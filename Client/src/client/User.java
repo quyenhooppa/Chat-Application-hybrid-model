@@ -7,20 +7,11 @@ package client;
 
 import clientUI.chatGUI;
 import clientUI.requestGUI;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.net.InetAddress;
 import java.util.*;
 import java.net.Socket;
 import java.net.ServerSocket;
-import javax.swing.JOptionPane;
+
 /**
  *
  * @author quyenhooppa
@@ -31,7 +22,7 @@ public class User extends Thread {
     private String pass; // password
     private String clientIp; // user ip
     private int receivedPort; // port connection
-    private RequestServer request;
+    private RequestServer requestServer;
     private ServerSocket serverSocket;
     private chatGUI chatUI;
     private requestGUI requestUI;
@@ -42,13 +33,21 @@ public class User extends Thread {
     // record messages communicate with friends
     HashMap<String, MessRecord> messRecordList; 
     
+    // list receive connection with friend
+    HashMap<String, ReceiveMess> receiveList;
+    
+    // list send connection with friend
+    HashMap<String, SendMess> sendList;
+    
     
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
         this.friendList = new LinkedHashMap<>();
         this.messRecordList = new HashMap<>();
-        this.request = new RequestServer(this);
+        this.requestServer = new RequestServer(this);
+        this.sendList = new HashMap<>();
+        this.receiveList = new HashMap<>();
     }
     
     
@@ -94,8 +93,8 @@ public class User extends Thread {
         return serverSocket;
     }
 
-    public RequestServer getRequest() {
-        return request;
+    public RequestServer getRequestServer() {
+        return requestServer;
     }
     
     public LinkedHashMap<String, Friend> getFriendList() {
@@ -106,6 +105,14 @@ public class User extends Thread {
         return messRecordList;
     }
 
+    public HashMap<String, ReceiveMess> getReceiveList() {
+        return receiveList;
+    }
+
+    public HashMap<String, SendMess> getSendList() {
+        return sendList;
+    }
+    
     public chatGUI getChatUI() {
         return chatUI;
     }
@@ -116,165 +123,135 @@ public class User extends Thread {
     
     
     
-    public void requestToServer(int typeOfRequest) {
-        request.setTypeOfRequest(typeOfRequest);
+    // classify the request sent to server
+    public void requestToServer(String requestToServer) {
+        int typeOfRequest = 6;
+
+        switch(requestToServer) {
+            case "register":
+                typeOfRequest = 1;
+                break;
+            case "login":
+                typeOfRequest = 2;
+                break;
+            case "find":
+                typeOfRequest = 3;
+                break;
+            case "add":
+                typeOfRequest = 4;
+                break;
+            case "logout":
+                typeOfRequest = 5;
+                break;
+            default:
+                typeOfRequest = 6;
+                break;
+        }
+        
+        requestServer.setTypeOfRequest(typeOfRequest);
     }
     
     public void userNameAdding(String name) {
-        request.setNameAdding(name);
+        requestServer.setNameAdding(name);
+    }
+    
+    private boolean checkSendConnection(String name) {
+        return sendList.containsKey(name);
+    }
+    
+    private SendMess startSendConnection(String info) {
+        SendMess newSending;
+        String name;
+        if (friendList.containsKey(info)) {
+            newSending = new SendMess(this, friendList.get(info), 0);
+            name = info;
+        } else {
+            String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+            int port;
+
+            int curPos = 0;
+            while (info.charAt(curPos) != '-') {
+                curPos++;
+            }
+            name = info.substring(0, curPos);
+            int pos = curPos;
+            curPos++;
+            
+            while (info.charAt(curPos) != '-') {
+                curPos++;
+            }
+            ip = info.substring(pos + 1, curPos);
+            port = Integer.parseInt(info.substring(curPos + 1));
+            
+            newSending = new SendMess(this, new Friend(name, ip, port, 1), 0);
+        }
+//        } else {
+//            newSending = new SendMess(this, friendList.get(info), 0);
+//            name = info;
+//        }
+        sendList.put(name, newSending);
+        sendList.get(name).start();
+        
+        return sendList.get(name);
+    }
+    
+    public void sendToFriend(String info, String type) {
+        SendMess sending;
+        
+        if (!checkSendConnection(info)) {
+            sending = startSendConnection(info);
+        } else {
+            sending = sendList.get(info);
+        }
+           
+        int typeSending = 0;
+        
+        switch(type) {
+            case "mess":
+                typeSending = 1;
+                break;
+            case "file":
+                typeSending = 2;
+                break;
+            case "friendRequest":
+                typeSending = 3;
+                break;
+            case "reply":
+                typeSending = 4;
+                break;
+            case "off":
+                typeSending = 5;
+                break;
+            default:
+                typeSending = 0;
+                break;
+        }
+        
+        sending.setTypeSending(typeSending);
+        
     }
     
     
+    
     @Override    
-    public void run()
-    {
-        
+    public void run() {
         try {
             this.serverSocket = new ServerSocket(this.receivedPort);
             
             while (true) {
-                Socket socket = serverSocket.accept();
-
                 try {
-
-                    BufferedReader input = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream()));
-                    PrintWriter output = 
-                            new PrintWriter(socket.getOutputStream(), true);
-
-                    String receivedMess = input.readLine();
+                    Socket socket = serverSocket.accept();
+                    new ReceiveMess(this, socket);
                     
-                    System.out.println(name + " received: " + receivedMess);
-                    
-                    int curPos = 1;
-                    String sender;
-                    String senderInfo;
-                    
-                    switch (receivedMess.charAt(0)) {
-                        case '1': // receive message
-                            curPos = 1;
-                            while (receivedMess.charAt(curPos) != '%') {
-                                curPos++;
-                            }   
-                            String friendName = receivedMess.substring(1, curPos);
-                            
-                            MessRecord record = messRecordList.get(friendName);
-                            record.addNumOfMess(1);
-                            record.addMess(receivedMess.substring(curPos + 1), 0);
-                            if (chatUI.getFriendName().equals(friendName)) {
-                                chatUI.displayMess(friendName);
-                            } else {
-                                chatUI.newMess(friendName);
-                            }
-                            
-                            System.out.println(record.getMessList().get(record.getNumOfMess()-1));
-                            output.println("Received");
-                            
-                            break;
-                            
-                        case '2': // receive a file
-                            
-                            curPos = 1;
-                            while (receivedMess.charAt(curPos) != '%') {
-                                curPos++;
-                            }   
-                            friendName = receivedMess.substring(1, curPos);
-                            int pos = curPos; // pos at %
-                            curPos++; // char after %
-                            
-                            while (receivedMess.charAt(curPos) != '%') {
-                                curPos++;
-                            }
-                            String fileName = receivedMess.substring(pos + 1, curPos);
-                            long fileLength = Long.parseLong(receivedMess.substring(curPos + 1));
-                            
-                            String home = System.getProperty("user.home");
-                            File file = new File(home + "/Downloads/" + fileName);
-                            file.createNewFile();
-                            // create an empty file with given size
-                            RandomAccessFile raf = new RandomAccessFile(file, "rw");
-                            raf.setLength(fileLength);
-                            raf.close();
-                            
-                            try (
-                                OutputStream out = new FileOutputStream(file);
-                                InputStream in = socket.getInputStream();
-                            ) {
-                                
-                                byte[] buffer = new byte[16 * 1024];
-                                
-                                int count;
-                                while ((count = in.read(buffer)) > 0) {
-                                    out.write(buffer, 0, count);
-                                }
-
-                                out.close();
-                                in.close();
-                                
-                                JOptionPane.showMessageDialog(null, 
-                                    fileName + " received done!");
-
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                            
-                            break;
-                            
-                            
-                        case '3': // receive friend request 
-                            
-                            curPos = 1;
-                            while (receivedMess.charAt(curPos) != '%') {
-                                curPos++;
-                            } 
-                            curPos++;
-                            
-                            sender = receivedMess.substring(1, curPos - 1);
-                            senderInfo = receivedMess.substring(curPos);
-                            new requestGUI(this, sender, senderInfo, 0).setVisible(true);
-                              
-                            break;
-                            
-                        case '4':
-                            
-                            curPos = 1;
-                            while (receivedMess.charAt(curPos) != '%') {
-                                curPos++;
-                            } 
-                            curPos++;
-                            
-                            sender = receivedMess.substring(1, curPos - 1);
-                            System.out.println("Sender: " + sender);
-                            //addFriend(sender);
-                            requestToServer(4);
-                            userNameAdding(sender);
-                            
-                            JOptionPane.showMessageDialog(null, "You and " + 
-                                sender + " are friends now");
-                            
-                            break;
-                            
-                        default: 
-                            
-                            break;
-                    }
-
-
-                } catch(IOException e) {
-                    System.out.println("Oops: " + e.getMessage());
-                } finally {
-                    try {
-                        socket.close();
-                    } catch(IOException e) {
-                        System.out.println("Receive close socket: " 
-                                + e.getMessage());
-                    }
+                    //System.out.println(name + ": open friend's connection");
+                } catch (IOException ex) {
+                     System.out.println("Receive socket created: " + ex);
+                     break;
                 }
-                }
-            } catch(IOException e) {
-                System.out.println("Receive exception " + e.getMessage());
             }
-        //}
+        } catch(IOException e) {
+                System.out.println("Receive socket exception " + e.getMessage());
+        }
     }
             
 }

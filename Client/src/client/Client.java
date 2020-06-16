@@ -22,10 +22,10 @@ public class Client {
         loginUI.setVisible(true);
         
         loginUI = new loginGUI();
-        loginUI.setVisible(true);
+        loginUI.setVisible(true);  
         
-        loginUI = new loginGUI();
-        loginUI.setVisible(true);
+//        loginUI = new loginGUI();
+//        loginUI.setVisible(true);
     }
     
 }

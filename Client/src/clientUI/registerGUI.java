@@ -208,9 +208,9 @@ public class registerGUI extends javax.swing.JFrame {
                 } else {
                     
                     User newUser = new User(name, pass);
-                    newUser.requestToServer(1);
-                    newUser.getRequest().setRegisterUI(this);
-                    newUser.getRequest().start();
+                    newUser.requestToServer("register");
+                    newUser.getRequestServer().setRegisterUI(this);
+                    newUser.getRequestServer().start();
                     
                 }
                 

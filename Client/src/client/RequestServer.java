@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -28,8 +29,6 @@ public class RequestServer extends Thread{
     private int typeOfRequest;
     private registerGUI registerUI;
     private loginGUI loginUI;
-    private chatGUI chatUI;
-    private requestGUI requestUI;
 
     public RequestServer(User user) {
         this.user = user;
@@ -53,10 +52,6 @@ public class RequestServer extends Thread{
     public void setLoginUI(loginGUI loginUI) {
         this.loginUI = loginUI;
     }
-
-    public void setChatUI(chatGUI chatUI) {
-        this.chatUI = chatUI;
-    }
     
     //--------------- GETTER ---------------
 
@@ -78,7 +73,7 @@ public class RequestServer extends Thread{
             PrintWriter stringToEcho = 
                     new PrintWriter(socket.getOutputStream(), true);
             
-            System.out.println(this.getName());
+            //System.out.println(this.getName());
             
             while(true) {
                 
@@ -116,16 +111,7 @@ public class RequestServer extends Thread{
                             //System.out.println(typeOfRequest);
                         } else {
                             if (echoes.ready()) {
-                                String response = echoes.readLine();
-                                System.out.println(response);
-                                String friendName = response.substring(1);
-                                int status = Character.getNumericValue(response.charAt(0));
-                                
-                                user.getFriendList().get(friendName).setStatus(status);
-                                
-                                user.getChatUI().addName(friendName, status);
-                                status = (status + 1) % 2;
-                                user.getChatUI().removeName(friendName, status);
+                                friendChangeStatus(echoes);
                                 
                             } else {
                                 System.out.print("");
@@ -236,8 +222,7 @@ public class RequestServer extends Thread{
             
             if (!response.equals("0")) { // user found or online
                 //chatUI.setReceiverInfo(response);
-                requestGUI addfriend = new requestGUI(user, 
-                        nameAdding, response, 1);
+                requestGUI addfriend = new requestGUI(user, nameAdding, response, 1);
                 addfriend.setVisible(true);
             } else { // user not found
                 JOptionPane.showMessageDialog(null, "User not found or is offline");
@@ -316,6 +301,31 @@ public class RequestServer extends Thread{
         }
     }
     
+    
+    private void friendChangeStatus(BufferedReader echoes) {
+        try {
+            String response = echoes.readLine();
+            System.out.println(response);
+            String friendName = response.substring(1);
+            int status = Character.getNumericValue(response.charAt(0));
+            
+            if (status == 0) {
+                user.getSendList().remove(friendName);
+                user.getMessRecordList().get(friendName).getMessList().clear();
+            } 
+
+            //user.sendToFriend(friendName, "off");
+
+            user.getFriendList().get(friendName).setStatus(status);
+            user.getChatUI().addName(friendName, status);
+            status = (status + 1) % 2;
+            user.getChatUI().removeName(friendName, status);
+            
+        } catch (IOException ex) {
+            System.out.println("Friend status change Error " 
+                    + ex.getMessage());
+        }
+    }
     
     
         // get friend's information from the server when login successfully
@@ -397,9 +407,10 @@ public class RequestServer extends Thread{
                 // Friend newFriend = new Friend(friendName, sentPort, status);
                 Friend newFriend = new Friend(friendName, ip, sentPort, status);
                 MessRecord newMessRecord = new MessRecord(friendName);
+                //SendMess sendMess = new SendMess(user, newFriend, 0);
                 
-               user.getFriendList().put(friendName, newFriend); // add friend
-               user.getMessRecordList().put(friendName, newMessRecord); // add mess record
+                user.getFriendList().put(friendName, newFriend); // add friend
+                user.getMessRecordList().put(friendName, newMessRecord); // add mess record
                 
             }
     }

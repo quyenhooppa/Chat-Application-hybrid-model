@@ -124,11 +124,12 @@ public class fileGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(filePath)
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(sendButton)
-                    .addComponent(chooseButton)
-                    .addComponent(cancelButton)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(sendButton)
+                        .addComponent(chooseButton)
+                        .addComponent(cancelButton)))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -150,7 +151,6 @@ public class fileGUI extends javax.swing.JFrame {
 
             sendFile.setMess(fileName + "%" + fileLength);
             sendFile.setFile(file);
-            sendFile.setFileUI(this);
             sendFile.run();
 
             
