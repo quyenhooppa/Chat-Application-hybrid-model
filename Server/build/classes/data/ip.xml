@@ -3,7 +3,7 @@
                 
     
     
-    <user name="thucquyen">
+    <user name="quithu165">
                                 
         
         
@@ -11,7 +11,7 @@
                                 
         
         
-        <username>thucquyen</username>
+        <username>quithu165</username>
                             
     
     
@@ -19,28 +19,28 @@
             
     
     
-    <user name="quithu165">
+    <user name="thucquyen">
                         
         
         <ip>172.20.10.8</ip>
                         
         
-        <username>quithu165</username>
+        <username>thucquyen</username>
                     
     
     </user>
         
     
-    <user name="quangtrai">
+    <user name="tchuquyen">
                 
         <ip>172.20.10.8</ip>
                 
-        <username>quangtrai</username>
+        <username>tchuquyen</username>
             
     </user>
     
-    <user name="thucuquyen">
+    <user name="tthucquyen">
         <ip>172.20.10.8</ip>
-        <username>thucuquyen</username>
+        <username>tthucquyen</username>
     </user>
 </ip>

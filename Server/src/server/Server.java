@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,13 +62,12 @@ public class Server {
                 try {
                     Socket socket = serverSocket.accept();
                     new Echoer(socket, userList);
-                    
                     System.out.println("New client connected");
                 } catch (IOException ex) {
                      System.out.println("Socket created: " + ex);
                 }
                 
-                System.out.println("OK");
+                //System.out.println("OK");
 
             }
 

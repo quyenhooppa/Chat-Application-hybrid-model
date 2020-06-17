@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.File;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +36,7 @@ import org.xml.sax.SAXException;
 
 public final class Echoer extends Thread {
     private Socket socket;
-    private static String userName;
+    private  String userName;
     private ListOfUser userList;
     private PrintWriter output;
 
@@ -65,88 +64,86 @@ public final class Echoer extends Thread {
     @Override
     public void run() {
         boolean socketOpen = true;
-        System.out.println(this.getName());
+//        System.out.println(this.getName());
         while (true) {
-        try {
-            BufferedReader input = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream(), true);
+            try {
+                BufferedReader input = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
+                output = new PrintWriter(socket.getOutputStream(), true);
 
-            String echoString = input.readLine();
-            System.out.println("Received client input: " + echoString);
+                String echoString = input.readLine();
+                System.out.println("Received client input: " + echoString);
 
-            char c = echoString.charAt(0);
+                char c = echoString.charAt(0);
 
-            switch (c) {
-                case '1': // request register
+                switch (c) {
+                    case '1': // request register
 
-                    register(echoString, output);  
-                    socketOpen = false;
-                    break;
-                case '2': // request login
+                        register(echoString, output);  
+                        socketOpen = false;
+                        break;
+                    case '2': // request login
 
-                    socketOpen = authenticate(echoString, output);
-                    notifyStatus();
-                    break;
-                case '3': // request send add friend
-                    
-                    String username = echoString.substring(1);
-                    findPerson(username, output);
-                    break;
-                case '4': // request add friend
-                   
-                    addFriend(echoString, output);
-                    break;
-                case '5': // request logout
-                    
-                    logOut(echoString, output);
-                    userName = echoString.substring(1);
-//                    System.out.println(userName + ": Logout");
-                    notifyStatus();
-                    userList.getListOfUserConnetion().remove(userName, this);
-                    socketOpen = false;
-                    break;
-                default:
-                    break;
-            }
+                        socketOpen = authenticate(echoString, output);
+                        notifyStatus();
+                        break;
+                    case '3': // request send add friend
 
-            
-        } catch (IOException e) {
-            System.out.println("Oops: " + e.getMessage());
-            if (!userName.equals("")) {
-                try {
-                    updateStatus(userName, "0");
-                } catch (SAXException ex) {
-                    Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ParserConfigurationException ex) {
-                    Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TransformerException ex) {
-                    Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
+                        String username = echoString.substring(1);
+                        findPerson(username, output);
+                        break;
+                    case '4': // request add friend
+
+                        addFriend(echoString, output);
+                        break;
+                    case '5': // request logout
+
+                        logOut(echoString, output);
+                        userName = echoString.substring(1);
+                        
+                        notifyStatus();
+                        userList.getListOfUserConnetion().remove(userName, this);
+                        socketOpen = false;
+                        break;
+                    default:
+                        break;
                 }
-            }
-            break;
 
-        } catch (TransformerException | ParserConfigurationException
-                | SAXException ex) {
-            Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (!socketOpen) {
-            break;
-        }
-        
+                if (!socketOpen) {
+                    break;
+                }
+
+            } catch (IOException e) {
+                System.out.println("Oops: " + e.getMessage());
+                if (!userName.equals("")) {
+                    try {
+                        updateStatus(userName, "0");
+                    } catch (SAXException ex) {
+                        Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ParserConfigurationException ex) {
+                        Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (TransformerException ex) {
+                        Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                break;
+
+            } catch (TransformerException | ParserConfigurationException
+                    | SAXException ex) {
+                Logger.getLogger(Echoer.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         try {
-                socket.close();
-            } catch (IOException e) {
-                System.out.println("Server close socket: " + e.getMessage());
-            }
-        
+            socket.close();
+        } catch (IOException e) {
+            System.out.println("Server close socket: " + e.getMessage());
+        }
     }
     
     //Notiffy to user friend if status changed
-    public void notifyStatus() throws SAXException, ParserConfigurationException, IOException {
+    private void notifyStatus() throws SAXException, ParserConfigurationException, IOException {
         
         String fileName = "src/data/" + userName + ".xml";
         File userFile = new File(fileName);
@@ -365,8 +362,7 @@ public final class Echoer extends Thread {
 
     }
     
-    
-    public void addNewUserIP(String ip, String name) throws SAXException, ParserConfigurationException, IOException, TransformerException {
+    private void addNewUserIP(String ip, String name) throws SAXException, ParserConfigurationException, IOException, TransformerException {
         String fileName = "src/data/ip.xml";
         File userFile = new File(fileName);
         boolean flag = true;
@@ -425,7 +421,7 @@ public final class Echoer extends Thread {
     
     private String getFriendStatus(String username) throws ParserConfigurationException, SAXException, IOException{
         String result = null;
-         String fileName = "src/data/" + username + ".xml";
+        String fileName = "src/data/" + username + ".xml";
         File userFile = new File(fileName);
         DocumentBuilderFactory factory
                 = DocumentBuilderFactory.newInstance();
@@ -473,7 +469,7 @@ public final class Echoer extends Thread {
         
     }
     
-    public static String getFriendPort(String username) throws SAXException, IOException, ParserConfigurationException{
+    private String getFriendPort(String username) throws SAXException, IOException, ParserConfigurationException{
         String result = null;
          String fileName = "src/data/" + username + ".xml";
         File userFile = new File(fileName);
@@ -494,7 +490,7 @@ public final class Echoer extends Thread {
     //END OF LOGIN%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //BEGIN OF FINDPERSON%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    public void findPerson(String username, PrintWriter output) throws SAXException, IOException, ParserConfigurationException{
+    private void findPerson(String username, PrintWriter output) throws SAXException, IOException, ParserConfigurationException{
         String fileName = "src/data/" + username + ".xml";
 //        System.out.println(username);
         File personFile = new File(fileName);
@@ -516,7 +512,7 @@ public final class Echoer extends Thread {
             }
             else {
                 message = ip + "-" + port;
-                System.out.println(message);
+//                System.out.println(message);
                 output.println(message);
             }
             
@@ -525,7 +521,7 @@ public final class Echoer extends Thread {
     //END OF FINDPERSON%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     //BEGIN OF ADDFRIEND%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    public void addFriend(String message, PrintWriter output) throws SAXException, IOException, ParserConfigurationException, TransformerException{
+    private void addFriend(String message, PrintWriter output) throws SAXException, IOException, ParserConfigurationException, TransformerException{
         String host;
         String friend;
 
@@ -545,7 +541,7 @@ public final class Echoer extends Thread {
         
         
     }
-    public void addFriendtoFile(String filename, String friendname, PrintWriter output) throws SAXException, IOException, ParserConfigurationException, TransformerException{
+    private void addFriendtoFile(String filename, String friendname, PrintWriter output) throws SAXException, IOException, ParserConfigurationException, TransformerException{
         String fName = "src/data/" + filename + ".xml";
         File hostFile = new File(fName);
         DocumentBuilderFactory factory
@@ -587,7 +583,7 @@ public final class Echoer extends Thread {
             
     }
     //END OF ADDFRIEND%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private static int getPort(String name) {
+    private int getPort(String name) {
 
         int port = 0;
         String fileName = "src/data/" + name + ".xml";
@@ -603,7 +599,7 @@ public final class Echoer extends Thread {
         return port;
     }
 
-    private static Node newElement(Document doc, String name, String value) {
+    private Node newElement(Document doc, String name, String value) {
 
         Element node = doc.createElement(name);
         node.appendChild(doc.createTextNode(value));
@@ -611,14 +607,14 @@ public final class Echoer extends Thread {
         return node;
     }
     
-     private static void logOut(String echoString, PrintWriter output) throws IOException, ParserConfigurationException, SAXException, TransformerException{
+     private void logOut(String echoString, PrintWriter output) throws IOException, ParserConfigurationException, SAXException, TransformerException{
         String name;
         name = echoString.substring(1);
         updateStatus(name, "0");
         output.println("You are logout");
         
      }
-    public static void updateStatus(String name, String status) throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException{
+    private void updateStatus(String name, String status) throws SAXException, IOException, ParserConfigurationException, TransformerConfigurationException, TransformerException{
         String fName = "src/data/" + name + ".xml";
         File hostFile = new File(fName);
         DocumentBuilderFactory factory
@@ -649,4 +645,3 @@ public final class Echoer extends Thread {
         transf.transform(source, file);
     }
 }
-

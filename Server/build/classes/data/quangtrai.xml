@@ -1,58 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <info xmlns="Information">
-                        
-    
-    
+                
     
     
     <user id="3">
-                                                
-        
-        
+                                
         
         
         <username>quangtrai</username>
-                                                
+                                
         
         
-        
-        
-        <pass>12345678</pass>
-                                                
-        
-        
+        <pass>11223344</pass>
+                                
         
         
         <port>6003</port>
-                                                
-        
-                
+                                
         
         
+        <friends/>
+                                
         
         
         <status>0</status>
-                                            
-    
-        
-        
-        
-        <friends>
-                                                
-            
-            
-            <friendname>quithu165</friendname>
-                                            
-        
-        
-        </friends>
                             
     
     
     </user>
-                    
-
-
+            
 
 
 </info>
