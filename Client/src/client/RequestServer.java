@@ -139,7 +139,8 @@ public class RequestServer extends Thread{
             } 
             
         } catch (IOException ex) {
-            System.out.println("Connect Server: " + ex);
+            System.out.println("Connect Server: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
     

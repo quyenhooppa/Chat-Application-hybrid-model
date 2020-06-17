@@ -61,7 +61,6 @@ public class SendMess extends Thread {
     
     
 
-    
     //--------------- GETTER ---------------
     public String getMess() {
         return mess;
@@ -146,6 +145,10 @@ public class SendMess extends Thread {
                             JOptionPane.showMessageDialog(null, "You don't want to add " + 
                                     friend.getName());
                         }
+                        break;
+                    
+                    case 5: //  send status to friend
+
                         break;
                         
                     default:
