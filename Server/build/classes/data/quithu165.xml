@@ -1,122 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <info xmlns="Information">
-                                                                                                                    
+                            
     
     
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <user id="1">
-                                                                                                                                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    <user id="2">
+                                                        
         
         
         
         
         
         <username>quithu165</username>
-                                                                                                                                                                                                                                        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                                                        
         
         
         
         
         
         <pass>quithu165</pass>
-                                                                                                                                                                                                                                        
+                                                        
         
         
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <port>6001</port>
-                                                                                                                                                                                                                                        
+        <port>6002</port>
+                                                        
         
                 
         
@@ -124,162 +36,30 @@
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <status>0</status>
-                                                                                                                                                                                                                                    
+                                                    
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
         
         <friends>
-                                                                                                                                                                                                                                                                                                                                    
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+                                                            
             
             
             
             <friendname>thucquyen</friendname>
-                                                                                                                                                                                                                                                                                                                                
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                                                        
         
         
         
         </friends>
-                                                                                                                                                                                                                    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+                                    
     
     
     
     </user>
-                                                                                                                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        
 
 
 

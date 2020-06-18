@@ -1,28 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ip xmlns="USER IP">
-                
-    
-    
-    <user name="quithu165">
-                                
-        
-        
-        <ip>172.20.10.8</ip>
-                                
-        
-        
-        <username>quithu165</username>
-                            
-    
-    
-    </user>
             
-    
     
     <user name="thucquyen">
                         
         
-        <ip>172.20.10.8</ip>
+        <ip>192.168.1.179</ip>
                         
         
         <username>thucquyen</username>
@@ -31,16 +14,16 @@
     </user>
         
     
-    <user name="tchuquyen">
+    <user name="quithu165">
                 
-        <ip>172.20.10.8</ip>
+        <ip>192.168.1.179</ip>
                 
-        <username>tchuquyen</username>
+        <username>quithu165</username>
             
     </user>
     
-    <user name="tthucquyen">
-        <ip>172.20.10.8</ip>
-        <username>tthucquyen</username>
+    <user name="quangtrai">
+        <ip>192.168.1.179</ip>
+        <username>quangtrai</username>
     </user>
 </ip>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <info xmlns="Information">
-                                                                                                        
+                                    
     
     
     
@@ -8,42 +8,8 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <user id="2">
-                                                                                                                                                                                                                
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    <user id="1">
+                                                                        
         
         
         
@@ -52,24 +18,7 @@
         
         
         <username>thucquyen</username>
-                                                                                                                                                                                                                
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                                                                        
         
         
         
@@ -78,7 +27,7 @@
         
         
         <pass>thucquyen</pass>
-                                                                                                                                                                                                                
+                                                                        
         
         
         
@@ -86,25 +35,8 @@
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <port>6002</port>
-                                                                                                                                                                                                                
+        <port>6001</port>
+                                                                        
         
                 
         
@@ -114,43 +46,9 @@
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        <status>0</status>
-                                                                                                                                                                                                            
+        <status>1</status>
+                                                                    
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -158,96 +56,28 @@
         
         
         <friends>
-                                                                                                                                                                                                                                                                                                
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+                                                                                    
             
             
             
             
             
             <friendname>quithu165</friendname>
-                                                                                                                                                                                                                                                                                            
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+                                                                                
         
         
         
         
         
         </friends>
-                                                                                                                                                                                            
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+                                                    
     
     
     
     
     
     </user>
-                                                                                                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                
 
 
 

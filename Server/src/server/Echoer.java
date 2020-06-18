@@ -294,17 +294,17 @@ public final class Echoer extends Thread {
 //        System.out.println(pass);
 //        System.out.println(ip);
 
-        addNewUserIP(ip, name);
+        
 
         String fileName = "src/data/" + name + ".xml";
         File userFile = new File(fileName);
 
         if (!userFile.isFile()) {
             System.out.println("Rejected!!!");
-
-            output.println("0");
+            output.println("2");
         } else {
-
+            addNewUserIP(ip, name);
+            
             userName = name;
             userList.getListOfUserConnetion().put(userName, this);
             
@@ -321,41 +321,47 @@ public final class Echoer extends Thread {
             String passFile = node1.getTextContent();
             // get listen port of user
             Node node2 = elem.getElementsByTagName("port").item(0);
+            // get status
+            Node node3 = elem.getElementsByTagName("status").item(0);
+            String status = node3.getTextContent();
            
             NodeList fList = doc.getElementsByTagName("friends");
             Node fNode = fList.item(0);
             Element friendList = (Element) fNode;
             
-            int numberOfFriend = friendList.getElementsByTagName("friendname").getLength();
-            String message = node2.getTextContent();
-            // login successfully, send back its listen port
-            if (passFile.equals(pass)) {
+            if (status.equals("0")) {
+                int numberOfFriend = friendList.getElementsByTagName("friendname").getLength();
+                String message = node2.getTextContent();
+                // login successfully, send back its listen port
+                if (passFile.equals(pass)) {
 
-                System.out.println("Login!!!");
-                updateStatus(name, "1");
-                message = message + "%" + numberOfFriend + "%";
-                Node friend;
-                String friendName;
-                String friendIP;
-                String friendPort;                
-                String status;
-                for (int i = 0; i < numberOfFriend; i++) {
-                    friend = elem.getElementsByTagName("friendname").item(i);
-                    friendName = friend.getTextContent();
-                    status = getFriendStatus(friendName);
-                    friendIP = getFriendIP(friendName);
-                    friendPort = getFriendPort(friendName);
-                    message = message+ status + friendName + "-" + friendIP + "-" + friendPort + "%";
+                    System.out.println("Login!!!");
+                    updateStatus(name, "1");
+                    message = message + "%" + numberOfFriend + "%";
+                    Node friend;
+                    String friendName;
+                    String friendIP;
+                    String friendPort;                
+                    String friendStatus;
+                    for (int i = 0; i < numberOfFriend; i++) {
+                        friend = elem.getElementsByTagName("friendname").item(i);
+                        friendName = friend.getTextContent();
+                        friendStatus = getFriendStatus(friendName);
+                        friendIP = getFriendIP(friendName);
+                        friendPort = getFriendPort(friendName);
+                        message = message + friendStatus + friendName + "-" + friendIP + "-" + friendPort + "%";
+                    }
+                    output.println(message);
+                    return true;
+                } else {
+
+                    System.out.println("Rejected!!!");
+                    output.println("0");
                 }
-                output.println(message);
-                return true;
-
-            } else {
-
-                System.out.println("Rejected!!!");
-
-                output.println("0");
             }
+            
+            System.out.println("Rejected!!!");
+            output.println("-1");
 
         }
         return false;
@@ -431,7 +437,7 @@ public final class Echoer extends Thread {
         NodeList nList = doc.getElementsByTagName("user");
         Node nNode = nList.item(0);
         Element elem = (Element) nNode;
-        // get length
+        // get status
         Node n1 = elem.getElementsByTagName("status").item(0);
         result = n1.getTextContent();
         return result;
