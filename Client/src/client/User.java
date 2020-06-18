@@ -227,7 +227,7 @@ public class User extends Thread {
                 break;
         }
         
-        //sending.setTypeSending(typeSending);
+        sending.setTypeSending(typeSending);
         
     }
     
