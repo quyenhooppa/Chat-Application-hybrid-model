@@ -131,15 +131,6 @@ public class requestGUI extends javax.swing.JFrame {
 
     private void acceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acceptActionPerformed
         // TODO add your handling code here:
-        String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-        int port;
-            
-        int curPos = 0;
-        while (receiverInfo.charAt(curPos) != '-') {
-            curPos++;
-        }
-        ip = receiverInfo.substring(0, curPos);
-        port = Integer.parseInt(receiverInfo.substring(curPos + 1));
             
         if (this.pos == 0) { // sending accept replies
             
@@ -147,17 +138,17 @@ public class requestGUI extends javax.swing.JFrame {
             user.userNameAdding(addName);
             user.getChatUI().addName(addName, 1);
             
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 4);
-            
-            request.setMess("accept");
-            request.start();
+            String info = addName + '-' + receiverInfo;
+            user.sendToFriend(info, "reply"); 
             
         } else { // sending friend request
 
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 3);
             String messSent = user.getClientIp() + "-" + user.getReceivedPort();
-            request.setMess(messSent);
-            request.start();
+            String info = addName + '-' + receiverInfo;
+            
+            user.sendToFriend(info, "nothing");
+            user.getSendList().get(addName).setMess(messSent);
+            user.sendToFriend(addName, "friendRequest");
         }
         
         this.dispose();
@@ -165,21 +156,9 @@ public class requestGUI extends javax.swing.JFrame {
 
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
         // TODO add your handling code here:
-        if (this.pos == 0) { // sending reject replies
-            String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-            int port;
-
-            int curPos = 0;
-            while (receiverInfo.charAt(curPos) != '-') {
-                curPos++;
-            }
-            ip = receiverInfo.substring(0, curPos);
-            port = Integer.parseInt(receiverInfo.substring(curPos + 1));
-        
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 4);
-            
-            request.setMess("reject");
-            request.start();
+        if (this.pos == 0) {
+            //output.println("Rejected");
+            user.getSendList().remove(addName);
         }
         this.dispose();
     }//GEN-LAST:event_cancelActionPerformed

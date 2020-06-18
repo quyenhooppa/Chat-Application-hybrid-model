@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
 public class ReceiveMess extends Thread {
     private User user;
     private Socket socket;
-    // private String sender;
+    private String sender;
     private BufferedReader input;
     private PrintWriter output;
     
@@ -44,47 +44,63 @@ public class ReceiveMess extends Thread {
         return socket;
     }
     
-
+    
+    
+    
     @Override    
     public void run() {
+        boolean firstMess = true; 
+        boolean run = true;
         int typeOfMess = 0;
+        
         try {
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new PrintWriter(socket.getOutputStream(), true);
             
-            String receivedMess = input.readLine();
+            while(true) {
+
+                String receivedMess = input.readLine();
                     
-            System.out.println(user.getUserName() + " received: " + receivedMess);
+                System.out.println(user.getUserName() + " received: " + receivedMess);
                     
-            typeOfMess = Character.getNumericValue(receivedMess.charAt(0));
+                typeOfMess = Character.getNumericValue(receivedMess.charAt(0));
                     
-            int curPos = 1;
-            while (receivedMess.charAt(curPos) != '%') {
-                curPos++;
-            }  
-            // get sender name
-            String senderName = receivedMess.substring(1, curPos);  
-            String senderInfo;
-                    
-            switch (typeOfMess) {
-                case 1: // receive message
+                int curPos = 1;
+                while (receivedMess.charAt(curPos) != '%') {
+                    curPos++;
+                }  
+                // get sender name
+                String senderName = receivedMess.substring(1, curPos);
                             
-                    // curPos at %
-                    MessRecord record = user.messRecordList.get(senderName);
-                    record.addNumOfMess(1);
-                    record.addMess(receivedMess.substring(curPos + 1), 0);
-                    if (user.getChatUI().getCurFriendName().equals(senderName)) {
-                        user.getChatUI().displayMess(senderName);
-                    } else {
-                        user.getChatUI().newMess(senderName);
-                    }
+                if (firstMess) {
+                    firstMess = false;
+                    sender = senderName;
+                }
+                    
+                String senderInfo;
+                    
+                switch (typeOfMess) {
+                    case 1: // receive message
                             
-                    System.out.println(record.getMessList().get(record.getNumOfMess()-1));
-                    break;
+                        // curPos at %
+                        MessRecord record = user.messRecordList.get(senderName);
+                        record.addNumOfMess(1);
+                        record.addMess(receivedMess.substring(curPos + 1), 0);
+                        if (user.getChatUI().getFriendName().equals(senderName)) {
+                            user.getChatUI().displayMess(senderName);
+                        } else {
+                            user.getChatUI().newMess(senderName);
+                        }
                             
-                case 2: // receive a file
+                            System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+                            //output.println("Received");
+                            
+                            typeOfMess =  0;
+                            break;
+                            
+                        case 2: // receive a file
  
-                    // curPos at %
+                            // curPos at %
                             int pos = curPos; // pos at %
                             curPos++; // char after %
                             
@@ -123,6 +139,8 @@ public class ReceiveMess extends Thread {
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
+                            
+                        typeOfMess =  0;
                         break;
                             
                     case 3: // receive friend request 
@@ -131,58 +149,50 @@ public class ReceiveMess extends Thread {
                         curPos++;
             
                         senderInfo = receivedMess.substring(curPos);
-                        //System.out.println(senderInfo);
-                        new requestGUI(user, senderName, senderInfo, 0).setVisible(true);
+                        System.out.println(senderInfo);
+                        new requestGUI(user, sender, senderInfo, 0).setVisible(true);
+                        run = false;
                         break;
                             
                     case 4: // request accpeted
                             
-                        // curPos at %
+                        // curPos at %} 
                         curPos++;
-                        String reply = receivedMess.substring(curPos);
 
-                        //System.out.println("Sender: " + senderName);
-                        if (reply.equals("accept")) {
-                            user.requestToServer("add");
-                            user.userNameAdding(senderName);
+                        System.out.println("Sender: " + sender);
 
-                            JOptionPane.showMessageDialog(null, "You and " + 
-                                senderName + " are friends now");
-                        } else if (reply.equals("reject")) {
-                            JOptionPane.showMessageDialog(null, senderName + 
-                                    " doesn't want to add you");
-                        }             
+                        user.requestToServer("add");
+                        user.userNameAdding(sender);
+                            
+                        JOptionPane.showMessageDialog(null, "You and " + 
+                            sender + " are friends now");
+                            
+                        typeOfMess =  0;
                         break;
                           
                     case 5: // friend logout
                         
-                        // curPos at %
-                        curPos++;
-                        String status = receivedMess.substring(curPos);
-                        
-                    if (status.equals("off")) {
-                        user.getFriendList().get(senderName).setStatus(0);
-                        user.getChatUI().addName(senderName, 0);
-                        user.getChatUI().removeName(senderName, 1);
-                        user.getMessRecordList().get(senderName).getMessList().clear();
-                        user.getChatUI().updateTextArea();
-                    } 
-                        
+                        run = false;
                         break;
                         
                     default:     
                         break;
                 }
-
+                
+                if (!run) {
+                    break;
+                }
+                
+            }
         } catch(IOException e) {
             System.out.println("Oops: " + e.getMessage());
-        } finally { 
-            try {
-                socket.close();
-            } catch(IOException e) {
-                System.out.println("Receive close socket: " 
-                    + e.getMessage());
-            }
+        } 
+        
+        try {
+            socket.close();
+        } catch(IOException e) {
+            System.out.println(user.getUserName() + sender + "Receive close socket: " 
+                + e.getMessage());
         }
     }   
 }

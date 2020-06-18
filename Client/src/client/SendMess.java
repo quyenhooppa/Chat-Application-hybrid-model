@@ -31,7 +31,6 @@ public class SendMess extends Thread {
     private File file;
     private int typeSending; // 1:message - 2:file - 3:friend request - 4:request reply
     private chatGUI chatUI;
-    private fileGUI fileUI;
 
     
     public SendMess(User userSend, Friend friend, int typeSending) {
@@ -51,12 +50,12 @@ public class SendMess extends Thread {
         this.chatUI = chatUI;
     }
 
-    public void setFileUI(fileGUI fileUI) {
-        this.fileUI = fileUI;
-    }
-    
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public void setTypeSending(int typeSending) {
+        this.typeSending = typeSending;
     }
     
     
@@ -74,30 +73,50 @@ public class SendMess extends Thread {
     // Thread sending to friend
     @Override
     public void run() {
-            try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
-                BufferedReader input = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()));
+        boolean off = false;
+        
+        try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
                    
-                PrintWriter output = 
-                        new PrintWriter(socket.getOutputStream(), true);
+            PrintWriter output = 
+                    new PrintWriter(socket.getOutputStream(), true);
                     
-                String messSent;
+            String messSent;
+            
+            while (typeSending == 0) {
+            }
+            
+            while (true) {    
                 
-                messSent = typeSending + userSend.getUserName() + "%" + mess;
-                output.println(messSent);
-                System.out.println(userSend.getUserName() + " sent: " + messSent);
+                if (typeSending != 0) {
+                    messSent = typeSending + userSend.getUserName() + "%" + mess;
+                    output.println(messSent);
+                    System.out.println(userSend.getUserName() + " sent: " + messSent);
+                }
                     
                 switch (typeSending) {
+                    case 0:
+                        
+                        int newType = typeSending;
+                        if (typeSending != newType) {
+                            typeSending = newType;
+                        } else {
+                            System.out.print("");
+                        }
+                        break;
+                        
                     case 1: // send a message
                         
                         MessRecord record = userSend.getMessRecordList().get(friend.getName());
                         record.addNumOfMess(1);
                         record.addMess(mess, 1);
-                        if (chatUI.getCurFriendName().equals(friend.getName())) {
+                        if (chatUI.getFriendName().equals(friend.getName())) {
                                 chatUI.displayMess(friend.getName());
                         }
                         System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                         
+                        typeSending = 0;
                         break;
                 
                     case 2: // send a file
@@ -129,44 +148,51 @@ public class SendMess extends Thread {
                             ex.printStackTrace();
                         }
                         
+                        typeSending = 0;
                         break;
                         
                     case 3: // send friend request
                          
                         JOptionPane.showMessageDialog(null, "Request sent");
+                        off = true;
                         break;
                         
                     case 4: // send request reply
                         
-                        if (mess.equals("accept")) {
-                            JOptionPane.showMessageDialog(null, "You and " + 
-                                    friend.getName() + " are friends now");
-                        } else if (mess.equals("reject")) {
-                            JOptionPane.showMessageDialog(null, "You don't want to add " + 
-                                    friend.getName());
-                        }
+                        JOptionPane.showMessageDialog(null, "You and " + 
+                                friend.getName() + " are friends now");
+                        
+                        typeSending = 0;
                         break;
-                    
-                    case 5: //  send status to friend
-
+                        
+                    case 5: // offline
+                        
+                        //userSend.getSendList().remove(friend.getName());
+                        off = true;
                         break;
                         
                     default:
                         break;
                 }
-                   
-                try {
-                    socket.close();      
-                } catch(IOException e) {
-                    System.out.println("Send close socket: " 
-                            + e.getMessage());
-                } 
-            }   
                 
-            catch (IOException e) {
-                System.out.println("Send " + friend.getName() + " " 
-                            + e.getMessage());
-            }   
+                if (off == true) {
+                    break;
+                } 
+                
+            }
+            
+            try {
+                socket.close();
+                System.out.println("send socket close");
+            } catch(IOException e) {
+                System.out.println("Send close socket: " 
+                        + e.getMessage());
+            } 
+        } catch (IOException e) {
+            System.out.println("Send " + friend.getName() + " " 
+                 + e.getMessage());
+        }
     }
+       
 }
 
