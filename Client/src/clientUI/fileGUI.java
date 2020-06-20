@@ -151,6 +151,7 @@ public class fileGUI extends javax.swing.JFrame {
 
             sendFile.setMess(fileName + "%" + fileLength);
             sendFile.setFile(file);
+            //sendFile.setFileUI(this);
             sendFile.run();
 
             

@@ -12,9 +12,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -29,10 +26,12 @@ public class RequestServer extends Thread{
     private int typeOfRequest;
     private registerGUI registerUI;
     private loginGUI loginUI;
+    private chatGUI chatUI;
+    private requestGUI requestUI;
 
     public RequestServer(User user) {
         this.user = user;
-        this.serverIp = "172.20.10.8";
+        this.serverIp = "192.168.1.179";
     }
     
 
@@ -51,6 +50,10 @@ public class RequestServer extends Thread{
     
     public void setLoginUI(loginGUI loginUI) {
         this.loginUI = loginUI;
+    }
+
+    public void setChatUI(chatGUI chatUI) {
+        this.chatUI = chatUI;
     }
     
     //--------------- GETTER ---------------
@@ -73,7 +76,7 @@ public class RequestServer extends Thread{
             PrintWriter stringToEcho = 
                     new PrintWriter(socket.getOutputStream(), true);
             
-            //System.out.println(this.getName());
+            System.out.println(this.getName());
             
             while(true) {
                 
@@ -108,11 +111,9 @@ public class RequestServer extends Thread{
                         int newRequest = typeOfRequest;
                         if (typeOfRequest != newRequest) {
                             typeOfRequest = newRequest;
-                            //System.out.println(typeOfRequest);
                         } else {
                             if (echoes.ready()) {
-                                friendChangeStatus(echoes);
-                                
+                                updateFriendStatus(echoes);
                             } else {
                                 System.out.print("");
                             }
@@ -136,7 +137,8 @@ public class RequestServer extends Thread{
             } 
             
         } catch (IOException ex) {
-            System.out.println("Connect Server: " + ex);
+            System.out.println("Connect Server: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
     
@@ -174,13 +176,11 @@ public class RequestServer extends Thread{
         try {
             
             InetAddress host = InetAddress.getLocalHost();
-                   
-
+                  
             stringToEcho.println("2" + user.getUserName() + "-" + user.getPass() + 
                     "-" + host.getHostAddress()); // send request
-            
+
             String response = echoes.readLine();
-            
             System.out.println("Login: " + response + " " + this.getName());
             
             // login failed
@@ -194,6 +194,17 @@ public class RequestServer extends Thread{
                 
                 return true;
             }
+            
+            if (response.equals("0")) {
+                JOptionPane.showMessageDialog(null,
+                     "Login failed. Please try again.");
+            } else if (response.equals("-1")) {
+                JOptionPane.showMessageDialog(null,
+                     "User has already login. Please try again.");
+            } else if (response.equals("2")) {
+                JOptionPane.showMessageDialog(null,
+                     "User not found. Please try again.");
+            }
                    
         } catch (IOException e) {
             System.out.println("Login Error " 
@@ -203,8 +214,6 @@ public class RequestServer extends Thread{
         loginUI.getUserName().setText("");
         loginUI.getPassword().setText("");
 
-        JOptionPane.showMessageDialog(null,
-             "Login Failed. Please try again.");
         return false;
     }
     
@@ -222,13 +231,13 @@ public class RequestServer extends Thread{
             
             if (!response.equals("0")) { // user found or online
                 //chatUI.setReceiverInfo(response);
-                requestGUI addfriend = new requestGUI(user, nameAdding, response, 1);
+                requestGUI addfriend = new requestGUI(user, 
+                        nameAdding, response, 1);
                 addfriend.setVisible(true);
             } else { // user not found
                 JOptionPane.showMessageDialog(null, "User not found or is offline");
             }
-                
-            
+                   
         } catch (IOException e) {
             System.out.println("Find Error: " 
                     + e.getMessage());
@@ -280,12 +289,12 @@ public class RequestServer extends Thread{
     
     
     public void logOut (BufferedReader echoes, PrintWriter stringToEcho) {
+        
         try { 
 
             stringToEcho.println("5" + user.getUserName());
             
             String response = echoes.readLine();
-            
             System.out.println("Logout: " + response + " " + this.getName());
  
             try {
@@ -302,33 +311,33 @@ public class RequestServer extends Thread{
     }
     
     
-    private void friendChangeStatus(BufferedReader echoes) {
+    // update when a friend changes his/her status
+    private void updateFriendStatus(BufferedReader echoes) {
+        
         try {
+            
             String response = echoes.readLine();
             System.out.println(response);
             String friendName = response.substring(1);
             int status = Character.getNumericValue(response.charAt(0));
             
             if (status == 0) {
-                user.getSendList().remove(friendName);
                 user.getMessRecordList().get(friendName).getMessList().clear();
             } 
-
-            //user.sendToFriend(friendName, "off");
 
             user.getFriendList().get(friendName).setStatus(status);
             user.getChatUI().addName(friendName, status);
             status = (status + 1) % 2;
             user.getChatUI().removeName(friendName, status);
+            user.getChatUI().updateTextArea();
             
         } catch (IOException ex) {
-            System.out.println("Friend status change Error " 
-                    + ex.getMessage());
+            System.out.println("Update friend status: " + ex);
         }
     }
     
     
-        // get friend's information from the server when login successfully
+    // get friend's information from the server when login successfully
     private void setUpFriendInfo(String response) {
         /**
         *                           RESPONSE FORMAT
@@ -407,10 +416,9 @@ public class RequestServer extends Thread{
                 // Friend newFriend = new Friend(friendName, sentPort, status);
                 Friend newFriend = new Friend(friendName, ip, sentPort, status);
                 MessRecord newMessRecord = new MessRecord(friendName);
-                //SendMess sendMess = new SendMess(user, newFriend, 0);
                 
-                user.getFriendList().put(friendName, newFriend); // add friend
-                user.getMessRecordList().put(friendName, newMessRecord); // add mess record
+               user.getFriendList().put(friendName, newFriend); // add friend
+               user.getMessRecordList().put(friendName, newMessRecord); // add mess record
                 
             }
     }

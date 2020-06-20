@@ -17,13 +17,13 @@ public class Client {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+            // TODO code application logic here
         loginGUI loginUI = new loginGUI();
         loginUI.setVisible(true);
         
         loginUI = new loginGUI();
-        loginUI.setVisible(true);  
-        
+        loginUI.setVisible(true);
+
 //        loginUI = new loginGUI();
 //        loginUI.setVisible(true);
     }

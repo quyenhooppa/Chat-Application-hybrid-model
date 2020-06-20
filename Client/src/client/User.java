@@ -33,12 +33,6 @@ public class User extends Thread {
     // record messages communicate with friends
     HashMap<String, MessRecord> messRecordList; 
     
-    // list receive connection with friend
-    HashMap<String, ReceiveMess> receiveList;
-    
-    // list send connection with friend
-    HashMap<String, SendMess> sendList;
-    
     
     public User(String name, String pass) {
         this.name = name;
@@ -46,8 +40,6 @@ public class User extends Thread {
         this.friendList = new LinkedHashMap<>();
         this.messRecordList = new HashMap<>();
         this.requestServer = new RequestServer(this);
-        this.sendList = new HashMap<>();
-        this.receiveList = new HashMap<>();
     }
     
     
@@ -104,14 +96,6 @@ public class User extends Thread {
     public HashMap<String, MessRecord> getMessRecordList() {
         return messRecordList;
     }
-
-    public HashMap<String, ReceiveMess> getReceiveList() {
-        return receiveList;
-    }
-
-    public HashMap<String, SendMess> getSendList() {
-        return sendList;
-    }
     
     public chatGUI getChatUI() {
         return chatUI;
@@ -151,86 +135,9 @@ public class User extends Thread {
         requestServer.setTypeOfRequest(typeOfRequest);
     }
     
-    public void userNameAdding(String name) {
+    public void setUserNameAdding(String name) {
         requestServer.setNameAdding(name);
     }
-    
-    private boolean checkSendConnection(String name) {
-        return sendList.containsKey(name);
-    }
-    
-    private SendMess startSendConnection(String info) {
-        SendMess newSending;
-        String name;
-        if (friendList.containsKey(info)) {
-            newSending = new SendMess(this, friendList.get(info), 0);
-            name = info;
-        } else {
-            String ip;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-            int port;
-
-            int curPos = 0;
-            while (info.charAt(curPos) != '-') {
-                curPos++;
-            }
-            name = info.substring(0, curPos);
-            int pos = curPos;
-            curPos++;
-            
-            while (info.charAt(curPos) != '-') {
-                curPos++;
-            }
-            ip = info.substring(pos + 1, curPos);
-            port = Integer.parseInt(info.substring(curPos + 1));
-            
-            newSending = new SendMess(this, new Friend(name, ip, port, 1), 0);
-        }
-//        } else {
-//            newSending = new SendMess(this, friendList.get(info), 0);
-//            name = info;
-//        }
-        sendList.put(name, newSending);
-        sendList.get(name).start();
-        
-        return sendList.get(name);
-    }
-    
-    public void sendToFriend(String info, String type) {
-        SendMess sending;
-        
-        if (!checkSendConnection(info)) {
-            sending = startSendConnection(info);
-        } else {
-            sending = sendList.get(info);
-        }
-           
-        int typeSending = 0;
-        
-        switch(type) {
-            case "mess":
-                typeSending = 1;
-                break;
-            case "file":
-                typeSending = 2;
-                break;
-            case "friendRequest":
-                typeSending = 3;
-                break;
-            case "reply":
-                typeSending = 4;
-                break;
-            case "off":
-                typeSending = 5;
-                break;
-            default:
-                typeSending = 0;
-                break;
-        }
-        
-        sending.setTypeSending(typeSending);
-        
-    }
-    
     
     
     @Override    
