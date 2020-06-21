@@ -6,6 +6,7 @@
 package client;
 
 import clientUI.chatGUI;
+import clientUI.fileGUI;
 import clientUI.requestGUI;
 import java.io.IOException;
 import java.util.*;
@@ -26,6 +27,7 @@ public class User extends Thread {
     private ServerSocket serverSocket;
     private chatGUI chatUI;
     private requestGUI requestUI;
+    private fileGUI fileUI;
     
     // list of user's friends
     LinkedHashMap<String, Friend> friendList; 
@@ -58,6 +60,10 @@ public class User extends Thread {
 
     public void setRequestUI(requestGUI requestUI) {
         this.requestUI = requestUI;
+    }
+    
+     public void setFileUI(fileGUI fileUI) {
+        this.fileUI = fileUI;
     }
 
 
@@ -103,6 +109,10 @@ public class User extends Thread {
 
     public requestGUI getRequestUI() {
         return requestUI;
+    }
+    
+    public fileGUI getFileUI() {
+        return fileUI;
     }
     
     
@@ -160,5 +170,6 @@ public class User extends Thread {
                 System.out.println("Receive socket exception " + e.getMessage());
         }
     }
+
             
 }

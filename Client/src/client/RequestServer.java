@@ -26,12 +26,10 @@ public class RequestServer extends Thread{
     private int typeOfRequest;
     private registerGUI registerUI;
     private loginGUI loginUI;
-    private chatGUI chatUI;
-    private requestGUI requestUI;
 
     public RequestServer(User user) {
         this.user = user;
-        this.serverIp = "192.168.1.179";
+        this.serverIp = "192.168.1.178";
     }
     
 
@@ -47,14 +45,13 @@ public class RequestServer extends Thread{
     public void setRegisterUI(registerGUI registerUI) {
         this.registerUI = registerUI;
     }
-    
+
     public void setLoginUI(loginGUI loginUI) {
         this.loginUI = loginUI;
     }
-
-    public void setChatUI(chatGUI chatUI) {
-        this.chatUI = chatUI;
-    }
+    
+    
+    
     
     //--------------- GETTER ---------------
 
@@ -198,7 +195,7 @@ public class RequestServer extends Thread{
             if (response.equals("0")) {
                 JOptionPane.showMessageDialog(null,
                      "Login failed. Please try again.");
-            } else if (response.equals("-1")) {
+            } else if (response.equals("3")) {
                 JOptionPane.showMessageDialog(null,
                      "User has already login. Please try again.");
             } else if (response.equals("2")) {

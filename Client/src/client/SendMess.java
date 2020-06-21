@@ -30,9 +30,7 @@ public class SendMess extends Thread {
     private String mess;
     private File file;
     private int typeSending; // 1:message - 2:file - 3:friend request - 4:request reply
-    private chatGUI chatUI;
 
-    
     public SendMess(User userSend, Friend friend, int typeSending) {
         this.userSend = userSend;
         this.friend = friend;
@@ -40,31 +38,34 @@ public class SendMess extends Thread {
         this.mess = "";
     }
     
+    public SendMess(User userSend, Friend friend, String mess, int typeSending) {
+        this.userSend = userSend;
+        this.friend = friend;
+        this.typeSending = typeSending;
+        this.mess = mess;
+        //newSending();
+    }
+    
+    public SendMess(User userSend, Friend friend, 
+            String mess, File file, int typeSending) {
+        this.userSend = userSend;
+        this.friend = friend;
+        this.typeSending = typeSending;
+        this.mess = mess;
+        this.file = file;
+        //newSending();
+    }
+    
+    
+    private void newSending() {
+        this.start();
+    }
     
     //--------------- SETTER ---------------
-    public void setMess(String mess) {
-        this.mess = mess;
-    }
-
-    public void setChatUI(chatGUI chatUI) {
-        this.chatUI = chatUI;
-    }
-
     public void setFile(File file) {
         this.file = file;
     }
     
-    
-
-    //--------------- GETTER ---------------
-    public String getMess() {
-        return mess;
-    }
-
-    public int getTypeSending() {
-        return typeSending;
-    }
-
     
     // Thread sending to friend
     @Override
@@ -88,38 +89,39 @@ public class SendMess extends Thread {
                         MessRecord record = userSend.getMessRecordList().get(friend.getName());
                         record.addNumOfMess(1);
                         record.addMess(mess, 1);
-                        if (chatUI.getCurFriendName().equals(friend.getName())) {
-                                chatUI.displayMess(friend.getName());
+                        if (userSend.getChatUI().getCurFriendName().equals(friend.getName())) {
+                                userSend.getChatUI().displayMess(friend.getName());
                         }
-                        System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                         
+                        //System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                         break;
                 
                     case 2: // send a file
                         
                         try (
-                            InputStream in = new FileInputStream(file);
+                            FileInputStream in = new FileInputStream(file);
                             OutputStream out = socket.getOutputStream();
                         ) {
-
-                            byte[] buffer = new byte[16 * 1024];
+                            new SendMess(userSend, friend, 
+                                    "Sending" + file.getName(), 1).start(); 
+                            
+                            byte[] buffer = new byte[1024 * 1024];
                             
                             int count;
-                            //int current = 0;
-                            //JProgressBar progress = fileUI.getProgressBar();
-                            while ((count = in.read(buffer)) > 0) {
+                            while ((count = in.read(buffer)) > -1) {
                                 out.write(buffer, 0, count);
-
-                                String s = file.length() + "";
-//                                current += buffer.length / Integer.valueOf(s);
-//                                progress.setValue(30);
                             }
-                            //progress.setVisible(false);
                             
                             out.close();
                             in.close();
-
                             
+                            new SendMess(userSend, friend, 
+                                    file.getName() + " done", 1).start();
+                            
+                            userSend.getFileUI().dispose();
+                            JOptionPane.showMessageDialog(null, 
+                                file.getName() + " sent done!");
+     
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }

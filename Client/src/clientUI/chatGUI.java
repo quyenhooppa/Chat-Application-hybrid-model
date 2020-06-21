@@ -61,12 +61,14 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         offlinefList.setModel(listOff);
         onlineList.setModel(listOnl);
         
+  
         jTextField1.addActionListener(typeMessage);
         findUser.addActionListener(newChat);
         doc = jTextPane1.getStyledDocument();
         messageAlign= new SimpleAttributeSet();
         JScrollPane   scroll = new JScrollPane();
         jTextPane1.add(scroll); 
+        jTextPane1.setEditable(false);
         
         jLabel1.setText("My name is " + user.getUserName() + "!");
         
@@ -96,6 +98,9 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
         jFileChooser1 = new javax.swing.JFileChooser();
         jFileChooser2 = new javax.swing.JFileChooser();
+        jSeparator1 = new javax.swing.JSeparator();
+        jFrame1 = new javax.swing.JFrame();
+        jFrame2 = new javax.swing.JFrame();
         jPanel1 = new javax.swing.JPanel();
         logout = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -113,6 +118,28 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
         reset = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
+        jFrame1.getContentPane().setLayout(jFrame1Layout);
+        jFrame1Layout.setHorizontalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame1Layout.setVerticalGroup(
+            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jFrame2Layout = new javax.swing.GroupLayout(jFrame2.getContentPane());
+        jFrame2.getContentPane().setLayout(jFrame2Layout);
+        jFrame2Layout.setHorizontalGroup(
+            jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jFrame2Layout.setVerticalGroup(
+            jFrame2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -195,6 +222,8 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
 
         jLabel3.setText("Offine");
 
+        jTextPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jTextPane1.setKeymap(null);
         jScrollPane4.setViewportView(jTextPane1);
 
         reset.setText("Reset");
@@ -299,7 +328,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
         for (int i =0; i < size; i++) {
             System.out.println(listOnl.getElementAt(i));
             if (listOnl.getElementAt(i).equals(name)) {
-                System.out.println("OK");
+                //System.out.println("OK");
                 listOnl.setElementAt("o\t" + name, i);
             }
         }
@@ -346,17 +375,14 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     
     //Send message to other clients
     public void ownerChat() {
-        if (!jTextField1.getText().equals("")) {
+        if (!jTextField1.getText().equals("") && 
+                !jLabel1.getText().contains(user.getUserName())) {
             
             // get friend's info
             Friend friend = (user.getFriendList()).get(curFriendName);
             
             //create a thread to send message
-            SendMess sendMess = new SendMess(user, friend, 1);
-            sendMess.setChatUI(this);
-            
-            //get message
-            sendMess.setMess(jTextField1.getText());
+            SendMess sendMess = new SendMess(user, friend, jTextField1.getText(), 1);
             sendMess.start();
             
             jTextField1.setText("");
@@ -502,11 +528,11 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
                
                 if (friend.getStatus() == 1) {
                     //create a thread to send message
-                    SendMess sendMess = new SendMess(user, friend, 5);
-                    sendMess.setChatUI(this);
+                    SendMess sendMess = new SendMess(user, friend, "off", 5);
+                    //sendMess.setChatUI(this);
 
                     //get message
-                    sendMess.setMess("off");
+                    //sendMess.setMess("off");
                     sendMess.start();
                 }
             }
@@ -617,6 +643,8 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private javax.swing.JTextField findUser;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JFileChooser jFileChooser2;
+    private javax.swing.JFrame jFrame1;
+    private javax.swing.JFrame jFrame2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -624,6 +652,7 @@ public class chatGUI extends javax.swing.JFrame implements KeyListener {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JButton logout;

@@ -6,6 +6,7 @@
 package client;
 
 import clientUI.requestGUI;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -78,8 +79,9 @@ public class ReceiveMess extends Thread {
                         user.getChatUI().newMess(senderName);
                     }
                             
-                    System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+                    //System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                     break;
+                    
                             
                 case 2: // receive a file
  
@@ -102,20 +104,20 @@ public class ReceiveMess extends Thread {
                             raf.close();
                             
                         try (
-                            OutputStream out = new FileOutputStream(file);
+                            FileOutputStream out = new FileOutputStream(file);
                             InputStream in = socket.getInputStream();
                         ) {
                     
-                            byte[] buffer = new byte[16 * 1024];
+                            byte[] buffer = new byte[1024 * 1024];
                                 
                             int count;
-                            while ((count = in.read(buffer)) > 0) {
+                            while ((count = in.read(buffer)) > -1) {
                                 out.write(buffer, 0, count);
                             }
 
                             out.close();
                             in.close();
-                                
+                              
                             JOptionPane.showMessageDialog(null, 
                                 fileName + " received done!");
 
@@ -175,14 +177,14 @@ public class ReceiveMess extends Thread {
 
         } catch(IOException e) {
             System.out.println("Oops: " + e.getMessage());
-        } finally { 
+        } //finally { 
             try {
                 socket.close();
             } catch(IOException e) {
                 System.out.println("Receive close socket: " 
                     + e.getMessage());
             }
-        }
+        //}
     }   
 }
     

@@ -303,7 +303,7 @@ public final class Echoer extends Thread {
             System.out.println("Rejected!!!");
             output.println("2");
         } else {
-            addNewUserIP(ip, name);
+            updateUserIP(ip, name);
             
             userName = name;
             userList.getListOfUserConnetion().put(userName, this);
@@ -361,14 +361,14 @@ public final class Echoer extends Thread {
             }
             
             System.out.println("Rejected!!!");
-            output.println("-1");
+            output.println("3");
 
         }
         return false;
 
     }
     
-    private void addNewUserIP(String ip, String name) throws SAXException, ParserConfigurationException, IOException, TransformerException {
+    private void updateUserIP(String ip, String name) throws SAXException, ParserConfigurationException, IOException, TransformerException {
         String fileName = "src/data/ip.xml";
         File userFile = new File(fileName);
         boolean flag = true;
@@ -391,7 +391,21 @@ public final class Echoer extends Thread {
             //System.out.println(nameField);
             if (nameField.equals(name)){
                 //System.out.println("Occur");
+                Node n3 = x.getElementsByTagName("ip").item(0);
+                n3.setTextContent(ip);
+                TransformerFactory transformerFactory
+                        = TransformerFactory.newInstance();
+                Transformer transf = transformerFactory.newTransformer();
+
+                transf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                transf.setOutputProperty(OutputKeys.INDENT, "yes");
+
+                DOMSource source = new DOMSource(doc);
+                StreamResult file = new StreamResult(userFile);
+                transf.transform(source, file);
+                
                 flag = false;
+                break;
             }
         }
         
@@ -634,9 +648,7 @@ public final class Echoer extends Thread {
         
         NodeList sList = elem.getElementsByTagName("status");
         Node sNode = sList.item(0);
-        //System.out.println(status);
-        Node newNode = newElement(doc, "status", status);
-        elem.replaceChild(newNode, sNode);
+        sNode.setTextContent(status);
         TransformerFactory transformerFactory
                 = TransformerFactory.newInstance();
         Transformer transf = transformerFactory.newTransformer();

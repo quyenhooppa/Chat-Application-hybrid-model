@@ -10,7 +10,6 @@ import client.SendMess;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -22,7 +21,6 @@ public class fileGUI extends javax.swing.JFrame {
     private User user;
     private Friend friend;
     private File file;
-    private chatGUI chatUI;
 
     /**
      * Creates new form fileGUI
@@ -38,12 +36,10 @@ public class fileGUI extends javax.swing.JFrame {
         
         this.user = user;
         this.friend = friend;
-        this.chatUI = chatUI;
+        
+        this.user.setFileUI(this);
     }
 
-    public JProgressBar getProgressBar() {
-        return progressBar;
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,7 +55,6 @@ public class fileGUI extends javax.swing.JFrame {
         chooseButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Directory");
@@ -106,8 +101,6 @@ public class fileGUI extends javax.swing.JFrame {
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
                                 .addComponent(chooseButton)
                                 .addGap(18, 18, 18)
                                 .addComponent(sendButton)
@@ -124,12 +117,10 @@ public class fileGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(filePath)
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(sendButton)
-                        .addComponent(chooseButton)
-                        .addComponent(cancelButton)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sendButton)
+                    .addComponent(chooseButton)
+                    .addComponent(cancelButton))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
@@ -140,30 +131,15 @@ public class fileGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (filePath.getText().equals("Empty")) {
             JOptionPane.showMessageDialog(null, "Please select a file to send!");
-        } else {
-            progressBar = new JProgressBar();
-            progressBar.setVisible(true);
+        } else if (!filePath.getText().equals("Sending...")) {
+            filePath.setText("Sending...");
             
-            SendMess sendFile = new SendMess(user, friend, 2);
             String fileName = file.getName();
             long fileLength =  file.length();
             
-
-            sendFile.setMess(fileName + "%" + fileLength);
-            sendFile.setFile(file);
-            //sendFile.setFileUI(this);
-            sendFile.run();
-
-            
-            SendMess sendMess = new SendMess(user, friend, 1);
-            sendMess.setChatUI(chatUI);
-            sendMess.setMess(fileName + " done");
-            sendMess.run();
-            
-            JOptionPane.showMessageDialog(null, 
-                    file.getName() + " sent done!");
-            
-            this.dispose();
+            SendMess sendFile = new SendMess(user, friend, 
+                    fileName + "%" + fileLength, file, 2);
+            sendFile.start();
         }
     }//GEN-LAST:event_sendButtonActionPerformed
 
@@ -184,7 +160,9 @@ public class fileGUI extends javax.swing.JFrame {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        if (!filePath.getText().equals("Sending")) {
+            this.dispose();
+        }
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     
@@ -230,7 +208,6 @@ public class fileGUI extends javax.swing.JFrame {
     private javax.swing.JButton chooseButton;
     private javax.swing.JLabel filePath;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
 }

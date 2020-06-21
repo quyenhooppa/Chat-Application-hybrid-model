@@ -143,20 +143,24 @@ public class requestGUI extends javax.swing.JFrame {
             
         if (this.pos == 0) { // sending accept replies
             
-            user.requestToServer("add");
+            
             user.setUserNameAdding(addName);
+            user.requestToServer("add");
             user.getChatUI().addName(addName, 1);
             
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 4);
+            SendMess request = new SendMess(user, 
+                    new Friend(addName, ip, port, 1), "accept", 4);
             
-            request.setMess("accept");
+            //request.setMess("accept");
             request.start();
             
         } else { // sending friend request
-
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 3);
+            
             String messSent = user.getClientIp() + "-" + user.getReceivedPort();
-            request.setMess(messSent);
+            SendMess request = new SendMess(user, 
+                    new Friend(addName, ip, port, 1), messSent, 3);
+            
+            //request.setMess(messSent);
             request.start();
         }
         
@@ -176,9 +180,10 @@ public class requestGUI extends javax.swing.JFrame {
             ip = receiverInfo.substring(0, curPos);
             port = Integer.parseInt(receiverInfo.substring(curPos + 1));
         
-            SendMess request = new SendMess(user, new Friend(addName, ip, port, 1), 4);
+            SendMess request = new SendMess(user, 
+                    new Friend(addName, ip, port, 1), "reject",4);
             
-            request.setMess("reject");
+            //request.setMess("reject");
             request.start();
         }
         this.dispose();
