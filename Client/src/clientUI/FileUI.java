@@ -17,7 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author quyenhooppa
  */
-public class fileGUI extends javax.swing.JFrame {
+public class FileUI extends javax.swing.JFrame {
     private User user;
     private Friend friend;
     private File file;
@@ -25,12 +25,12 @@ public class fileGUI extends javax.swing.JFrame {
     /**
      * Creates new form fileGUI
      */
-    public fileGUI() {
+    public FileUI() {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
     }
     
-    public fileGUI(User user, Friend friend, chatGUI chatUI) {
+    public FileUI(User user, Friend friend, ChatUI chatUI) {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
         
@@ -124,6 +124,8 @@ public class fileGUI extends javax.swing.JFrame {
                 .addContainerGap(13, Short.MAX_VALUE))
         );
 
+        getAccessibleContext().setAccessibleParent(this);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -183,20 +185,23 @@ public class fileGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(fileGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(fileGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(fileGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(fileGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FileUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new fileGUI().setVisible(true);
+                new FileUI().setVisible(true);
             }
         });
     }

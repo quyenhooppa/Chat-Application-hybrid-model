@@ -5,7 +5,7 @@
  */
 package client;
 
-import clientUI.requestGUI;
+import clientUI.RequestFriendUI;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.net.Socket;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,10 +25,9 @@ import javax.swing.JOptionPane;
  * @author quyenhooppa
  */
 public class ReceiveMess extends Thread {
+    
     private User user;
     private Socket socket;
-    // private String sender;
-    private BufferedReader input;
     
 
     public ReceiveMess(User user, Socket socket) {
@@ -49,7 +49,8 @@ public class ReceiveMess extends Thread {
     public void run() {
         int typeOfMess = 0;
         try {
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
             // output = new PrintWriter(socket.getOutputStream(), true);
             
             String receivedMess = input.readLine();
@@ -71,12 +72,11 @@ public class ReceiveMess extends Thread {
                             
                     // curPos at %
                     MessRecord record = user.messRecordList.get(senderName);
-                    record.addNumOfMess(1);
                     record.addMess(receivedMess.substring(curPos + 1), 0);
                     if (user.getChatUI().getCurFriendName().equals(senderName)) {
                         user.getChatUI().displayMess(senderName);
                     } else {
-                        user.getChatUI().newMess(senderName);
+                        user.getChatUI().newMess(senderName, 1);
                     }
                             
                     //System.out.println(record.getMessList().get(record.getNumOfMess()-1));
@@ -86,27 +86,27 @@ public class ReceiveMess extends Thread {
                 case 2: // receive a file
  
                     // curPos at %
-                            int pos = curPos; // pos at %
-                            curPos++; // char after %
+                    int pos = curPos; // pos at %
+                    curPos++; // char after %
                             
-                            while (receivedMess.charAt(curPos) != '%') {
-                                curPos++;
-                            }
-                            String fileName = receivedMess.substring(pos + 1, curPos);
-                            long fileLength = Long.parseLong(receivedMess.substring(curPos + 1));
+                    while (receivedMess.charAt(curPos) != '%') {
+                         curPos++;
+                    }
+                    String fileName = receivedMess.substring(pos + 1, curPos);
+                    long fileLength = Long.parseLong(receivedMess.substring(curPos + 1));
                             
-                            String home = System.getProperty("user.home");
-                            File file = new File(home + "/Downloads/" + fileName);
-                            file.createNewFile();
-                            // create an empty file with given size
-                            RandomAccessFile raf = new RandomAccessFile(file, "rw");
-                            raf.setLength(fileLength);
-                            raf.close();
+                    String home = System.getProperty("user.home");
+                    File file = new File(home + "/Downloads/" + fileName);
+                    file.createNewFile();
+                    // create an empty file with given size
+                    RandomAccessFile raf = new RandomAccessFile(file, "rw");
+                    raf.setLength(fileLength);
+                    raf.close();
                             
-                        try (
-                            FileOutputStream out = new FileOutputStream(file);
-                            InputStream in = socket.getInputStream();
-                        ) {
+                    try (
+                        FileOutputStream out = new FileOutputStream(file);
+                        InputStream in = socket.getInputStream();
+                    ) {
                     
                             byte[] buffer = new byte[1024 * 1024];
                                 
@@ -133,7 +133,7 @@ public class ReceiveMess extends Thread {
             
                         senderInfo = receivedMess.substring(curPos);
                         //System.out.println(senderInfo);
-                        new requestGUI(user, senderName, senderInfo, 0).setVisible(true);
+                        new RequestFriendUI(user, senderName, senderInfo, 0).setVisible(true);
                         break;
                             
                     case 4: // request accpeted
@@ -162,18 +162,84 @@ public class ReceiveMess extends Thread {
                         String status = receivedMess.substring(curPos);
                         
                     if (status.equals("off")) {
-                        user.getFriendList().get(senderName).setStatus(0);
-                        user.getChatUI().addName(senderName, 0);
-                        user.getChatUI().removeName(senderName, 1);
-                        user.getMessRecordList().get(senderName).getMessList().clear();
-                        user.getChatUI().updateTextArea();
+                        
+                        if (user.getFriendList().containsKey(senderName)) {
+                            user.getFriendList().get(senderName).setStatus(0);
+                            user.getChatUI().addName(senderName, 0);
+                            user.getChatUI().removeName(senderName, 1);
+                            user.getMessRecordList().get(senderName).getMessList().clear();
+                            if (user.getChatUI().getCurFriendName().equals(
+                                    senderName)) {
+                                user.getChatUI().updateTextArea();
+                                user.getChatUI().setCurFriendName("");
+                            }
+                        }
+                        
+                        for (int i = 0; i < user.getGroupChatList().size(); i++) {
+                            GroupChat groupChat = (new ArrayList<>(
+                                    user.getGroupChatList().values())).get(i);
+                            if (groupChat.getMemberList().containsKey(senderName)) {
+                                user.getChatUI().updateGroup(groupChat.getGroupName(), 0);
+                                user.getGroupChatList().remove(groupChat.getGroupName());
+                            }
+                            if (user.getChatUI().getCurGroupName().equals(
+                                    groupChat.getGroupName())) {
+                                user.getChatUI().updateTextArea();
+                                user.getChatUI().setCurGroupName("");
+                            }
+                        }
                     } 
-                        
                         break;
+                    
+                case 6:
+                    
+                    // curPos at %
+                    curPos++; 
+                    pos = curPos;
+                    
+                    String groupName;
+                    String membersInfo;
+                    Friend friendCreate = user.getFriendList().get(senderName);
+                    
+                    while (receivedMess.charAt(curPos) != '%') {
+                        curPos++;
+                    }
+                    groupName = receivedMess.substring(pos, curPos);
+                    membersInfo = receivedMess.substring(curPos + 1)
+                            + friendCreate.getName() + "-"
+                            + friendCreate.getIP() + "-" 
+                            + friendCreate.getSentPort() + "%";
+                    
+                    user.getGroupChatList().put(groupName, new GroupChat(groupName, membersInfo));
+                    user.getChatUI().updateGroup(groupName, 1);
+                    //System.out.println(groupName + "\t" + membersInfo);
+                    break;
+                    
+                case 7:
+                    
+                    // curPos at %
+                    curPos++;
+                    pos = curPos;
+                    
+                    while (receivedMess.charAt(curPos) != '%') {
+                        curPos++;
+                    }
+                    groupName = receivedMess.substring(pos, curPos);
+                    String mess = receivedMess.substring(curPos + 1);
+                    
+                    user.getGroupChatList().get(groupName).addMess(
+                            senderName + ":  " + mess, 0);
+                    
+                    if (user.getChatUI().getCurGroupName().equals(groupName)) {
+                        user.getChatUI().displayGroupMess(groupName);
+                    } else {
+                        user.getChatUI().newMess(groupName, 2);
+                    }
+                    break;
                         
-                    default:     
-                        break;
-                }
+                default:     
+                    break;
+            }
 
         } catch(IOException e) {
             System.out.println("Oops: " + e.getMessage());

@@ -14,7 +14,7 @@ import javax.swing.JTextField;
  *
  * @author Admin
  */
-public class requestGUI extends javax.swing.JFrame {
+public class RequestFriendUI extends javax.swing.JFrame {
     
     private User user;
     private int pos;
@@ -24,14 +24,14 @@ public class requestGUI extends javax.swing.JFrame {
     /**
      * Creates new form requestGUI
      */
-    public requestGUI() {
+    public RequestFriendUI() {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
         
     }
     
     
-    public requestGUI (User user, String name, String receiverInfo, int pos) {
+    public RequestFriendUI (User user, String name, String receiverInfo, int pos) {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
         
@@ -206,21 +206,27 @@ public class requestGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(requestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RequestFriendUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(requestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RequestFriendUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(requestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RequestFriendUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(requestGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RequestFriendUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new requestGUI().setVisible(true);
+                new RequestFriendUI().setVisible(true);
             }
         });
     }

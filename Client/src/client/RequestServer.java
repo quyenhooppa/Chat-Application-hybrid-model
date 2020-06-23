@@ -24,12 +24,12 @@ public class RequestServer extends Thread{
     private String serverIp; // server ip
     private Socket socket;
     private int typeOfRequest;
-    private registerGUI registerUI;
-    private loginGUI loginUI;
+    private RegisterUI registerUI;
+    private LoginUI loginUI;
 
     public RequestServer(User user) {
         this.user = user;
-        this.serverIp = "192.168.1.178";
+        this.serverIp = "172.20.10.8";
     }
     
 
@@ -42,11 +42,11 @@ public class RequestServer extends Thread{
         this.nameAdding = nameAdding;
     }
 
-    public void setRegisterUI(registerGUI registerUI) {
+    public void setRegisterUI(RegisterUI registerUI) {
         this.registerUI = registerUI;
     }
 
-    public void setLoginUI(loginGUI loginUI) {
+    public void setLoginUI(LoginUI loginUI) {
         this.loginUI = loginUI;
     }
     
@@ -183,10 +183,11 @@ public class RequestServer extends Thread{
             // login failed
             if (response.length() > 1) {
                 
+                user.setUpData();
                 setUpFriendInfo(response);
                 user.setClientIp(host.getHostAddress());
                 
-                new chatGUI(user).setVisible(true); 
+                new ChatUI(user).setVisible(true); 
                 loginUI.dispose();
                 
                 return true;
@@ -228,7 +229,7 @@ public class RequestServer extends Thread{
             
             if (!response.equals("0")) { // user found or online
                 //chatUI.setReceiverInfo(response);
-                requestGUI addfriend = new requestGUI(user, 
+                RequestFriendUI addfriend = new RequestFriendUI(user, 
                         nameAdding, response, 1);
                 addfriend.setVisible(true);
             } else { // user not found
@@ -274,7 +275,7 @@ public class RequestServer extends Thread{
             port = Integer.parseInt(response.substring(curPos + 1));
                  
             user.getFriendList().put(name, new Friend(name, ip, port, status));
-            user.getMessRecordList().put(name, new MessRecord(name));
+            user.getMessRecordList().put(name, new MessRecord());
             System.out.println(name + status);
             user.getChatUI().addName(name, status);
             
@@ -412,7 +413,7 @@ public class RequestServer extends Thread{
                 
                 // Friend newFriend = new Friend(friendName, sentPort, status);
                 Friend newFriend = new Friend(friendName, ip, sentPort, status);
-                MessRecord newMessRecord = new MessRecord(friendName);
+                MessRecord newMessRecord = new MessRecord();
                 
                user.getFriendList().put(friendName, newFriend); // add friend
                user.getMessRecordList().put(friendName, newMessRecord); // add mess record

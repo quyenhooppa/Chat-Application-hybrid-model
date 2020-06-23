@@ -15,12 +15,12 @@ import javax.swing.*;
  *
  * @author Admin
  */
-public class registerGUI extends javax.swing.JFrame {
+public class RegisterUI extends javax.swing.JFrame {
 
     /**
      * Creates new form registerGUI
      */
-    public registerGUI() {
+    public RegisterUI() {
         initComponents();
         rePassword.addActionListener(register);
     }
@@ -179,7 +179,7 @@ public class registerGUI extends javax.swing.JFrame {
             
             if (pass.equals(rePass)) {
                 
-                if (!name.matches("^[a-zA-z0-9]+$")) { // only letters anf digits
+                if (!name.matches("^[a-zA-z0-9]+$")) { // only letters and digits
                     userName.setText("");
                     password.setText("");
                     rePassword.setText("");
@@ -229,7 +229,7 @@ public class registerGUI extends javax.swing.JFrame {
         try {
             doneRegister();
         } catch (ClassNotFoundException | InterruptedException ex) {
-            Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegisterUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_doneButActionPerformed
 
@@ -245,7 +245,7 @@ public class registerGUI extends javax.swing.JFrame {
             try {
                 doneRegister();
             } catch (ClassNotFoundException | InterruptedException ex) {
-                Logger.getLogger(registerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(RegisterUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     };
@@ -282,14 +282,26 @@ public class registerGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(registerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(registerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(registerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(registerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RegisterUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -298,7 +310,7 @@ public class registerGUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new registerGUI().setVisible(true);
+                new RegisterUI().setVisible(true);
             }
         });
     }

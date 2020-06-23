@@ -5,9 +5,9 @@
  */
 package client;
 
-import clientUI.chatGUI;
-import clientUI.fileGUI;
-import clientUI.requestGUI;
+import clientUI.ChatUI;
+import clientUI.FileUI;
+import clientUI.RequestFriendUI;
 import java.io.IOException;
 import java.util.*;
 import java.net.Socket;
@@ -25,9 +25,9 @@ public class User extends Thread {
     private int receivedPort; // port connection
     private RequestServer requestServer;
     private ServerSocket serverSocket;
-    private chatGUI chatUI;
-    private requestGUI requestUI;
-    private fileGUI fileUI;
+    private ChatUI chatUI;
+    private RequestFriendUI requestUI;
+    private FileUI fileUI;
     
     // list of user's friends
     LinkedHashMap<String, Friend> friendList; 
@@ -35,12 +35,13 @@ public class User extends Thread {
     // record messages communicate with friends
     HashMap<String, MessRecord> messRecordList; 
     
+    // 
+    LinkedHashMap<String, GroupChat> groupChatList;
+    
     
     public User(String name, String pass) {
         this.name = name;
         this.pass = pass;
-        this.friendList = new LinkedHashMap<>();
-        this.messRecordList = new HashMap<>();
         this.requestServer = new RequestServer(this);
     }
     
@@ -54,15 +55,15 @@ public class User extends Thread {
         this.clientIp = clientIp;
     }
         
-    public void setChatUI(chatGUI chatUI) {
+    public void setChatUI(ChatUI chatUI) {
         this.chatUI = chatUI;
     }
 
-    public void setRequestUI(requestGUI requestUI) {
+    public void setRequestUI(RequestFriendUI requestUI) {
         this.requestUI = requestUI;
     }
     
-     public void setFileUI(fileGUI fileUI) {
+     public void setFileUI(FileUI fileUI) {
         this.fileUI = fileUI;
     }
 
@@ -102,20 +103,30 @@ public class User extends Thread {
     public HashMap<String, MessRecord> getMessRecordList() {
         return messRecordList;
     }
+
+    public HashMap<String, GroupChat> getGroupChatList() {
+        return groupChatList;
+    }
     
-    public chatGUI getChatUI() {
+    public ChatUI getChatUI() {
         return chatUI;
     }
 
-    public requestGUI getRequestUI() {
+    public RequestFriendUI getRequestUI() {
         return requestUI;
     }
     
-    public fileGUI getFileUI() {
+    public FileUI getFileUI() {
         return fileUI;
     }
     
     
+    
+    public void setUpData() {
+        this.friendList = new LinkedHashMap<>();
+        this.messRecordList = new HashMap<>();
+        this.groupChatList = new LinkedHashMap<>();
+    }
     
     // classify the request sent to server
     public void requestToServer(String requestToServer) {

@@ -5,7 +5,7 @@
  */
 package client;
 
-import clientUI.loginGUI;
+import clientUI.LoginUI;
 
 /**
  *
@@ -18,14 +18,14 @@ public class Client {
      */
     public static void main(String[] args) {
             // TODO code application logic here
-        loginGUI loginUI = new loginGUI();
+        LoginUI loginUI = new LoginUI();
         loginUI.setVisible(true);
         
-        loginUI = new loginGUI();
+        loginUI = new LoginUI();
         loginUI.setVisible(true);
 
-//        loginUI = new loginGUI();
-//        loginUI.setVisible(true);
+        loginUI = new LoginUI();
+        loginUI.setVisible(true);
     }
     
 }

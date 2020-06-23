@@ -5,14 +5,9 @@
  */
 package client;
 
-import clientUI.chatGUI;
-import clientUI.fileGUI;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -29,21 +24,21 @@ public class SendMess extends Thread {
     private Friend friend; 
     private String mess;
     private File file;
-    private int typeSending; // 1:message - 2:file - 3:friend request - 4:request reply
-
-    public SendMess(User userSend, Friend friend, int typeSending) {
-        this.userSend = userSend;
-        this.friend = friend;
-        this.typeSending = typeSending;
-        this.mess = "";
-    }
+    // 1:send message
+    // 2:file 
+    // 3:friend request 
+    // 4:request reply
+    // 5:logout
+    // 6:group chat
+    // 7:group mess
+    private int typeSending; 
+    
     
     public SendMess(User userSend, Friend friend, String mess, int typeSending) {
         this.userSend = userSend;
         this.friend = friend;
         this.typeSending = typeSending;
         this.mess = mess;
-        //newSending();
     }
     
     public SendMess(User userSend, Friend friend, 
@@ -53,12 +48,6 @@ public class SendMess extends Thread {
         this.typeSending = typeSending;
         this.mess = mess;
         this.file = file;
-        //newSending();
-    }
-    
-    
-    private void newSending() {
-        this.start();
     }
     
     //--------------- SETTER ---------------
@@ -71,9 +60,8 @@ public class SendMess extends Thread {
     @Override
     public void run() {
             try (Socket socket = new Socket(friend.getIP(), friend.getSentPort())) {
-                BufferedReader input = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()));
-                   
+//                BufferedReader input = new BufferedReader(
+//                        new InputStreamReader(socket.getInputStream())); 
                 PrintWriter output = 
                         new PrintWriter(socket.getOutputStream(), true);
                     
@@ -87,13 +75,10 @@ public class SendMess extends Thread {
                     case 1: // send a message
                         
                         MessRecord record = userSend.getMessRecordList().get(friend.getName());
-                        record.addNumOfMess(1);
                         record.addMess(mess, 1);
                         if (userSend.getChatUI().getCurFriendName().equals(friend.getName())) {
                                 userSend.getChatUI().displayMess(friend.getName());
                         }
-                        
-                        //System.out.println(record.getMessList().get(record.getNumOfMess()-1));
                         break;
                 
                     case 2: // send a file
@@ -125,7 +110,6 @@ public class SendMess extends Thread {
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
-                        
                         break;
                         
                     case 3: // send friend request
@@ -145,7 +129,14 @@ public class SendMess extends Thread {
                         break;
                     
                     case 5: //  send status to friend
-
+                        break;
+                        
+                    case 6: // create group chat
+                        
+                        break;
+                        
+                    case 7: // send mess to group chat
+                        
                         break;
                         
                     default:
