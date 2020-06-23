@@ -377,40 +377,45 @@ public final class Echoer extends Thread {
         DocumentBuilder dBuilder = factory.newDocumentBuilder();
         Document doc = dBuilder.parse(userFile);
         doc.getDocumentElement().normalize();
+        
         NodeList nList = doc.getElementsByTagName("ip");
-        //Get first element
         Node nNode = nList.item(0);
         Element elem = (Element) nNode;
         NodeList nE = elem.getElementsByTagName("user");
+        
+        Node n1 = nE.item(0);
+        Element x = (Element) n1;
+            
         int length = nE.getLength();
         for (int i = 0; i < length; i++){
-            Node n1 = nE.item(i);
-            Element x = (Element) n1;
+            n1 = nE.item(i);
+            x = (Element) n1;
             Node n2 = x.getElementsByTagName("username").item(0);
             String nameField = n2.getTextContent();
             //System.out.println(nameField);
             if (nameField.equals(name)){
                 //System.out.println("Occur");
-                Node n3 = x.getElementsByTagName("ip").item(0);
-                n3.setTextContent(ip);
-                TransformerFactory transformerFactory
-                        = TransformerFactory.newInstance();
-                Transformer transf = transformerFactory.newTransformer();
-
-                transf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                transf.setOutputProperty(OutputKeys.INDENT, "yes");
-
-                DOMSource source = new DOMSource(doc);
-                StreamResult file = new StreamResult(userFile);
-                transf.transform(source, file);
-                
                 flag = false;
                 break;
             }
         }
         
-        if (!flag) {
-        } else {
+        if (!flag) { // update new ip for existing user
+            Node n3 = x.getElementsByTagName("ip").item(0);
+            n3.setTextContent(ip);
+            
+            TransformerFactory transformerFactory
+                        = TransformerFactory.newInstance();
+            Transformer transf = transformerFactory.newTransformer();
+
+            transf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transf.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult file = new StreamResult(userFile);
+            transf.transform(source, file);
+                
+        } else { // add new ip for new user 
             Element user = doc.createElement("user");
 
             user.setAttribute("name", name);
@@ -432,9 +437,7 @@ public final class Echoer extends Thread {
             transf.setOutputProperty(OutputKeys.INDENT, "yes");
 
             DOMSource source = new DOMSource(doc);
-
             StreamResult file = new StreamResult(userFile);
-
             transf.transform(source, file);
         }
     }
