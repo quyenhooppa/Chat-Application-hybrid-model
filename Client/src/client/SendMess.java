@@ -130,8 +130,8 @@ public class SendMess extends Thread {
    
     private void updateMessRecord() {
         //MessRecord record = userSend.getMessRecordList().get(friend.getName());
-        MessRecord record = userSend.getFriendList().get(friend.getName()).getMessRecord();
-        record.addMess(mess, 1);
+        //MessRecord record = userSend.getFriendList().get(friend.getName()).getMessRecord();
+        userSend.getFriendList().get(friend.getName()).addMess(mess, 1);
         
         if (userSend.getChatUI().getCurFriendName().equals(friend.getName())) {
             userSend.getChatUI().displayMess(friend.getName());

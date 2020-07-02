@@ -6,15 +6,12 @@
 package client;
 
 import clientUI.RequestFriendUI;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -115,48 +112,12 @@ public class ReceiveMess extends Thread {
                     
                 case 6:
                     
-                    // curPos at %
-                    curPos++; 
-                    int pos = curPos;
-                    
-                    String groupName;
-                    String membersInfo;
-                    Friend friendCreate = user.getFriendList().get(senderName);
-                    
-                    while (receivedMess.charAt(curPos) != '%') {
-                        curPos++;
-                    }
-                    groupName = receivedMess.substring(pos, curPos);
-                    membersInfo = receivedMess.substring(curPos + 1)
-                            + friendCreate.getName() + "-"
-                            + friendCreate.getIP() + "-" 
-                            + friendCreate.getSentPort() + "%";
-                    
-                    user.getGroupChatList().put(groupName, new GroupChat(groupName, membersInfo));
-                    user.getChatUI().updateGroup(groupName, 1);
-                    //System.out.println(groupName + "\t" + membersInfo);
+                    creatGroupChat(receivedMess, senderName, curPos);
                     break;
                     
                 case 7:
                     
-                    // curPos at %
-                    curPos++;
-                    pos = curPos;
-                    
-                    while (receivedMess.charAt(curPos) != '%') {
-                        curPos++;
-                    }
-                    groupName = receivedMess.substring(pos, curPos);
-                    String mess = receivedMess.substring(curPos + 1);
-                    
-                    user.getGroupChatList().get(groupName).addMess(
-                            senderName + ":  " + mess, 0);
-                    
-                    if (user.getChatUI().getCurGroupName().equals(groupName)) {
-                        user.getChatUI().displayGroupMess(groupName);
-                    } else {
-                        user.getChatUI().newMess(groupName, 2);
-                    }
+                    updateGroupMess(receivedMess, senderName, curPos);
                     break;
                         
                 default:     
@@ -180,8 +141,9 @@ public class ReceiveMess extends Thread {
     private void updateMessRecord(String receivedMess, String senderName, int curPos) {
         // curPos at %
         //MessRecord record = user.messRecordList.get(senderName);
-        MessRecord record = user.getFriendList().get(senderName).getMessRecord();
-        record.addMess(receivedMess.substring(curPos + 1), 0);
+        //MessRecord record = user.getFriendList().get(senderName).getMessRecord();
+        user.getFriendList().get(senderName).addMess(receivedMess.substring(curPos + 1), 0);
+        //record.addMess(receivedMess.substring(curPos + 1), 0);
         if (user.getChatUI().getCurFriendName().equals(senderName)) {
             user.getChatUI().displayMess(senderName);
         } else {
@@ -249,7 +211,8 @@ public class ReceiveMess extends Thread {
                 user.getChatUI().addName(senderName, 0);
                 user.getChatUI().removeName(senderName, 1);
                 //user.getMessRecordList().get(senderName).getMessList().clear();
-                user.getFriendList().get(senderName).getMessRecord().getMessList().clear();
+                //user.getFriendList().get(senderName).getMessRecord().getMessList().clear();
+                user.getFriendList().get(senderName).getMessRecord().clear();
                 if (user.getChatUI().getCurFriendName().equals(senderName)) {
                     user.getChatUI().updateTextArea();
                     user.getChatUI().setCurFriendName("");
@@ -271,6 +234,49 @@ public class ReceiveMess extends Thread {
         } 
     }
    
+    private void creatGroupChat(String receivedMess, String senderName, int curPos) {
+        // curPos at %
+        curPos++; 
+        int pos = curPos;
+                    
+        String groupName;
+        String membersInfo;
+        Friend friendCreate = user.getFriendList().get(senderName);
+                    
+        while (receivedMess.charAt(curPos) != '%') {
+            curPos++;
+        }
+        groupName = receivedMess.substring(pos, curPos);
+        membersInfo = receivedMess.substring(curPos + 1)
+                + friendCreate.getName() + "-"
+                + friendCreate.getIP() + "-" 
+                + friendCreate.getSentPort() + "%";
+                    
+        user.getGroupChatList().put(groupName, new GroupChat(groupName, membersInfo));
+        user.getChatUI().updateGroup(groupName, 1);
+        //System.out.println(groupName + "\t" + membersInfo);
+    }
+    
+    private void updateGroupMess(String receivedMess, String senderName, int curPos) {
+        // curPos at %
+        curPos++;
+        int pos = curPos;
+                    
+        while (receivedMess.charAt(curPos) != '%') {
+            curPos++;
+        }
+        String groupName = receivedMess.substring(pos, curPos);
+        String mess = receivedMess.substring(curPos + 1);
+                    
+        user.getGroupChatList().get(groupName).addMess(
+                senderName + ":  " + mess, 0);
+                    
+        if (user.getChatUI().getCurGroupName().equals(groupName)) {
+            user.getChatUI().displayGroupMess(groupName);
+        } else {
+            user.getChatUI().newMess(groupName, 2);
+        }
+    }
 }
     
 

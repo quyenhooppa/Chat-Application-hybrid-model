@@ -100,13 +100,15 @@ public class GroupChat {
     
     // add messagae to the list, type of messages is sent (1) or received (0)
     public void addMess(String mess, int type) {
-        if (type == 1) { // mess sent
-            String encodedMess = String.valueOf(type) + mess;
-            messList.add(encodedMess);
-        } else { // mess recevied: sender: \t mess
-            String encodedMess = String.valueOf(type) + mess;
-            messList.add(encodedMess);
-        }
+//        if (type == 1) { // mess sent
+//            String encodedMess = String.valueOf(type) + mess;
+//            messList.add(encodedMess);
+//        } else { // mess recevied: sender: \t mess
+//            String encodedMess = String.valueOf(type) + mess;
+//            messList.add(encodedMess);
+//        }
+        String encodedMess = String.valueOf(type) + mess;
+        messList.add(encodedMess);
     }
 
 }

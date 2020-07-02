@@ -331,7 +331,8 @@ public class RequestServer extends Thread{
             
             if (status == 0) {
                 //user.getMessRecordList().get(friendName).getMessList().clear();
-                user.getFriendList().get(friendName).getMessRecord().getMessList().clear();
+                //user.getFriendList().get(friendName).getMessRecord().getMessList().clear();
+                user.getFriendList().get(friendName).getMessRecord().clear();
             } 
 
             user.getFriendList().get(friendName).setStatus(status);

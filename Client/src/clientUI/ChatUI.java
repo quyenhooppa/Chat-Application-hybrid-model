@@ -438,11 +438,12 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         }
         
         // get message record with friend
-        MessRecord messRecord = user.getFriendList().get(friendName).getMessRecord();
+        //MessRecord messRecord = user.getFriendList().get(friendName).getMessRecord();
         //MessRecord messRecord = user.getMessRecordList().get(friend);
+        ArrayList<String> messRecord = user.getFriendList().get(friendName).getMessRecord();
         
-        for (int i = 0; i < messRecord.getMessList().size(); i++) {
-            String message = messRecord.getMessList().get(i);
+        for (int i = 0; i < messRecord.size(); i++) {
+            String message = messRecord.get(i);
             if (message.charAt(0) == '1') {
                 ownerChatMessage(message.substring(1));
             } else {
