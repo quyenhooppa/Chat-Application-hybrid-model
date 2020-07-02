@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,7 +31,7 @@ public class Server {
 
     
     public static void main(String[] args) throws ParserConfigurationException, TransformerException{
-        ListOfUser userList = new ListOfUser();
+        HashMap<String, Echoer> userList = new HashMap<>();
         
         try (ServerSocket serverSocket = new ServerSocket(5000)) {
             String fileName = "src/data/ip.xml";
@@ -62,13 +63,10 @@ public class Server {
                 try {
                     Socket socket = serverSocket.accept();
                     new Echoer(socket, userList);
-                    System.out.println("New client connected");
+//                    System.out.println("New client connected");
                 } catch (IOException ex) {
                      System.out.println("Socket created: " + ex);
                 }
-                
-                //System.out.println("OK");
-
             }
 
         } catch (IOException e) {

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.File;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -35,12 +36,14 @@ import org.xml.sax.SAXException;
  */
 
 public final class Echoer extends Thread {
+    
     private Socket socket;
-    private  String userName;
-    private ListOfUser userList;
+    private String userName;
+    //private ListOfUser userList;
+    private HashMap<String, Echoer> userList;
     private PrintWriter output;
 
-    public Echoer(Socket socket, ListOfUser userList) {
+    public Echoer(Socket socket,HashMap<String, Echoer> userList) { //, ListOfUser userList) {
         this.socket = socket;
         this.userList = userList;
         newConnection();
@@ -72,7 +75,14 @@ public final class Echoer extends Thread {
                 output = new PrintWriter(socket.getOutputStream(), true);
 
                 String echoString = input.readLine();
-                System.out.println("Received client input: " + echoString);
+                System.out.println("Received client input: " + echoString 
+                        + " " + this.getName());
+                
+                if (echoString.isEmpty()) {
+                    notifyNewStatusToFriend();
+                    userList.remove(userName, this);
+                    break;
+                }
 
                 char c = echoString.charAt(0);
 
@@ -85,12 +95,12 @@ public final class Echoer extends Thread {
                     case '2': // request login
 
                         socketOpen = authenticate(echoString, output);
-                        notifyStatus();
+                        notifyNewStatusToFriend();
                         break;
                     case '3': // request send add friend
 
                         String username = echoString.substring(1);
-                        findPerson(username, output);
+                        findUser(username, output);
                         break;
                     case '4': // request add friend
 
@@ -99,10 +109,11 @@ public final class Echoer extends Thread {
                     case '5': // request logout
 
                         logOut(echoString, output);
-                        userName = echoString.substring(1);
+                        // userName = echoString.substring(1);
                         
-                        notifyStatus();
-                        userList.getListOfUserConnetion().remove(userName, this);
+                        notifyNewStatusToFriend();
+                       // userList.getListOfUserConnetion().remove(userName, this);
+                        userList.remove(userName, this);
                         socketOpen = false;
                         break;
                     default:
@@ -114,7 +125,7 @@ public final class Echoer extends Thread {
                 }
 
             } catch (IOException e) {
-                System.out.println("Oops: " + e.getMessage());
+                // System.out.println("Oops: " + e.getMessage());
                 if (!userName.equals("")) {
                     try {
                         updateStatus(userName, "0");
@@ -142,8 +153,9 @@ public final class Echoer extends Thread {
         }
     }
     
-    //Notiffy to user friend if status changed
-    private void notifyStatus() throws SAXException, ParserConfigurationException, IOException {
+    
+    //Notify to user friend if status changed
+    private void notifyNewStatusToFriend() throws SAXException, ParserConfigurationException, IOException {
         
         String fileName = "src/data/" + userName + ".xml";
         File userFile = new File(fileName);
@@ -178,7 +190,8 @@ public final class Echoer extends Thread {
                 //System.out.println(status + friendName);
                 if (friendStatus.equals("1")) {
                     
-                    Echoer echoer = userList.getListOfUserConnetion().get(friendName);
+                    //Echoer echoer = userList.getListOfUserConnetion().get(friendName);
+                    Echoer echoer = userList.get(friendName);
 //                    System.out.println(friendName + " " + message);
                     echoer.getOutput().println(message);
                 }
@@ -211,7 +224,7 @@ public final class Echoer extends Thread {
         } else {
             output.println("1"); 
             int port;
-            port = getPort(name);
+            port = defineListenPort(name);
             // write to xml file 
             DocumentBuilderFactory factory
                     = DocumentBuilderFactory.newInstance();
@@ -294,19 +307,18 @@ public final class Echoer extends Thread {
 //        System.out.println(pass);
 //        System.out.println(ip);
 
-        
-
         String fileName = "src/data/" + name + ".xml";
         File userFile = new File(fileName);
 
         if (!userFile.isFile()) {
-            System.out.println("Rejected!!!");
+//            System.out.println("Rejected!!!");
             output.println("2");
         } else {
             updateUserIP(ip, name);
             
             userName = name;
-            userList.getListOfUserConnetion().put(userName, this);
+            //userList.getListOfUserConnetion().put(userName, this);
+            userList.put(userName, this);
             
             DocumentBuilderFactory factory
                     = DocumentBuilderFactory.newInstance();
@@ -335,7 +347,7 @@ public final class Echoer extends Thread {
                 // login successfully, send back its listen port
                 if (passFile.equals(pass)) {
 
-                    System.out.println("Login!!!");
+//                    System.out.println("Login!!!");
                     updateStatus(name, "1");
                     message = message + "%" + numberOfFriend + "%";
                     Node friend;
@@ -354,13 +366,12 @@ public final class Echoer extends Thread {
                     output.println(message);
                     return true;
                 } else {
-
-                    System.out.println("Rejected!!!");
+//                    System.out.println("Rejected!!!");
                     output.println("0");
                 }
             }
             
-            System.out.println("Rejected!!!");
+//            System.out.println("Rejected!!!");
             output.println("3");
 
         }
@@ -513,7 +524,7 @@ public final class Echoer extends Thread {
     //END OF LOGIN%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     //BEGIN OF FINDPERSON%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private void findPerson(String username, PrintWriter output) throws SAXException, IOException, ParserConfigurationException{
+    private void findUser(String username, PrintWriter output) throws SAXException, IOException, ParserConfigurationException{
         String fileName = "src/data/" + username + ".xml";
 //        System.out.println(username);
         File personFile = new File(fileName);
@@ -606,7 +617,7 @@ public final class Echoer extends Thread {
             
     }
     //END OF ADDFRIEND%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    private int getPort(String name) {
+    private int defineListenPort(String name) {
 
         int port = 0;
         String fileName = "src/data/" + name + ".xml";
