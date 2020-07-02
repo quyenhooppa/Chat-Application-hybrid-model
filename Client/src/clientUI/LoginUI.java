@@ -24,15 +24,6 @@ public class LoginUI extends javax.swing.JFrame {
         password.addActionListener(login);
     }
 
-    public JPasswordField getPassword() {
-        return password;
-    }
-
-    public JTextField getUserName() {
-        return userName;
-    }
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,8 +38,8 @@ public class LoginUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         password = new javax.swing.JPasswordField();
-        registerBut = new javax.swing.JButton();
-        loginBut = new javax.swing.JButton();
+        registerButton = new javax.swing.JButton();
+        loginButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,17 +49,17 @@ public class LoginUI extends javax.swing.JFrame {
 
         jLabel2.setText("Password:");
 
-        registerBut.setText("Register");
-        registerBut.addActionListener(new java.awt.event.ActionListener() {
+        registerButton.setText("Register");
+        registerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerButActionPerformed(evt);
+                registerButtonActionPerformed(evt);
             }
         });
 
-        loginBut.setText("Login");
-        loginBut.addActionListener(new java.awt.event.ActionListener() {
+        loginButton.setText("Login");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButActionPerformed(evt);
+                loginButtonActionPerformed(evt);
             }
         });
 
@@ -95,9 +86,9 @@ public class LoginUI extends javax.swing.JFrame {
                                     .addGap(0, 0, Short.MAX_VALUE))))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(63, 63, 63)
-                            .addComponent(registerBut)
+                            .addComponent(registerButton)
                             .addGap(47, 47, 47)
-                            .addComponent(loginBut)))
+                            .addComponent(loginButton)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(147, 147, 147)
                         .addComponent(jLabel3)))
@@ -118,8 +109,8 @@ public class LoginUI extends javax.swing.JFrame {
                     .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registerBut)
-                    .addComponent(loginBut))
+                    .addComponent(registerButton)
+                    .addComponent(loginButton))
                 .addContainerGap())
         );
 
@@ -167,13 +158,18 @@ public class LoginUI extends javax.swing.JFrame {
         }
     }
     
-    private void registerButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButActionPerformed
+    public void resetField() {
+        userName.setText("");
+        password.setText("");
+    }
+    
+    private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
         new RegisterUI().setVisible(true); 
-    }//GEN-LAST:event_registerButActionPerformed
+    }//GEN-LAST:event_registerButtonActionPerformed
 
-    private void loginButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButActionPerformed
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         checkAccount();
-    }//GEN-LAST:event_loginButActionPerformed
+    }//GEN-LAST:event_loginButtonActionPerformed
      
     Action login = new AbstractAction()
     {
@@ -255,9 +251,9 @@ public class LoginUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JButton loginBut;
+    private javax.swing.JButton loginButton;
     private javax.swing.JPasswordField password;
-    private javax.swing.JButton registerBut;
+    private javax.swing.JButton registerButton;
     private javax.swing.JTextField userName;
     // End of variables declaration//GEN-END:variables
 

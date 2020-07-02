@@ -86,7 +86,7 @@ public class GroupChat {
             Friend friend = (new ArrayList<>(memberList.values())).get(i);
             
             if (!friend.getName().equals(sender.getUserName())) {
-                System.out.println(friend.getName() + friend.getIP() + friend.getSentPort());
+               // System.out.println(friend.getName() + friend.getIP() + friend.getSentPort());
                 new SendMess(sender, friend, 
                         groupName + "%" + mess, 7).start();
             }

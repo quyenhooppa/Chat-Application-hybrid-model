@@ -32,10 +32,7 @@ public class User extends Thread {
     // list of user's friends
     LinkedHashMap<String, Friend> friendList; 
     
-    // record messages communicate with friends
-    HashMap<String, MessRecord> messRecordList; 
     
-    // 
     LinkedHashMap<String, GroupChat> groupChatList;
     
     
@@ -100,10 +97,6 @@ public class User extends Thread {
         return friendList;
     }
 
-    public HashMap<String, MessRecord> getMessRecordList() {
-        return messRecordList;
-    }
-
     public HashMap<String, GroupChat> getGroupChatList() {
         return groupChatList;
     }
@@ -124,7 +117,6 @@ public class User extends Thread {
     
     public void setUpData() {
         this.friendList = new LinkedHashMap<>();
-        this.messRecordList = new HashMap<>();
         this.groupChatList = new LinkedHashMap<>();
     }
     

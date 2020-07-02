@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 
 /**
  *
@@ -74,42 +73,12 @@ public class SendMess extends Thread {
                 switch (typeSending) {
                     case 1: // send a message
                         
-                        MessRecord record = userSend.getMessRecordList().get(friend.getName());
-                        record.addMess(mess, 1);
-                        if (userSend.getChatUI().getCurFriendName().equals(friend.getName())) {
-                                userSend.getChatUI().displayMess(friend.getName());
-                        }
+                        updateMessRecord();
                         break;
                 
                     case 2: // send a file
                         
-                        try (
-                            FileInputStream in = new FileInputStream(file);
-                            OutputStream out = socket.getOutputStream();
-                        ) {
-                            new SendMess(userSend, friend, 
-                                    "Sending" + file.getName(), 1).start(); 
-                            
-                            byte[] buffer = new byte[1024 * 1024];
-                            
-                            int count;
-                            while ((count = in.read(buffer)) > -1) {
-                                out.write(buffer, 0, count);
-                            }
-                            
-                            out.close();
-                            in.close();
-                            
-                            new SendMess(userSend, friend, 
-                                    file.getName() + " done", 1).start();
-                            
-                            userSend.getFileUI().dispose();
-                            JOptionPane.showMessageDialog(null, 
-                                file.getName() + " sent done!");
-     
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
+                        sendFile(socket);
                         break;
                         
                     case 3: // send friend request
@@ -156,5 +125,48 @@ public class SendMess extends Thread {
                             + e.getMessage());
             }   
     }
+    
+    
+   
+    private void updateMessRecord() {
+        //MessRecord record = userSend.getMessRecordList().get(friend.getName());
+        MessRecord record = userSend.getFriendList().get(friend.getName()).getMessRecord();
+        record.addMess(mess, 1);
+        
+        if (userSend.getChatUI().getCurFriendName().equals(friend.getName())) {
+            userSend.getChatUI().displayMess(friend.getName());
+        }
+    }
+    
+    private void sendFile(Socket socket) {
+       try (
+            FileInputStream in = new FileInputStream(file);
+            OutputStream out = socket.getOutputStream();
+        ) {
+            new SendMess(userSend, friend, 
+                    "Sending" + file.getName(), 1).start(); 
+                            
+            byte[] buffer = new byte[1024 * 1024];
+                            
+            int count;
+            while ((count = in.read(buffer)) > -1) {
+                out.write(buffer, 0, count);
+            }
+                            
+            out.close();
+            in.close();
+                            
+            new SendMess(userSend, friend, 
+                    file.getName() + " done", 1).start();
+                            
+            userSend.getFileUI().dispose();
+            JOptionPane.showMessageDialog(null, 
+                    file.getName() + " sent done!");
+     
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } 
+    }
+    
 }
 

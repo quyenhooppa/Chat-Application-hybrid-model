@@ -15,12 +15,14 @@ public class Friend {
     private String ip;
     private int sentPort; // port to send to friend
     private int status;
+    private MessRecord messRecord;
 
     public Friend(String name, String ip, int sentPort, int status) {
         this.name = name;
         this.ip = ip;
         this.sentPort = sentPort;
         this.status = status;
+        this.messRecord = new MessRecord();
     }
 
     // set friend's status from server
@@ -43,6 +45,10 @@ public class Friend {
     
     public String getIP() {
         return ip;
+    }
+
+    public MessRecord getMessRecord() {
+        return messRecord;
     }
     
 }

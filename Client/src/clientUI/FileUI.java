@@ -30,7 +30,7 @@ public class FileUI extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
     }
     
-    public FileUI(User user, Friend friend, ChatUI chatUI) {
+    public FileUI(User user, Friend friend) {
         initComponents();
         jLabel1.setHorizontalAlignment(JTextField.CENTER);
         

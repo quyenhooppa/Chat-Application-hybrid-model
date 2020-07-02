@@ -18,6 +18,8 @@ import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -70,132 +72,52 @@ public class ReceiveMess extends Thread {
             switch (typeOfMess) {
                 case 1: // receive message
                             
-                    // curPos at %
-                    MessRecord record = user.messRecordList.get(senderName);
-                    record.addMess(receivedMess.substring(curPos + 1), 0);
-                    if (user.getChatUI().getCurFriendName().equals(senderName)) {
-                        user.getChatUI().displayMess(senderName);
-                    } else {
-                        user.getChatUI().newMess(senderName, 1);
-                    }
-                            
-                    //System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+                    updateMessRecord(receivedMess, senderName, curPos);
                     break;
-                    
-                            
+                               
                 case 2: // receive a file
  
+                    receiveFile(receivedMess, curPos);
+                    break;
+                            
+                case 3: // receive friend request 
+                            
                     // curPos at %
-                    int pos = curPos; // pos at %
-                    curPos++; // char after %
+                    curPos++;
+                    senderInfo = receivedMess.substring(curPos);
+                    //System.out.println(senderInfo);
+                    new RequestFriendUI(user, senderName, senderInfo, 0).setVisible(true);
+                    break;
                             
-                    while (receivedMess.charAt(curPos) != '%') {
-                         curPos++;
-                    }
-                    String fileName = receivedMess.substring(pos + 1, curPos);
-                    long fileLength = Long.parseLong(receivedMess.substring(curPos + 1));
+                case 4: // request accpeted
                             
-                    String home = System.getProperty("user.home");
-                    File file = new File(home + "/Downloads/" + fileName);
-                    file.createNewFile();
-                    // create an empty file with given size
-                    RandomAccessFile raf = new RandomAccessFile(file, "rw");
-                    raf.setLength(fileLength);
-                    raf.close();
-                            
-                    try (
-                        FileOutputStream out = new FileOutputStream(file);
-                        InputStream in = socket.getInputStream();
-                    ) {
-                    
-                            byte[] buffer = new byte[1024 * 1024];
-                                
-                            int count;
-                            while ((count = in.read(buffer)) > -1) {
-                                out.write(buffer, 0, count);
-                            }
+                    // curPos at %
+                    curPos++;
+                    String reply = receivedMess.substring(curPos);
 
-                            out.close();
-                            in.close();
-                              
-                            JOptionPane.showMessageDialog(null, 
-                                fileName + " received done!");
+                    //System.out.println("Sender: " + senderName);
+                    if (reply.equals("accept")) {
+                        user.requestToServer("add");
+                        user.setUserNameAdding(senderName);
 
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                        break;
-                            
-                    case 3: // receive friend request 
-                            
-                        // curPos at %
-                        curPos++;
-            
-                        senderInfo = receivedMess.substring(curPos);
-                        //System.out.println(senderInfo);
-                        new RequestFriendUI(user, senderName, senderInfo, 0).setVisible(true);
-                        break;
-                            
-                    case 4: // request accpeted
-                            
-                        // curPos at %
-                        curPos++;
-                        String reply = receivedMess.substring(curPos);
-
-                        //System.out.println("Sender: " + senderName);
-                        if (reply.equals("accept")) {
-                            user.requestToServer("add");
-                            user.setUserNameAdding(senderName);
-
-                            JOptionPane.showMessageDialog(null, "You and " + 
+                        JOptionPane.showMessageDialog(null, "You and " + 
                                 senderName + " are friends now");
-                        } else if (reply.equals("reject")) {
-                            JOptionPane.showMessageDialog(null, senderName + 
-                                    " doesn't want to add you");
-                        }             
-                        break;
+                    } else if (reply.equals("reject")) {
+                        JOptionPane.showMessageDialog(null, senderName + 
+                                " doesn't want to add you");
+                    }             
+                    break;
                           
-                    case 5: // friend logout
+                case 5: // friend logout
                         
-                        // curPos at %
-                        curPos++;
-                        String status = receivedMess.substring(curPos);
-                        
-                    if (status.equals("off")) {
-                        
-                        if (user.getFriendList().containsKey(senderName)) {
-                            user.getFriendList().get(senderName).setStatus(0);
-                            user.getChatUI().addName(senderName, 0);
-                            user.getChatUI().removeName(senderName, 1);
-                            user.getMessRecordList().get(senderName).getMessList().clear();
-                            if (user.getChatUI().getCurFriendName().equals(
-                                    senderName)) {
-                                user.getChatUI().updateTextArea();
-                                user.getChatUI().setCurFriendName("");
-                            }
-                        }
-                        
-                        for (int i = 0; i < user.getGroupChatList().size(); i++) {
-                            GroupChat groupChat = (new ArrayList<>(
-                                    user.getGroupChatList().values())).get(i);
-                            if (groupChat.getMemberList().containsKey(senderName)) {
-                                user.getChatUI().updateGroup(groupChat.getGroupName(), 0);
-                                user.getGroupChatList().remove(groupChat.getGroupName());
-                            }
-                            if (user.getChatUI().getCurGroupName().equals(
-                                    groupChat.getGroupName())) {
-                                user.getChatUI().updateTextArea();
-                                user.getChatUI().setCurGroupName("");
-                            }
-                        }
-                    } 
-                        break;
+                    clearMessRecord(receivedMess, senderName, curPos);    
+                    break;
                     
                 case 6:
                     
                     // curPos at %
                     curPos++; 
-                    pos = curPos;
+                    int pos = curPos;
                     
                     String groupName;
                     String membersInfo;
@@ -243,15 +165,112 @@ public class ReceiveMess extends Thread {
 
         } catch(IOException e) {
             System.out.println("Oops: " + e.getMessage());
-        } //finally { 
-            try {
-                socket.close();
-            } catch(IOException e) {
-                System.out.println("Receive close socket: " 
-                    + e.getMessage());
+        }
+        
+            
+        try {
+            socket.close();
+        } catch(IOException e) {
+            System.out.println("Receive close socket: " 
+                + e.getMessage());
+        }
+    }  
+    
+    
+    private void updateMessRecord(String receivedMess, String senderName, int curPos) {
+        // curPos at %
+        //MessRecord record = user.messRecordList.get(senderName);
+        MessRecord record = user.getFriendList().get(senderName).getMessRecord();
+        record.addMess(receivedMess.substring(curPos + 1), 0);
+        if (user.getChatUI().getCurFriendName().equals(senderName)) {
+            user.getChatUI().displayMess(senderName);
+        } else {
+            user.getChatUI().newMess(senderName, 1);
+        }
+                            
+        //System.out.println(record.getMessList().get(record.getNumOfMess()-1));
+    }
+    
+    private void receiveFile(String receivedMess, int curPos) {
+        try {
+            // curPos at %
+            int pos = curPos; // pos at %
+            curPos++; // char after %
+            
+            while (receivedMess.charAt(curPos) != '%') {
+                curPos++;
             }
-        //}
-    }   
+            String fileName = receivedMess.substring(pos + 1, curPos);
+            long fileLength = Long.parseLong(receivedMess.substring(curPos + 1));
+            
+            String home = System.getProperty("user.home");
+            File file = new File(home + "/Downloads/" + fileName);
+            file.createNewFile();
+            // create an empty file with given size
+            RandomAccessFile raf = new RandomAccessFile(file, "rw");
+            raf.setLength(fileLength);
+            raf.close();
+            
+            try (
+                    FileOutputStream out = new FileOutputStream(file);
+                    InputStream in = socket.getInputStream();
+                    ) {
+                
+                byte[] buffer = new byte[1024 * 1024];
+                
+                int count;
+                while ((count = in.read(buffer)) > -1) {
+                    out.write(buffer, 0, count);
+                }
+                
+                out.close();
+                in.close();
+                
+                JOptionPane.showMessageDialog(null,
+                        fileName + " received done!");
+                
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } catch (IOException ex) {
+                Logger.getLogger(ReceiveMess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void clearMessRecord(String receivedMess, String senderName, int curPos) {
+        // curPos at %
+        curPos++;
+        String status = receivedMess.substring(curPos);
+                        
+        if (status.equals("off")) {
+                        
+            if (user.getFriendList().containsKey(senderName)) {
+                user.getFriendList().get(senderName).setStatus(0);
+                user.getChatUI().addName(senderName, 0);
+                user.getChatUI().removeName(senderName, 1);
+                //user.getMessRecordList().get(senderName).getMessList().clear();
+                user.getFriendList().get(senderName).getMessRecord().getMessList().clear();
+                if (user.getChatUI().getCurFriendName().equals(senderName)) {
+                    user.getChatUI().updateTextArea();
+                    user.getChatUI().setCurFriendName("");
+                }
+            }
+
+            for (int i = 0; i < user.getGroupChatList().size(); i++) {
+                GroupChat groupChat = (new ArrayList<>(
+                    user.getGroupChatList().values())).get(i);
+                if (groupChat.getMemberList().containsKey(senderName)) {
+                    user.getChatUI().updateGroup(groupChat.getGroupName(), 0);
+                    user.getGroupChatList().remove(groupChat.getGroupName());
+                }
+                if (user.getChatUI().getCurGroupName().equals(groupChat.getGroupName())) {
+                    user.getChatUI().updateTextArea();
+                    user.getChatUI().setCurGroupName("");
+                }
+            }
+        } 
+    }
+   
 }
     
 

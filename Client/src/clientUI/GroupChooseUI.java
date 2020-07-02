@@ -43,8 +43,8 @@ public class GroupChooseUI extends javax.swing.JFrame {
             }
         }
         
-        online.setModel(this.onlFriends);
-        group.setModel(this.groupMems);
+        onlineList.setModel(this.onlFriends);
+        groupList.setModel(this.groupMems);
     }
 
     /**
@@ -57,35 +57,35 @@ public class GroupChooseUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        group = new javax.swing.JList<>();
+        groupList = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
-        online = new javax.swing.JList<>();
+        onlineList = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        cancel = new javax.swing.JButton();
-        create = new javax.swing.JButton();
-        add = new javax.swing.JButton();
-        remove = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        createButton = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
         groupName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        group.setModel(new javax.swing.AbstractListModel<String>() {
+        groupList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        group.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jScrollPane2.setViewportView(group);
+        groupList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jScrollPane2.setViewportView(groupList);
 
-        online.setModel(new javax.swing.AbstractListModel<String>() {
+        onlineList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        online.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jScrollPane3.setViewportView(online);
+        onlineList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jScrollPane3.setViewportView(onlineList);
 
         jLabel1.setFont(new java.awt.Font(".SF NS Text", 2, 13)); // NOI18N
         jLabel1.setText("Online friends");
@@ -97,31 +97,31 @@ public class GroupChooseUI extends javax.swing.JFrame {
         jLabel3.setText("Group name:");
         jLabel3.setToolTipText("");
 
-        cancel.setText("Cancel");
-        cancel.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
-        create.setText("Create");
-        create.addActionListener(new java.awt.event.ActionListener() {
+        createButton.setText("Create");
+        createButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createActionPerformed(evt);
+                createButtonActionPerformed(evt);
             }
         });
 
-        add.setText("Add");
-        add.addActionListener(new java.awt.event.ActionListener() {
+        addButton.setText("Add");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addActionPerformed(evt);
+                addButtonActionPerformed(evt);
             }
         });
 
-        remove.setText("Remove");
-        remove.addActionListener(new java.awt.event.ActionListener() {
+        removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeActionPerformed(evt);
+                removeButtonActionPerformed(evt);
             }
         });
 
@@ -140,8 +140,8 @@ public class GroupChooseUI extends javax.swing.JFrame {
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(28, 28, 28)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(add, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(remove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(27, 27, 27)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
@@ -153,9 +153,9 @@ public class GroupChooseUI extends javax.swing.JFrame {
                                 .addGap(36, 36, 36)))
                         .addGap(41, 41, 41))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(create)
+                        .addComponent(createButton)
                         .addGap(81, 81, 81)
-                        .addComponent(cancel)
+                        .addComponent(cancelButton)
                         .addGap(106, 106, 106))))
         );
         layout.setVerticalGroup(
@@ -172,27 +172,27 @@ public class GroupChooseUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(add)
+                        .addComponent(addButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(remove))
+                        .addComponent(removeButton))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(create)
-                    .addComponent(cancel))
+                    .addComponent(createButton)
+                    .addComponent(cancelButton))
                 .addContainerGap(9, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
         this.dispose();
-    }//GEN-LAST:event_cancelActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void createActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createActionPerformed
+    private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         // TODO add your handling code here:
         String name = this.groupName.getText().trim();
         if (!name.matches("^[a-zA-z0-9]+$")) { // only letters and digits
@@ -225,7 +225,7 @@ public class GroupChooseUI extends javax.swing.JFrame {
                 membersInfo = membersInfo + getFriendInfo(friend) + "%";
             }
             
-            System.out.println(membersInfo);
+            // System.out.println(membersInfo);
             
             for (int i = 0; i < groupMems.size(); i++) {
                 //System.out.println(groupMems.elementAt(i));
@@ -242,7 +242,7 @@ public class GroupChooseUI extends javax.swing.JFrame {
             
             this.dispose();
         }
-    }//GEN-LAST:event_createActionPerformed
+    }//GEN-LAST:event_createButtonActionPerformed
 
     private String getFriendInfo(Friend friend) {
         return friend.getName() + "-" + 
@@ -250,19 +250,19 @@ public class GroupChooseUI extends javax.swing.JFrame {
                 friend.getSentPort();
     }
     
-    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         // TODO add your handling code here:
-        String selectName = online.getSelectedValue();
+        String selectName = onlineList.getSelectedValue();
         onlFriends.remove(onlFriends.indexOf(selectName));
         groupMems.addElement(selectName);
-    }//GEN-LAST:event_addActionPerformed
+    }//GEN-LAST:event_addButtonActionPerformed
 
-    private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeActionPerformed
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         // TODO add your handling code here:
-        String selectName = group.getSelectedValue();
+        String selectName = groupList.getSelectedValue();
         groupMems.remove(groupMems.indexOf(selectName));
         onlFriends.addElement(selectName);
-    }//GEN-LAST:event_removeActionPerformed
+    }//GEN-LAST:event_removeButtonActionPerformed
 
     
     /**
@@ -301,17 +301,17 @@ public class GroupChooseUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton add;
-    private javax.swing.JButton cancel;
-    private javax.swing.JButton create;
-    private javax.swing.JList<String> group;
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton createButton;
+    private javax.swing.JList<String> groupList;
     private javax.swing.JTextField groupName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JList<String> online;
-    private javax.swing.JButton remove;
+    private javax.swing.JList<String> onlineList;
+    private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
 }

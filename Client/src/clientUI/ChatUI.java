@@ -61,9 +61,9 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         offlineList.setEnabled(false);
         
         onlineList.setModel(listOnl);
-        group.setModel(listGroup);
+        groupList.setModel(listGroup);
   
-        jTextField1.addActionListener(typeMessage);
+        mess.addActionListener(typeMessage);
         findUser.addActionListener(newChat);
         doc = jTextPane1.getStyledDocument();
         messageAlign= new SimpleAttributeSet();
@@ -119,25 +119,25 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
         jPanel1 = new javax.swing.JPanel();
-        logout = new javax.swing.JButton();
+        logoutButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        mess = new javax.swing.JButton();
-        file = new javax.swing.JButton();
+        mess = new javax.swing.JTextField();
+        sendMessButton = new javax.swing.JButton();
+        sendFileButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         offlineList = new javax.swing.JList<>();
         findUser = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        findToChat = new javax.swing.JButton();
+        findButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         onlineList = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        clear = new javax.swing.JButton();
-        groupChat = new javax.swing.JButton();
+        clearButton = new javax.swing.JButton();
+        groupButton = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        group = new javax.swing.JList<>();
+        groupList = new javax.swing.JList<>();
         jLabel4 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
@@ -174,11 +174,11 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        logout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/backicon.png"))); // NOI18N
-        logout.setText("Logout");
-        logout.addActionListener(new java.awt.event.ActionListener() {
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/backicon.png"))); // NOI18N
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutActionPerformed(evt);
+                logoutButtonActionPerformed(evt);
             }
         });
 
@@ -186,29 +186,29 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("F1");
 
-        jTextField1.setToolTipText("Type messages here");
-        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+        mess.setToolTipText("Type messages here");
+        mess.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                jTextField1FocusGained(evt);
+                messFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                jTextField1FocusLost(evt);
+                messFocusLost(evt);
             }
         });
 
-        mess.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/sendicon.png"))); // NOI18N
-        mess.setText("Send");
-        mess.addActionListener(new java.awt.event.ActionListener() {
+        sendMessButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/sendicon.png"))); // NOI18N
+        sendMessButton.setText("Send");
+        sendMessButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                messActionPerformed(evt);
+                sendMessButtonActionPerformed(evt);
             }
         });
 
-        file.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/attachicon.png"))); // NOI18N
-        file.setText("Attach");
-        file.addActionListener(new java.awt.event.ActionListener() {
+        sendFileButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/attachicon.png"))); // NOI18N
+        sendFileButton.setText("Attach");
+        sendFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileActionPerformed(evt);
+                sendFileButtonActionPerformed(evt);
             }
         });
 
@@ -232,10 +232,10 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
 
         jLabel2.setText("Online");
 
-        findToChat.setText("Chat");
-        findToChat.addActionListener(new java.awt.event.ActionListener() {
+        findButton.setText("Chat");
+        findButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                findToChatActionPerformed(evt);
+                findButtonActionPerformed(evt);
             }
         });
 
@@ -261,28 +261,28 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         jTextPane1.setKeymap(null);
         jScrollPane4.setViewportView(jTextPane1);
 
-        clear.setText("Clear");
-        clear.addActionListener(new java.awt.event.ActionListener() {
+        clearButton.setText("Clear");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearActionPerformed(evt);
+                clearButtonActionPerformed(evt);
             }
         });
 
-        groupChat.setText("Group");
-        groupChat.setToolTipText("");
-        groupChat.addActionListener(new java.awt.event.ActionListener() {
+        groupButton.setText("Group");
+        groupButton.setToolTipText("");
+        groupButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                groupChatActionPerformed(evt);
+                groupButtonActionPerformed(evt);
             }
         });
 
-        group.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        group.addMouseListener(new java.awt.event.MouseAdapter() {
+        groupList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        groupList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                groupMousePressed(evt);
+                groupListMousePressed(evt);
             }
         });
-        jScrollPane5.setViewportView(group);
+        jScrollPane5.setViewportView(groupList);
 
         jLabel4.setText("Group");
 
@@ -293,18 +293,18 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(logout)
+                        .addComponent(logoutButton)
                         .addGap(149, 149, 149)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 626, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(mess, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(5, 5, 5)
-                                .addComponent(mess)
+                                .addComponent(sendMessButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(file, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(sendFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(23, 23, 23)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,11 +317,11 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(findUser, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(findToChat)))
+                                    .addComponent(findButton)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(groupChat)
+                                .addComponent(groupButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(clear)))))
+                                .addComponent(clearButton)))))
                 .addGap(0, 37, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -330,13 +330,13 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(logout)
+                        .addComponent(logoutButton)
                         .addGap(9, 9, 9))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(clear)
-                            .addComponent(groupChat))
+                            .addComponent(clearButton)
+                            .addComponent(groupButton))
                         .addGap(5, 5, 5)))
                 .addGap(6, 6, 6)
                 .addComponent(jLabel2)
@@ -346,9 +346,9 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(mess)
-                            .addComponent(file, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(mess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sendMessButton)
+                            .addComponent(sendFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(25, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -362,7 +362,7 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(findToChat)
+                            .addComponent(findButton)
                             .addComponent(findUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18))))
         );
@@ -392,7 +392,7 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         if (type == 1) {
             int size = listOnl.getSize();
             for (int i = 0; i < size; i++) {
-                System.out.println(listOnl.getElementAt(i));
+                // System.out.println(listOnl.getElementAt(i));
                 if (listOnl.getElementAt(i).equals(name)) {
                     //System.out.println("OK");
                     listOnl.setElementAt("o\t" + name, i);
@@ -401,7 +401,7 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         } else if (type == 2) {
             int size = listGroup.getSize();
             for (int i = 0; i < size; i++) {
-                System.out.println(listGroup.getElementAt(i));
+                // System.out.println(listGroup.getElementAt(i));
                 if (listGroup.getElementAt(i).equals(name)) {
                     //System.out.println("OK");
                     listGroup.setElementAt("o\t" + name, i);
@@ -430,7 +430,7 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
     }
     
     // Display the messages communicated with friend
-    public void displayMess(String friend) {
+    public void displayMess(String friendName) {
         try {
             doc.remove(0, doc.getLength());
         } catch(BadLocationException e) { 
@@ -438,7 +438,8 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         }
         
         // get message record with friend
-        MessRecord messRecord = user.getMessRecordList().get(friend);
+        MessRecord messRecord = user.getFriendList().get(friendName).getMessRecord();
+        //MessRecord messRecord = user.getMessRecordList().get(friend);
         
         for (int i = 0; i < messRecord.getMessList().size(); i++) {
             String message = messRecord.getMessList().get(i);
@@ -474,21 +475,21 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
     
     // Send message to other clients
     public void ownerChat() {
-        if (    !jTextField1.getText().equals("") && 
+        if (    !mess.getText().equals("") && 
                 !curFriendName.equals("")) {
             // get friend's info
             Friend friend = (user.getFriendList()).get(curFriendName);
             //create a thread to send message
-            new SendMess(user, friend, jTextField1.getText(), 1).start();
+            new SendMess(user, friend, mess.getText(), 1).start();
             
-            jTextField1.setText("");
-        } else if (    !jTextField1.getText().equals("") && 
+            mess.setText("");
+        } else if (    !mess.getText().equals("") && 
                        !curGroupName.equals("")) {
             // get group chat info
             GroupChat groupChat = (user.getGroupChatList()).get(curGroupName);
-            groupChat.sendGroupMess(user, jTextField1.getText());
+            groupChat.sendGroupMess(user, mess.getText());
             
-            jTextField1.setText("");
+            mess.setText("");
         } 
     }
      
@@ -607,22 +608,22 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         }
     }
  
-    private void findToChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findToChatActionPerformed
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
         beginChat();
-    }//GEN-LAST:event_findToChatActionPerformed
+    }//GEN-LAST:event_findButtonActionPerformed
 
-    private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
+    private void messFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_messFocusGained
         // TODO add your handling code here:
-        if (jTextField1.getText().equals("Type here"))
-            jTextField1.setText("");
-    }//GEN-LAST:event_jTextField1FocusGained
+        if (mess.getText().equals("Type here"))
+            mess.setText("");
+    }//GEN-LAST:event_messFocusGained
 
-    private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusLost
+    private void messFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_messFocusLost
         // TODO add your handling code here:
-        if (jTextField1.getText().equals("")){
+        if (mess.getText().equals("")){
             //jTextField1.setText("Type here");
         }
-    }//GEN-LAST:event_jTextField1FocusLost
+    }//GEN-LAST:event_messFocusLost
 
     private void findUserFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_findUserFocusGained
         // TODO add your handling code here:
@@ -639,7 +640,7 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         }
     }//GEN-LAST:event_findUserFocusLost
 
-    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         
         user.requestToServer("logout");
         
@@ -679,31 +680,31 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         newUser.setVisible(true);
         
         this.dispose();
-    }//GEN-LAST:event_logoutActionPerformed
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
-    private void messActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messActionPerformed
+    private void sendMessButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessButtonActionPerformed
         if (!jLabel1.getText().contains(user.getUserName())) {
             ownerChat();    
         }
-    }//GEN-LAST:event_messActionPerformed
+    }//GEN-LAST:event_sendMessButtonActionPerformed
 
-    private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         // TODO add your handling code here:
         updateTextArea();
-    }//GEN-LAST:event_clearActionPerformed
+    }//GEN-LAST:event_clearButtonActionPerformed
 
     private void onlineListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onlineListMouseClicked
         // TODO add your handling code here:
         onlineList.clearSelection();
     }//GEN-LAST:event_onlineListMouseClicked
 
-    private void fileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileActionPerformed
+    private void sendFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendFileButtonActionPerformed
         // TODO add your handling code here:
         if (jLabel1.getText().contains(curFriendName)) {
-            FileUI fileUI = new FileUI(user, user.getFriendList().get(curFriendName), this);
+            FileUI fileUI = new FileUI(user, user.getFriendList().get(curFriendName));
             fileUI.setVisible(true);    
         }
-    }//GEN-LAST:event_fileActionPerformed
+    }//GEN-LAST:event_sendFileButtonActionPerformed
 
     private void onlineListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_onlineListMousePressed
         // TODO add your handling code here:
@@ -719,24 +720,25 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
         displayMess(curFriendName);
     }//GEN-LAST:event_onlineListMousePressed
 
-    private void groupChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupChatActionPerformed
+    private void groupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupButtonActionPerformed
         // TODO add your handling code here:
-        new GroupChooseUI(user).setVisible(true);
-    }//GEN-LAST:event_groupChatActionPerformed
+        GroupChooseUI groupChooseUI = new GroupChooseUI(user);
+        groupChooseUI.setVisible(true);
+    }//GEN-LAST:event_groupButtonActionPerformed
 
-    private void groupMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_groupMousePressed
+    private void groupListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_groupListMousePressed
         // TODO add your handling code here:
-        if (group.getSelectedValue().contains("o\t")) {
-            listGroup.setElementAt(group.getSelectedValue().substring(2), 
-                    group.getSelectedIndex());
+        if (groupList.getSelectedValue().contains("o\t")) {
+            listGroup.setElementAt(groupList.getSelectedValue().substring(2), 
+                    groupList.getSelectedIndex());
         }
-        jLabel1.setText("Group Chat " + group.getSelectedValue());
+        jLabel1.setText("Group Chat " + groupList.getSelectedValue());
         curFriendName = "";
-        curGroupName = group.getSelectedValue(); 
-        group.clearSelection();
+        curGroupName = groupList.getSelectedValue(); 
+        groupList.clearSelection();
         
         displayGroupMess(curGroupName);
-    }//GEN-LAST:event_groupMousePressed
+    }//GEN-LAST:event_groupListMousePressed
 
     
     Action typeMessage = new AbstractAction()
@@ -809,12 +811,11 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton clear;
-    private javax.swing.JButton file;
-    private javax.swing.JButton findToChat;
+    private javax.swing.JButton clearButton;
+    private javax.swing.JButton findButton;
     private javax.swing.JTextField findUser;
-    private javax.swing.JList<String> group;
-    private javax.swing.JButton groupChat;
+    private javax.swing.JButton groupButton;
+    private javax.swing.JList<String> groupList;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JFileChooser jFileChooser1;
@@ -833,12 +834,13 @@ public class ChatUI extends javax.swing.JFrame implements KeyListener {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JButton logout;
-    private javax.swing.JButton mess;
+    private javax.swing.JButton logoutButton;
+    private javax.swing.JTextField mess;
     private javax.swing.JList<String> offlineList;
     private javax.swing.JList<String> onlineList;
+    private javax.swing.JButton sendFileButton;
+    private javax.swing.JButton sendMessButton;
     // End of variables declaration//GEN-END:variables
 
     @Override

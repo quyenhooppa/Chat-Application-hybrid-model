@@ -25,20 +25,6 @@ public class RegisterUI extends javax.swing.JFrame {
         rePassword.addActionListener(register);
     }
 
-    public JPasswordField getPassword() {
-        return password;
-    }
-
-    public JPasswordField getRePassword() {
-        return rePassword;
-    }
-
-    public JTextField getUserName() {
-        return userName;
-    }
-
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -56,8 +42,8 @@ public class RegisterUI extends javax.swing.JFrame {
         userName = new javax.swing.JTextField();
         password = new javax.swing.JPasswordField();
         rePassword = new javax.swing.JPasswordField();
-        doneBut = new javax.swing.JButton();
-        cancelBut = new javax.swing.JButton();
+        doneButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("CHAT APP SIGNUP");
@@ -76,17 +62,17 @@ public class RegisterUI extends javax.swing.JFrame {
             }
         });
 
-        doneBut.setText("Done");
-        doneBut.addActionListener(new java.awt.event.ActionListener() {
+        doneButton.setText("Done");
+        doneButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                doneButActionPerformed(evt);
+                doneButtonActionPerformed(evt);
             }
         });
 
-        cancelBut.setText("Cancel");
-        cancelBut.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
@@ -101,7 +87,7 @@ public class RegisterUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(doneBut)
+                    .addComponent(doneButton)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel2)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -116,7 +102,7 @@ public class RegisterUI extends javax.swing.JFrame {
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                        .addComponent(cancelBut)
+                        .addComponent(cancelButton)
                         .addGap(44, 44, 44))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -138,8 +124,8 @@ public class RegisterUI extends javax.swing.JFrame {
                     .addComponent(rePassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(doneBut)
-                    .addComponent(cancelBut))
+                    .addComponent(doneButton)
+                    .addComponent(cancelButton))
                 .addGap(0, 10, Short.MAX_VALUE))
         );
 
@@ -225,17 +211,23 @@ public class RegisterUI extends javax.swing.JFrame {
         }
     }
     
-    private void doneButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButActionPerformed
+    public void resetField() {
+        userName.setText("");
+        password.setText("");
+        rePassword.setText("");
+    }
+    
+    private void doneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_doneButtonActionPerformed
         try {
             doneRegister();
         } catch (ClassNotFoundException | InterruptedException ex) {
             Logger.getLogger(RegisterUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_doneButActionPerformed
+    }//GEN-LAST:event_doneButtonActionPerformed
 
-    private void cancelButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.dispose();
-    }//GEN-LAST:event_cancelButActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
     
     Action register = new AbstractAction()
     {
@@ -316,8 +308,8 @@ public class RegisterUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelBut;
-    private javax.swing.JButton doneBut;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton doneButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

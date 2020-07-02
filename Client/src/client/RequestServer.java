@@ -29,7 +29,7 @@ public class RequestServer extends Thread{
 
     public RequestServer(User user) {
         this.user = user;
-        this.serverIp = "172.20.10.8";
+        this.serverIp = "192.168.1.178";
     }
     
 
@@ -73,7 +73,7 @@ public class RequestServer extends Thread{
             PrintWriter stringToEcho = 
                     new PrintWriter(socket.getOutputStream(), true);
             
-            System.out.println(this.getName());
+//            System.out.println();
             
             while(true) {
                 
@@ -82,9 +82,7 @@ public class RequestServer extends Thread{
                         if (register(echoes, stringToEcho)) {
                             registerUI.dispose();
                         } else {
-                            registerUI.getUserName().setText("");
-                            registerUI.getPassword().setText("");
-                            registerUI.getRePassword().setText("");
+                            registerUI.resetField();
                         }
                         online = false;
                         break;
@@ -145,12 +143,12 @@ public class RequestServer extends Thread{
         
         try {
             
-            String send = "1" + user.getUserName() + "-" + user.getPass();
-                    
+            String send = "1" + user.getUserName() + "-" + user.getPass();  
             stringToEcho.println(send);
+            System.out.println(send);
             
             String response = echoes.readLine();
-            System.out.println("Register: " + response);
+            System.out.println("Register: " + response + " " + this.getName());
             
             if (response.equals("1")) {
                 JOptionPane.showMessageDialog(null, "Register successfully!");
@@ -173,9 +171,10 @@ public class RequestServer extends Thread{
         try {
             
             InetAddress host = InetAddress.getLocalHost();
-                  
-            stringToEcho.println("2" + user.getUserName() + "-" + user.getPass() + 
-                    "-" + host.getHostAddress()); // send request
+            String send =  "2" + user.getUserName() + "-" + user.getPass() + 
+                    "-" + host.getHostAddress();   
+            stringToEcho.println(send); // send request
+            System.out.println(send);
 
             String response = echoes.readLine();
             System.out.println("Login: " + response + " " + this.getName());
@@ -193,15 +192,21 @@ public class RequestServer extends Thread{
                 return true;
             }
             
-            if (response.equals("0")) {
-                JOptionPane.showMessageDialog(null,
-                     "Login failed. Please try again.");
-            } else if (response.equals("3")) {
-                JOptionPane.showMessageDialog(null,
-                     "User has already login. Please try again.");
-            } else if (response.equals("2")) {
-                JOptionPane.showMessageDialog(null,
-                     "User not found. Please try again.");
+            switch (response) {
+                case "0":
+                    JOptionPane.showMessageDialog(null,
+                            "Login failed. Please try again.");
+                    break;
+                case "3":
+                    JOptionPane.showMessageDialog(null,
+                            "User has already login. Please try again.");
+                    break;
+                case "2":
+                    JOptionPane.showMessageDialog(null,
+                            "User not found. Please try again.");
+                    break;
+                default:
+                    break;
             }
                    
         } catch (IOException e) {
@@ -209,8 +214,7 @@ public class RequestServer extends Thread{
                     + e.getMessage());
         }
         
-        loginUI.getUserName().setText("");
-        loginUI.getPassword().setText("");
+        loginUI.resetField();
 
         return false;
     }
@@ -222,7 +226,9 @@ public class RequestServer extends Thread{
         
         try {
 
-            stringToEcho.println("3" + name);
+            String send = "3" + name;
+            stringToEcho.println(send);
+            System.out.println(send);
             
             String response = echoes.readLine();
             System.out.println("Find user: " + response + " " + this.getName());
@@ -249,7 +255,9 @@ public class RequestServer extends Thread{
         
         try {
 
-            stringToEcho.println("4" + user.getUserName() + "-" + name);
+            String send = "4" + user.getUserName() + "-" + name;
+            stringToEcho.println(send);
+            System.out.println(send);
             
             String response = echoes.readLine();
             System.out.println("Add friend: " + response + " " + this.getName());
@@ -275,7 +283,7 @@ public class RequestServer extends Thread{
             port = Integer.parseInt(response.substring(curPos + 1));
                  
             user.getFriendList().put(name, new Friend(name, ip, port, status));
-            user.getMessRecordList().put(name, new MessRecord());
+            //user.getMessRecordList().put(name, new MessRecord());
             System.out.println(name + status);
             user.getChatUI().addName(name, status);
             
@@ -290,7 +298,9 @@ public class RequestServer extends Thread{
         
         try { 
 
-            stringToEcho.println("5" + user.getUserName());
+            String send = "5" + user.getUserName();
+            stringToEcho.println(send);
+            System.out.println(send);
             
             String response = echoes.readLine();
             System.out.println("Logout: " + response + " " + this.getName());
@@ -320,7 +330,8 @@ public class RequestServer extends Thread{
             int status = Character.getNumericValue(response.charAt(0));
             
             if (status == 0) {
-                user.getMessRecordList().get(friendName).getMessList().clear();
+                //user.getMessRecordList().get(friendName).getMessList().clear();
+                user.getFriendList().get(friendName).getMessRecord().getMessList().clear();
             } 
 
             user.getFriendList().get(friendName).setStatus(status);
@@ -413,10 +424,10 @@ public class RequestServer extends Thread{
                 
                 // Friend newFriend = new Friend(friendName, sentPort, status);
                 Friend newFriend = new Friend(friendName, ip, sentPort, status);
-                MessRecord newMessRecord = new MessRecord();
+//                MessRecord newMessRecord = new MessRecord();
                 
                user.getFriendList().put(friendName, newFriend); // add friend
-               user.getMessRecordList().put(friendName, newMessRecord); // add mess record
+               //user.getMessRecordList().put(friendName, newMessRecord); // add mess record
                 
             }
     }
