@@ -121,6 +121,9 @@ public class SendMess extends Thread {
             }   
                 
             catch (IOException e) {
+//                if (e.getMessage().contains("connect failed")) {
+//                    JOptionPane.showMessageDialog(null, "Network is unreachable");
+//                }
                 System.out.println("Send " + friend.getName() + " " 
                             + e.getMessage());
             }   
@@ -144,7 +147,7 @@ public class SendMess extends Thread {
             OutputStream out = socket.getOutputStream();
         ) {
             new SendMess(userSend, friend, 
-                    "Sending" + file.getName(), 1).start(); 
+                    "Sending " + file.getName(), 1).start(); 
                             
             byte[] buffer = new byte[1024 * 1024];
                             
