@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ip xmlns="USER IP">
-                                                                                            
+                                                                                                            
+    
+    
+    
+    
     
     
     
@@ -23,7 +27,7 @@
     
     
     <user name="quithu165">
-                                                                                                                                                                                        
+                                                                                                                                                                                                                        
         
         
         
@@ -45,8 +49,16 @@
         
         
         
-        <ip>192.168.1.58</ip>
-                                                                                                                                                                                        
+        
+        
+        
+        
+        <ip>192.168.43.146</ip>
+                                                                                                                                                                                                                        
+        
+        
+        
+        
         
         
         
@@ -69,7 +81,11 @@
         
         
         <username>quithu165</username>
-                                                                                                                                                                                    
+                                                                                                                                                                                                                    
+    
+    
+    
+    
     
     
     
@@ -92,13 +108,17 @@
     
     
     </user>
-                                                                                        
+                                                                                                        
 
 
 
 
 
 
+    
+    
+    
+    
     
     
     
@@ -115,7 +135,7 @@
     
     
     <user name="thucquyen">
-                                                                                                                                
+                                                                                                                                                                
         
         
         
@@ -130,8 +150,16 @@
         
         
         
-        <ip>192.168.1.178</ip>
-                                                                                                                                
+        
+        
+        
+        
+        <ip>192.168.43.146</ip>
+                                                                                                                                                                
+        
+        
+        
+        
         
         
         
@@ -147,7 +175,11 @@
         
         
         <username>thucquyen</username>
-                                                                                                                            
+                                                                                                                                                            
+    
+    
+    
+    
     
     
     
@@ -163,7 +195,11 @@
     
     
     </user>
-                                                            
+                                                                            
+    
+    
+    
+    
     
     
     
@@ -179,7 +215,11 @@
     
     
     <user name="quangtrai">
-                                                                                                                        
+                                                                                                                                                        
+        
+        
+        
+        
         
         
         
@@ -194,7 +234,11 @@
         
         
         <ip>192.168.1.58</ip>
-                                                                                                                        
+                                                                                                                                                        
+        
+        
+        
+        
         
         
         
@@ -209,7 +253,11 @@
         
         
         <username>quangtrai</username>
-                                                                                                                    
+                                                                                                                                                    
+    
+    
+    
+    
     
     
     
@@ -224,7 +272,11 @@
     
     
     </user>
-                                                        
+                                                                        
+
+
+
+
 
 
 

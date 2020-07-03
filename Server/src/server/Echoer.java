@@ -78,9 +78,13 @@ public final class Echoer extends Thread {
                 System.out.println("Received client input: " + echoString 
                         + " " + this.getName());
                 
-                if (echoString.isEmpty()) {
-                    notifyNewStatusToFriend();
-                    userList.remove(userName, this);
+                if (echoString == null) {
+                    System.out.println(userName);
+                    if (!userName.isEmpty()) {
+                        updateStatus(userName, "0");
+                        notifyNewStatusToFriend();
+                        userList.remove(userName, this);
+                    }
                     break;
                 }
 
@@ -95,7 +99,11 @@ public final class Echoer extends Thread {
                     case '2': // request login
 
                         socketOpen = authenticate(echoString, output);
-                        notifyNewStatusToFriend();
+                        if (socketOpen == true) {
+                            //userList.getListOfUserConnetion().put(userName, this);
+                            userList.put(userName, this);
+                            notifyNewStatusToFriend();
+                        }
                         break;
                     case '3': // request send add friend
 
@@ -312,13 +320,8 @@ public final class Echoer extends Thread {
 
         if (!userFile.isFile()) {
 //            System.out.println("Rejected!!!");
-            output.println("2");
+            output.println("2"); // not found
         } else {
-            updateUserIP(ip, name);
-            
-            userName = name;
-            //userList.getListOfUserConnetion().put(userName, this);
-            userList.put(userName, this);
             
             DocumentBuilderFactory factory
                     = DocumentBuilderFactory.newInstance();
@@ -346,7 +349,8 @@ public final class Echoer extends Thread {
                 String message = node2.getTextContent();
                 // login successfully, send back its listen port
                 if (passFile.equals(pass)) {
-
+                    updateUserIP(ip, name);
+                    userName = name;
 //                    System.out.println("Login!!!");
                     updateStatus(name, "1");
                     message = message + "%" + numberOfFriend + "%";
@@ -367,12 +371,12 @@ public final class Echoer extends Thread {
                     return true;
                 } else {
 //                    System.out.println("Rejected!!!");
-                    output.println("0");
+                    output.println("0"); // wrong pass
                 }
             }
             
 //            System.out.println("Rejected!!!");
-            output.println("3");
+            output.println("3"); // already login
 
         }
         return false;
