@@ -29,7 +29,7 @@ public class RequestServer extends Thread{
 
     public RequestServer(User user) {
         this.user = user;
-        this.serverIp = "192.168.43.134";
+        this.serverIp = "192.168.20.102";
     }
     
 
