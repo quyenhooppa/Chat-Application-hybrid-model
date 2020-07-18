@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <info xmlns="Information">
-                                                                                
+                                                                                        
+    
+    
     
     
     
@@ -20,7 +22,9 @@
     
     
     <user id="2">
-                                                                                                                                                                
+                                                                                                                                                                                
+        
+        
         
         
         
@@ -40,7 +44,9 @@
         
         
         <username>quithu165</username>
-                                                                                                                                                                
+                                                                                                                                                                                
+        
+        
         
         
         
@@ -60,7 +66,9 @@
         
         
         <pass>quithu165</pass>
-                                                                                                                                                                
+                                                                                                                                                                                
+        
+        
         
         
         
@@ -80,7 +88,7 @@
         
         
         <port>6002</port>
-                                                                                                                                                                
+                                                                                                                                                                                
         
         
         
@@ -103,13 +111,17 @@
         
         
         
-        <status>1</status>
-                                                                                                                                                            
+        
+        
+        <status>0</status>
+                                                                                                                                                                            
     
     
     
         
     
+        
+        
         
         
         
@@ -125,7 +137,9 @@
         
         
         <friends>
-                                                                                                                                                                                                
+                                                                                                                                                                                                                        
+            
+            
             
             
             
@@ -141,7 +155,9 @@
             
             
             <friendname>quangtrai</friendname>
-                                                                                                                                                                                            
+                                                                                                                                                                                                                    
+            
+            
             
             
             
@@ -157,7 +173,9 @@
             
             
             <friendname>thucquyen</friendname>
-                                                                                                                                                                                
+                                                                                                                                                                                                        
+        
+        
         
         
         
@@ -172,7 +190,9 @@
         
         
         </friends>
-                                                                                                                    
+                                                                                                                                    
+    
+    
     
     
     
@@ -187,7 +207,9 @@
     
     
     </user>
-                                                                            
+                                                                                    
+
+
 
 
 
